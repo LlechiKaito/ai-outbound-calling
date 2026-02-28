@@ -149,7 +149,7 @@ test.describe("Dashboard", () => {
   test("should show orchestrator state as idle", async ({ page }) => {
     await page.goto("/dashboard");
 
-    await expect(page.locator("#orchestrator-state")).toHaveText("idle");
+    await expect(page.locator("#orchestrator-state")).toHaveText("待機中");
     await expect(page.locator("#btn-start")).toBeEnabled();
     await expect(page.locator("#btn-pause")).toBeDisabled();
     await expect(page.locator("#btn-resume")).toBeDisabled();
@@ -172,7 +172,7 @@ test.describe("Dashboard", () => {
     await page.click("#btn-add-lead");
     await expect(form).toBeVisible();
 
-    await page.click("#add-lead-form button:has-text('Cancel')");
+    await page.click("#add-lead-form button:has-text('キャンセル')");
     await expect(form).toBeHidden();
   });
 
@@ -196,7 +196,7 @@ test.describe("Dashboard", () => {
     await page.fill("#new-contact", "新規担当");
     await page.fill("#new-phone", "09011112222");
     await page.fill("#new-email", "new@test.com");
-    await page.click("#add-lead-form button:has-text('Add')");
+    await page.click("#add-lead-form button:has-text('追加')");
 
     await page.waitForTimeout(500);
     expect(addLeadCalled).toBe(true);
@@ -206,11 +206,11 @@ test.describe("Dashboard", () => {
     await page.goto("/dashboard");
 
     await page.click("#btn-add-lead");
-    await page.click("#add-lead-form button:has-text('Add')");
+    await page.click("#add-lead-form button:has-text('追加')");
 
     const error = page.locator("#add-lead-error");
     await expect(error).toBeVisible();
-    await expect(error).toContainText("required");
+    await expect(error).toContainText("必須");
   });
 
   test("should update controls when orchestrator is running", async ({ page }) => {
@@ -231,11 +231,11 @@ test.describe("Dashboard", () => {
 
     await page.goto("/dashboard");
 
-    await expect(page.locator("#orchestrator-state")).toHaveText("running");
+    await expect(page.locator("#orchestrator-state")).toHaveText("実行中");
     await expect(page.locator("#btn-start")).toBeDisabled();
     await expect(page.locator("#btn-pause")).toBeEnabled();
     await expect(page.locator("#btn-stop")).toBeEnabled();
-    await expect(page.locator("#live-progress")).toContainText("2 / 5");
+    await expect(page.locator("#live-progress")).toContainText("2 / 5 件");
     await expect(page.locator("#live-current-lead")).toContainText("進行中会社");
   });
 });

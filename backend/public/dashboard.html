@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Outbound Calling - Dashboard</title>
+  <title>AI 自動架電システム - ダッシュボード</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .status-badge { @apply px-2 py-0.5 rounded-full text-xs font-medium; }
@@ -14,44 +14,44 @@
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-  <!-- Header -->
+  <!-- ヘッダー -->
   <header class="bg-white shadow-sm border-b">
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div>
-        <h1 class="text-xl font-bold text-gray-900">AI Outbound Calling</h1>
-        <p class="text-sm text-gray-500">Dashboard</p>
+        <h1 class="text-xl font-bold text-gray-900">AI 自動架電システム</h1>
+        <p class="text-sm text-gray-500">ダッシュボード</p>
       </div>
       <div class="flex items-center gap-3">
         <a id="sheets-link" href="#" target="_blank" rel="noopener noreferrer"
            class="text-sm px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 border border-green-200">
-          Google Sheets
+          Google Sheets を開く
         </a>
         <button id="btn-refresh" onclick="refreshAll()"
                 class="text-sm px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-          Refresh
+          更新
         </button>
       </div>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-    <!-- Live Activity -->
+    <!-- ライブステータス -->
     <section id="live-activity" class="bg-white rounded-lg shadow-sm border p-4">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
           <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-gray-400"></div>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Live Activity</h2>
-          <span id="orchestrator-state" class="status-badge bg-gray-100 text-gray-600">idle</span>
+          <h2 class="text-sm font-semibold text-gray-700 tracking-wide">リアルタイム状況</h2>
+          <span id="orchestrator-state" class="status-badge bg-gray-100 text-gray-600">待機中</span>
         </div>
         <div class="flex gap-2">
           <button onclick="orchestratorAction('start')" id="btn-start"
-                  class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50">Start</button>
+                  class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50">開始</button>
           <button onclick="orchestratorAction('pause')" id="btn-pause"
-                  class="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:opacity-50" disabled>Pause</button>
+                  class="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:opacity-50" disabled>一時停止</button>
           <button onclick="orchestratorAction('resume')" id="btn-resume"
-                  class="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50" disabled>Resume</button>
+                  class="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50" disabled>再開</button>
           <button onclick="orchestratorAction('stop')" id="btn-stop"
-                  class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50" disabled>Stop</button>
+                  class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50" disabled>停止</button>
         </div>
       </div>
       <div id="live-detail" class="text-sm text-gray-600">
@@ -60,115 +60,115 @@
       </div>
     </section>
 
-    <!-- KPI Cards -->
+    <!-- KPI カード -->
     <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Total Leads</p>
+        <p class="text-xs text-gray-500">総リード数</p>
         <p id="kpi-total-leads" class="text-2xl font-bold text-gray-900 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Total Called</p>
+        <p class="text-xs text-gray-500">架電済み</p>
         <p id="kpi-total-called" class="text-2xl font-bold text-gray-900 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Success</p>
+        <p class="text-xs text-gray-500">応答数</p>
         <p id="kpi-success-count" class="text-2xl font-bold text-green-600 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Success Rate</p>
+        <p class="text-xs text-gray-500">応答率</p>
         <p id="kpi-success-rate" class="text-2xl font-bold text-blue-600 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Avg Interest</p>
+        <p class="text-xs text-gray-500">平均興味度</p>
         <p id="kpi-avg-interest" class="text-2xl font-bold text-purple-600 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Pending</p>
+        <p class="text-xs text-gray-500">未対応</p>
         <p id="kpi-pending" class="text-2xl font-bold text-yellow-600 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500 uppercase">Retry Limit</p>
+        <p class="text-xs text-gray-500">リトライ上限</p>
         <p id="kpi-retry-limit" class="text-2xl font-bold text-red-600 mt-1">-</p>
       </div>
     </section>
 
-    <!-- Lead List + Add Lead -->
+    <!-- リード一覧 + 追加 -->
     <section class="bg-white rounded-lg shadow-sm border">
       <div class="p-4 border-b flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <h2 class="font-semibold text-gray-900">Leads</h2>
+          <h2 class="font-semibold text-gray-900">架電リスト</h2>
           <nav class="flex gap-4 text-sm" id="lead-tabs">
-            <button onclick="filterLeads('')" class="tab-active pb-1" data-tab="all">All</button>
-            <button onclick="filterLeads('pending')" class="tab-inactive pb-1" data-tab="pending">Pending</button>
-            <button onclick="filterLeads('completed')" class="tab-inactive pb-1" data-tab="completed">Completed</button>
-            <button onclick="filterLeads('retry_limit')" class="tab-inactive pb-1" data-tab="retry_limit">Retry Limit</button>
+            <button onclick="filterLeads('')" class="tab-active pb-1" data-tab="all">すべて</button>
+            <button onclick="filterLeads('pending')" class="tab-inactive pb-1" data-tab="pending">未対応</button>
+            <button onclick="filterLeads('completed')" class="tab-inactive pb-1" data-tab="completed">完了</button>
+            <button onclick="filterLeads('retry_limit')" class="tab-inactive pb-1" data-tab="retry_limit">リトライ上限</button>
           </nav>
         </div>
         <button onclick="toggleAddLeadForm()" id="btn-add-lead"
-                class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">+ Add Lead</button>
+                class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">+ リード追加</button>
       </div>
 
-      <!-- Add Lead Form (hidden by default) -->
+      <!-- リード追加フォーム（初期非表示） -->
       <div id="add-lead-form" class="hidden p-4 bg-blue-50 border-b">
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-          <input type="text" id="new-company" placeholder="Company Name"
+          <input type="text" id="new-company" placeholder="会社名"
                  class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
-          <input type="text" id="new-contact" placeholder="Contact Name"
+          <input type="text" id="new-contact" placeholder="担当者名"
                  class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
           <input type="tel" id="new-phone" placeholder="09012345678"
                  class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
           <input type="email" id="new-email" placeholder="email@example.com"
                  class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
           <div class="flex gap-2">
-            <button onclick="submitNewLead()" class="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex-1">Add</button>
-            <button onclick="toggleAddLeadForm()" class="px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">Cancel</button>
+            <button onclick="submitNewLead()" class="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex-1">追加</button>
+            <button onclick="toggleAddLeadForm()" class="px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">キャンセル</button>
           </div>
         </div>
         <p id="add-lead-error" class="text-red-500 text-xs mt-2 hidden"></p>
       </div>
 
-      <!-- Lead Table -->
+      <!-- リードテーブル -->
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-gray-50 text-left text-xs text-gray-500 uppercase">
+          <thead class="bg-gray-50 text-left text-xs text-gray-500">
             <tr>
-              <th class="px-4 py-3">Company</th>
-              <th class="px-4 py-3">Contact</th>
-              <th class="px-4 py-3">Phone</th>
-              <th class="px-4 py-3">Status</th>
-              <th class="px-4 py-3">Result</th>
-              <th class="px-4 py-3">Interest</th>
-              <th class="px-4 py-3">Last Called</th>
-              <th class="px-4 py-3">Next Action</th>
-              <th class="px-4 py-3">Retry</th>
+              <th class="px-4 py-3">会社名</th>
+              <th class="px-4 py-3">担当者</th>
+              <th class="px-4 py-3">電話番号</th>
+              <th class="px-4 py-3">ステータス</th>
+              <th class="px-4 py-3">架電結果</th>
+              <th class="px-4 py-3">興味度</th>
+              <th class="px-4 py-3">最終架電</th>
+              <th class="px-4 py-3">次のアクション</th>
+              <th class="px-4 py-3">リトライ</th>
             </tr>
           </thead>
           <tbody id="leads-tbody" class="divide-y">
-            <tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
+            <tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- Call History -->
+    <!-- 架電履歴 -->
     <section class="bg-white rounded-lg shadow-sm border">
       <div class="p-4 border-b">
-        <h2 class="font-semibold text-gray-900">Call History</h2>
+        <h2 class="font-semibold text-gray-900">架電履歴</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-gray-50 text-left text-xs text-gray-500 uppercase">
+          <thead class="bg-gray-50 text-left text-xs text-gray-500">
             <tr>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">Company</th>
-              <th class="px-4 py-3">Contact</th>
-              <th class="px-4 py-3">Result</th>
-              <th class="px-4 py-3">Interest</th>
-              <th class="px-4 py-3">Summary</th>
+              <th class="px-4 py-3">日時</th>
+              <th class="px-4 py-3">会社名</th>
+              <th class="px-4 py-3">担当者</th>
+              <th class="px-4 py-3">結果</th>
+              <th class="px-4 py-3">興味度</th>
+              <th class="px-4 py-3">メモ</th>
             </tr>
           </thead>
           <tbody id="history-tbody" class="divide-y">
-            <tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
+            <tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -179,6 +179,13 @@
     const API = '';
     let currentFilter = '';
     let autoRefreshTimer = null;
+
+    const STATE_LABELS = {
+      idle: '待機中',
+      running: '実行中',
+      paused: '一時停止',
+      stopped: '停止',
+    };
 
     // --- API helpers ---
     async function apiFetch(path) {
@@ -209,18 +216,18 @@
       document.getElementById('kpi-retry-limit').textContent = d.retryLimitCount;
     }
 
-    // --- Leads ---
+    // --- リード ---
     function statusBadge(status) {
-      if (!status || status === '未対応') return '<span class="status-badge bg-yellow-100 text-yellow-700">Pending</span>';
-      if (status === '完了') return '<span class="status-badge bg-green-100 text-green-700">Completed</span>';
-      if (status === 'リトライ上限') return '<span class="status-badge bg-red-100 text-red-700">Retry Limit</span>';
+      if (!status || status === '未対応') return '<span class="status-badge bg-yellow-100 text-yellow-700">未対応</span>';
+      if (status === '完了') return '<span class="status-badge bg-green-100 text-green-700">完了</span>';
+      if (status === 'リトライ上限') return '<span class="status-badge bg-red-100 text-red-700">リトライ上限</span>';
       return '<span class="status-badge bg-gray-100 text-gray-600">' + status + '</span>';
     }
 
     function resultBadge(result) {
       if (!result) return '-';
-      if (result === '応答') return '<span class="status-badge bg-green-100 text-green-700">Answered</span>';
-      if (result === '不在') return '<span class="status-badge bg-orange-100 text-orange-700">No Answer</span>';
+      if (result === '応答') return '<span class="status-badge bg-green-100 text-green-700">応答</span>';
+      if (result === '不在') return '<span class="status-badge bg-orange-100 text-orange-700">不在</span>';
       return result;
     }
 
@@ -238,7 +245,7 @@
       if (!res.isSuccess) return;
       const tbody = document.getElementById('leads-tbody');
       if (res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">No leads found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">リードがありません</td></tr>';
         return;
       }
       tbody.innerHTML = res.data.map(l => `<tr class="hover:bg-gray-50">
@@ -264,13 +271,13 @@
       loadLeads();
     }
 
-    // --- Call History ---
+    // --- 架電履歴 ---
     async function loadCallHistory() {
       const res = await apiFetch('/api/dashboard/call-history');
       if (!res.isSuccess) return;
       const tbody = document.getElementById('history-tbody');
       if (res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No call history</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">架電履歴がありません</td></tr>';
         return;
       }
       tbody.innerHTML = res.data.map(h => `<tr class="hover:bg-gray-50">
@@ -283,7 +290,7 @@
       </tr>`).join('');
     }
 
-    // --- Live Status ---
+    // --- ライブステータス ---
     async function loadStatus() {
       const res = await apiFetch('/api/dashboard/status');
       if (!res.isSuccess) return;
@@ -291,7 +298,7 @@
       const stateEl = document.getElementById('orchestrator-state');
       const dotEl = document.getElementById('status-dot');
 
-      stateEl.textContent = d.orchestratorState;
+      stateEl.textContent = STATE_LABELS[d.orchestratorState] || d.orchestratorState;
 
       const stateColors = {
         idle: { badge: 'bg-gray-100 text-gray-600', dot: 'bg-gray-400' },
@@ -321,9 +328,9 @@
       }
 
       if (isRunning || isPaused) {
-        progressEl.textContent = 'Progress: ' + d.processedCount + ' / ' + d.totalLeads;
+        progressEl.textContent = '進捗: ' + d.processedCount + ' / ' + d.totalLeads + ' 件';
         if (d.currentLead) {
-          currentEl.textContent = 'Current: ' + d.currentLead.companyName + ' (' + d.currentLead.contactName + ')';
+          currentEl.textContent = '架電中: ' + d.currentLead.companyName + '（' + d.currentLead.contactName + '）';
         } else {
           currentEl.textContent = '';
         }
@@ -342,7 +349,7 @@
       }
     }
 
-    // --- Add Lead ---
+    // --- リード追加 ---
     function toggleAddLeadForm() {
       const form = document.getElementById('add-lead-form');
       form.classList.toggle('hidden');
@@ -359,7 +366,7 @@
       const errorEl = document.getElementById('add-lead-error');
 
       if (!companyName || !contactName || !phoneNumber) {
-        errorEl.textContent = 'Company, Contact, Phone are required.';
+        errorEl.textContent = '会社名・担当者名・電話番号は必須です。';
         errorEl.classList.remove('hidden');
         return;
       }
@@ -375,12 +382,12 @@
         toggleAddLeadForm();
         await refreshAll();
       } else {
-        errorEl.textContent = res.message || 'Failed to add lead.';
+        errorEl.textContent = res.message || 'リードの追加に失敗しました。';
         errorEl.classList.remove('hidden');
       }
     }
 
-    // --- Helpers ---
+    // --- ヘルパー ---
     function esc(str) {
       if (!str) return '';
       const d = document.createElement('div');
@@ -388,7 +395,7 @@
       return d.innerHTML;
     }
 
-    // --- Init ---
+    // --- 初期化 ---
     async function refreshAll() {
       await Promise.all([loadKpis(), loadLeads(), loadCallHistory(), loadStatus()]);
     }
