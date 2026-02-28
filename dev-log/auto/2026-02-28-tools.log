@@ -727,3 +727,117 @@
   - old:       expect(mockLeadRepo.updateLeadResult).toHaveBeenCalledWith(
   + new:       expect(mockLeadRepo.updateLeadResult).toHaveBeenCalledWith(
 [13:11:24] GLOB .env
+[13:12:27] GLOB **/backend/src/presentation/routes/**/*.ts
+[13:12:30] READ /home/claude/workdir/ai-outbound-calling/backend/src/server.ts
+[13:12:31] READ /home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+[13:12:31] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/health-routes.ts
+[13:12:31] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/call/call-routes.ts
+[13:12:34] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/analysis/analysis-routes.ts
+[13:12:34] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/call-history/call-history-routes.ts
+[13:12:34] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/follow-up-email/follow-up-email-routes.ts
+[13:12:34] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/orchestrator/orchestrator-routes.ts
+[13:12:37] GLOB **/backend/src/presentation/controllers/**/*.ts
+[13:12:38] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/call/call-controller.ts
+[13:12:39] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/analysis/analysis-controller.ts
+[13:12:39] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/call-history/call-history-controller.ts
+[13:12:39] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/follow-up-email/follow-up-email-controller.ts
+[13:12:41] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/orchestrator/orchestrator-controller.ts
+[13:12:44] GLOB **/backend/src/application/dto/**/*.ts
+[13:12:44] GLOB **/backend/src/application/usecases/**/*.ts
+[13:12:45] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call/make-call-dto.ts
+[13:12:46] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/analysis/analyze-call-dto.ts
+[13:12:46] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call-history/save-call-history-dto.ts
+[13:12:46] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/follow-up-email/send-follow-up-email-dto.ts
+[13:12:49] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/orchestrator/orchestrator-dto.ts
+[13:12:49] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/orchestrator/auto-call-orchestrator-usecase.ts
+[13:12:52] GLOB **/backend/src/domain/entities/**/*.ts
+[13:12:53] GLOB **/backend/src/domain/repositories/**/*.ts
+[13:12:54] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/orchestrator/lead.ts
+[13:12:54] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/orchestrator/lead-repository.ts
+[13:12:54] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/analysis/call-analysis.ts
+[13:12:55] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/analysis/call-analysis-repository.ts
+[13:13:04] READ /home/claude/workdir/ai-outbound-calling/package.json
+[13:13:06] GLOB **/backend/src/infrastructure/external/google/**/*.ts
+[13:13:08] READ /home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-call-history-repository.ts
+[13:13:08] READ /home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-lead-repository.ts
+[13:13:12] READ /home/claude/workdir/ai-outbound-calling/backend/src/constants/orchestrator.ts
+[13:13:13] READ /home/claude/workdir/ai-outbound-calling/backend/src/constants/google-sheets.ts
+[13:13:16] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/errors/error-handler.ts
+[13:13:17] READ /home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/call/make-call-usecase.ts
+[13:13:20] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/call-history/call-history.ts
+[13:13:46] Agent {"description":"Explore existing API endpoints","prompt":"Explore the codebase to understand all existing API endpoints, their request/response formats, and what data is available. Focus on:\n\n1. All
+[13:14:04] TaskCreate {"subject":"Add dashboard backend APIs (KPIs, leads list, call history, add lead)","description":"Create new API endpoints for dashboard:\n- GET /api/dashboard/kpis - total calls, success rate, avg in
+[13:14:06] TaskCreate {"subject":"Create dashboard frontend (HTML + Tailwind + vanilla JS)","description":"Build a single-page dashboard served at /dashboard with:\n- KPI cards (total calls, success rate, avg interest leve
+[13:14:08] TaskCreate {"subject":"Write unit + integration + E2E tests for dashboard","description":"- Unit tests: DashboardUseCase KPI calculations\n- Integration tests: Dashboard API endpoints with supertest\n- E2E tests
+[13:14:11] TaskUpdate {"taskId":"6","status":"in_progress"}
+[13:14:16] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/orchestrator/lead-repository.ts
+[13:14:20] READ /home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/orchestrator/lead.ts
+[13:14:28] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/orchestrator/lead.ts
+  - old: export class Lead {
+  + new: export class Lead {
+[13:14:34] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/orchestrator/lead-repository.ts
+  - old: export interface LeadRepository {
+  + new: export interface NewLeadData {
+[13:14:37] READ /home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-lead-repository.ts
+[13:14:42] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-lead-repository.ts
+  - old: import type { LeadRepository, LeadUpdateData } from "@/domain/repositories/orchestrator/lead-repository.js";
+  + new: import type { LeadRepository, LeadUpdateData, NewLeadData } from "@/domain/repositories/orchestrator/lead-repository.js";
+[13:14:49] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-lead-repository.ts
+  - old:     const leads = rows.slice(HEADER_ROW_OFFSET).map((row, index) =>
+  + new:     const leads = rows.slice(HEADER_ROW_OFFSET).map((row, index) =>
+[13:14:56] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-lead-repository.ts
+  - old:   private normalizePhoneNumber(raw: string): string {
+  + new:   async addLead(data: NewLeadData): Promise<Result<void, Error>> {
+[13:15:07] WRITE /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/dashboard/dashboard-dto.ts (48 lines)
+[13:15:25] WRITE /home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/dashboard/dashboard-usecase.ts (139 lines)
+[13:15:42] WRITE /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/dashboard/dashboard-controller.ts (120 lines)
+[13:15:47] WRITE /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/dashboard/dashboard-routes.ts (33 lines)
+[13:15:51] READ /home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+[13:15:58] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+  - old: import { OrchestratorController } from "@/presentation/controllers/orchestrator/orchestrator-controller.js";
+  + new: import { OrchestratorController } from "@/presentation/controllers/orchestrator/orchestrator-controller.js";
+[13:16:02] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+  - old: function createGoogleSheetsLeadRepository(): GoogleSheetsLeadRepository {
+  + new: export function createDashboardController(): DashboardController | null {
+[13:16:08] READ /home/claude/workdir/ai-outbound-calling/backend/src/server.ts
+[13:16:16] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/server.ts
+  - old: import Fastify from "fastify";
+  + new: import path from "node:path";
+[13:16:22] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/server.ts
+  - old:   const orchestratorController = createOrchestratorController(app.log);
+  + new:   const orchestratorController = createOrchestratorController(app.log);
+[13:17:02] READ /home/claude/workdir/ai-outbound-calling/tests/integration/orchestrator-api.test.ts
+[13:17:06] EDIT /home/claude/workdir/ai-outbound-calling/tests/integration/orchestrator-api.test.ts
+  - old:   const mockLeadRepo: jest.Mocked<LeadRepository> = {
+  + new:   const mockLeadRepo: jest.Mocked<LeadRepository> = {
+[13:17:11] EDIT /home/claude/workdir/ai-outbound-calling/tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+  - old:     mockLeadRepo = {
+  + new:     mockLeadRepo = {
+[13:17:15] TaskUpdate {"taskId":"6","status":"completed"}
+[13:17:15] TaskUpdate {"taskId":"7","status":"in_progress"}
+[13:17:23] READ /home/claude/workdir/ai-outbound-calling/backend/src/config/index.ts
+[13:18:32] WRITE /home/claude/workdir/ai-outbound-calling/backend/public/dashboard.html (403 lines)
+[13:18:38] READ /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/dashboard/dashboard-controller.ts
+[13:18:44] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/dashboard/dashboard-controller.ts
+  - old: export class DashboardController {
+  + new: export class DashboardController {
+[13:18:48] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/dashboard/dashboard-controller.ts
+  - old:     reply.status(HTTP_STATUS.OK).send({
+  + new:     reply.status(HTTP_STATUS.OK).send({
+[13:18:55] EDIT /home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+  - old: export function createDashboardController(): DashboardController | null {
+  + new: export function createDashboardController(): DashboardController | null {
+[13:19:01] EDIT /home/claude/workdir/ai-outbound-calling/backend/public/dashboard.html
+  - old:       if (isRunning || isPaused) {
+  + new:       if (d.spreadsheetUrl) {
+[13:19:33] TaskUpdate {"taskId":"7","status":"completed"}
+[13:19:33] TaskUpdate {"taskId":"8","status":"in_progress"}
+[13:20:01] WRITE /home/claude/workdir/ai-outbound-calling/tests/unit/dashboard/dashboard-usecase.test.ts (152 lines)
+[13:20:20] WRITE /home/claude/workdir/ai-outbound-calling/tests/integration/dashboard-api.test.ts (142 lines)
+[13:21:24] WRITE /home/claude/workdir/ai-outbound-calling/playwright.config.ts (18 lines)
+[13:21:59] WRITE /home/claude/workdir/ai-outbound-calling/tests/e2e/dashboard.spec.ts (242 lines)
+[13:22:37] WRITE /home/claude/workdir/ai-outbound-calling/tests/e2e/serve-dashboard.ts (22 lines)
+[13:22:43] EDIT /home/claude/workdir/ai-outbound-calling/playwright.config.ts
+  - old: import { defineConfig } from "@playwright/test";
+  + new: import { defineConfig } from "@playwright/test";
+[13:23:13] TaskUpdate {"taskId":"8","status":"completed"}

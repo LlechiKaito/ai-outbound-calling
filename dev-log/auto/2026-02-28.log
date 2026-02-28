@@ -1506,3 +1506,412 @@ EOF
  create mode 100644 backend/src/domain/value-objects/call-history/call-result.ts
  create mode 100644 backend/src/domain/value-objects/call/call-sid.ts
 ... (102 lines total, truncated)
+──────────────────────────────────────
+[13:12:05] $ git add README.md dev-log/ && git commit -m "$(cat <<'EOF'
+docs(orchestrator): update README with setup and orchestrator usage
+
+Add comprehensive documentation including setup instructions,
+environment variables, API reference, spreadsheet preparation guide,
+phone number format handling, and orchestrator usage examples.
+
+Refs #4
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+EOF
+)"
+[feature/#4-auto-analyze-and-save 07d553e] docs(orchestrator): update README with setup and orchestrator usage
+ 135 files changed, 97368 insertions(+)
+ create mode 100644 dev-log/auto/2026-02-25-tools.log
+ create mode 100644 dev-log/auto/2026-02-25.log
+ create mode 100644 dev-log/auto/2026-02-26-tools.log
+ create mode 100644 dev-log/auto/2026-02-26.log
+ create mode 100644 dev-log/auto/2026-02-28-tools.log
+ create mode 100644 dev-log/auto/2026-02-28.log
+ create mode 100644 dev-log/sessions/2026-02-25_13-17-42.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-21-28.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-22-34.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-31-52.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-35-25.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-42-25.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-43-53.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-44-17.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-47-16.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-49-26.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-51-17.md
+ create mode 100644 dev-log/sessions/2026-02-25_13-57-53.md
+ create mode 100644 dev-log/sessions/2026-02-25_14-38-57.md
+ create mode 100644 dev-log/sessions/2026-02-25_14-41-52.md
+ create mode 100644 dev-log/sessions/2026-02-25_14-53-29.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-00-18.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-07-18.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-12-07.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-15-43.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-16-30.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-20-52.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-21-54.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-23-03.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-35-27.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-38-03.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-38-17.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-38-40.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-39-33.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-39-52.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-42-10.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-42-47.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-43-31.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-43-53.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-44-11.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-45-52.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-49-10.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-49-37.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-50-39.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-53-16.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-54-09.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-55-50.md
+ create mode 100644 dev-log/sessions/2026-02-25_15-57-50.md
+... (136 lines total, truncated)
+──────────────────────────────────────
+[13:12:11] $ git push origin feature/#4-auto-analyze-and-save
+remote: 
+remote: Create a pull request for 'feature/#4-auto-analyze-and-save' on GitHub by visiting:        
+remote:      https://github.com/LlechiKaito/ai-outbound-calling/pull/new/feature/%234-auto-analyze-and-save        
+remote: 
+To https://github.com/LlechiKaito/ai-outbound-calling.git
+ * [new branch]      feature/#4-auto-analyze-and-save -> feature/#4-auto-analyze-and-save
+──────────────────────────────────────
+[13:12:24] $ find /home/claude/workdir/ai-outbound-calling -type f -name "*.ts" -o -name "*.js" | grep -E "(route|controller|server|container)" | head -30
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/server.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/server.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/container/index.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/container/index.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/controllers/analysis/analysis-controller.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/controllers/analysis/analysis-controller.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/controllers/call-history/call-history-controller.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/controllers/call-history/call-history-controller.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/controllers/call/call-controller.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/controllers/call/call-controller.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/health-routes.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/analysis/analysis-routes.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/analysis/analysis-routes.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/call-history/call-history-routes.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/call-history/call-history-routes.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/health-routes.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/call/call-routes.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/presentation/routes/call/call-routes.js
+/home/claude/workdir/ai-outbound-calling/node_modules/@types/node/web-globals/abortcontroller.d.ts
+/home/claude/workdir/ai-outbound-calling/node_modules/fast-json-stringify/examples/server.js
+/home/claude/workdir/ai-outbound-calling/node_modules/argparse/lib/action_container.js
+/home/claude/workdir/ai-outbound-calling/node_modules/typescript/lib/tsserverlibrary.js
+/home/claude/workdir/ai-outbound-calling/node_modules/typescript/lib/_tsserver.js
+/home/claude/workdir/ai-outbound-calling/node_modules/typescript/lib/tsserver.js
+/home/claude/workdir/ai-outbound-calling/node_modules/typescript/lib/tsserverlibrary.d.ts
+/home/claude/workdir/ai-outbound-calling/node_modules/color-convert/route.js
+/home/claude/workdir/ai-outbound-calling/node_modules/googleapis/build/src/apis/container/v1.d.ts
+/home/claude/workdir/ai-outbound-calling/node_modules/googleapis/build/src/apis/container/v1.js
+/home/claude/workdir/ai-outbound-calling/node_modules/googleapis/build/src/apis/container/index.js
+/home/claude/workdir/ai-outbound-calling/node_modules/googleapis/build/src/apis/container/v1beta1.js
+──────────────────────────────────────
+[13:12:58] $ find /home/claude/workdir/ai-outbound-calling -type f \( -name "index.html" -o -name "*.html" \) | grep -v node_modules | head -20
+──────────────────────────────────────
+[13:12:59] $ ls -la /home/claude/workdir/ai-outbound-calling/backend/src/presentation/ 2>/dev/null || echo "Dir not found"
+total 0
+drwxr-xr-x  7 claude claude 224 Feb 26 00:42 .
+drwxr-xr-x 11 claude claude 352 Feb 28 10:21 ..
+drwxr-xr-x  7 claude claude 224 Feb 28 10:20 controllers
+drwxr-xr-x  3 claude claude  96 Feb 25 15:21 errors
+drwxr-xr-x  3 claude claude  96 Feb 26 00:42 handlers
+drwxr-xr-x  3 claude claude  96 Feb 25 13:34 middleware
+drwxr-xr-x  8 claude claude 256 Feb 28 10:20 routes
+──────────────────────────────────────
+[13:13:02] $ find /home/claude/workdir/ai-outbound-calling -type d -name "public" -o -type d -name "static" | grep -v node_modules
+──────────────────────────────────────
+[13:13:11] $ find /home/claude/workdir/ai-outbound-calling/backend/src/constants -type f -name "*.ts"
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/google-sheets.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/elevenlabs.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/twiml.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/http.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/orchestrator.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/openai.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/twilio-stream.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/follow-up-email.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/config.ts
+──────────────────────────────────────
+[13:13:15] $ find /home/claude/workdir/ai-outbound-calling/backend/src/presentation -type f -name "*.ts" | head -20
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/middleware/twilio-signature-middleware.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/errors/error-handler.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/follow-up-email/follow-up-email-controller.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/analysis/analysis-controller.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/call-history/call-history-controller.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/call/call-controller.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/orchestrator/orchestrator-controller.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/follow-up-email/follow-up-email-routes.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/health-routes.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/analysis/analysis-routes.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/call-history/call-history-routes.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/call/call-routes.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/orchestrator/orchestrator-routes.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/handlers/media-stream/media-stream-handler.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/presentation/handlers/media-stream/media-stream-types.ts
+──────────────────────────────────────
+[13:13:19] $ find /home/claude/workdir/ai-outbound-calling/backend/src/domain/errors -type f -name "*.ts"
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/call-history-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/orchestrator-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/conversation-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/follow-up-email-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/domain-error.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/call-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/analysis-error-messages.ts
+──────────────────────────────────────
+[13:13:23] $ find /home/claude/workdir/ai-outbound-calling/tests -type f -name "*.ts" 2>/dev/null | head -10
+/home/claude/workdir/ai-outbound-calling/tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/analysis/interest-level.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/analysis/analyze-call-usecase.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/call-history/post-call-processing-usecase.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/call-history/save-call-history-usecase.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/call-history/call-result.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/utils/formatters.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/call/phone-number.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/call/make-call-usecase.test.ts
+/home/claude/workdir/ai-outbound-calling/tests/unit/orchestrator/lead.test.ts
+──────────────────────────────────────
+[13:15:00] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/dashboard /home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/dashboard
+──────────────────────────────────────
+[13:15:30] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/dashboard /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/dashboard
+──────────────────────────────────────
+[13:16:30] $ npm install @fastify/static 2>&1 | tail -5
+105 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[13:16:56] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 tests/unit/orchestrator/ tests/integration/orchestrator-api.test.ts 2>&1 | tail -20
+    [96mtests/integration/orchestrator-api.test.ts[0m:[93m17[0m:[93m9[0m - [91merror[0m[90m TS2322: [0mType '{ fetchAllLeads: jest.Mock<any, any, any>; updateLeadResult: jest.Mock<any, any, any>; }' is not assignable to type 'Mocked<LeadRepository>'.
+      Property 'addLead' is missing in type '{ fetchAllLeads: jest.Mock<any, any, any>; updateLeadResult: jest.Mock<any, any, any>; }' but required in type '{ fetchAllLeads: MockInstance<Promise<Result<Lead[], Error>>, [], unknown>; updateLeadResult: MockInstance<Promise<Result<void, Error>>, [rowIndex: ...], unknown>; addLead: MockInstance<...>; }'.
+
+    [7m17[0m   const mockLeadRepo: jest.Mocked<LeadRepository> = {
+    [7m  [0m [91m        ~~~~~~~~~~~~[0m
+
+      [96mbackend/src/domain/repositories/orchestrator/lead-repository.ts[0m:[93m24[0m:[93m3[0m
+        [7m24[0m   addLead(data: NewLeadData): Promise<Result<void, Error>>;
+        [7m  [0m [96m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        'addLead' is declared here.
+
+PASS tests/unit/orchestrator/orchestrator-state.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/lead.test.ts
+
+Test Suites: 2 failed, 4 passed, 6 total
+Tests:       59 passed, 59 total
+Snapshots:   0 total
+Time:        19.854 s
+Ran all test suites matching tests/unit/orchestrator/|tests/integration/orchestrator-api.test.ts.
+──────────────────────────────────────
+[13:17:20] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/public
+──────────────────────────────────────
+[13:19:29] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts (9.184 s)
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/orchestrator-api.test.ts
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+
+Test Suites: 20 passed, 20 total
+Tests:       155 passed, 155 total
+Snapshots:   0 total
+Time:        21.239 s
+Ran all test suites.
+──────────────────────────────────────
+[13:19:38] $ mkdir -p /home/claude/workdir/ai-outbound-calling/tests/unit/dashboard
+──────────────────────────────────────
+[13:20:26] $ npm install -D @playwright/test 2>&1 | tail -5
+105 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[13:20:44] $ npx playwright install chromium 2>&1 | tail -5
+    at validateDependenciesLinux (/home/claude/workdir/ai-outbound-calling/node_modules/playwright-core/lib/server/registry/dependencies.js:269:9)
+    at async Registry._validateHostRequirements (/home/claude/workdir/ai-outbound-calling/node_modules/playwright-core/lib/server/registry/index.js:991:14)
+    at async Registry._validateHostRequirementsForExecutableIfNeeded (/home/claude/workdir/ai-outbound-calling/node_modules/playwright-core/lib/server/registry/index.js:1113:7)
+    at async Registry.validateHostRequirementsForExecutablesIfNeeded (/home/claude/workdir/ai-outbound-calling/node_modules/playwright-core/lib/server/registry/index.js:1102:7)
+    at async i.<anonymous> (/home/claude/workdir/ai-outbound-calling/node_modules/playwright-core/lib/cli/program.js:174:7)
+──────────────────────────────────────
+[13:21:19] $ npx playwright install --with-deps chromium 2>&1 | tail -10
+Setting up libcups2:arm64 (2.4.2-3+deb12u9) ...
+Setting up libxmu6:arm64 (2:1.1.3-3) ...
+Setting up libglx-mesa0:arm64 (22.3.6-1+deb12u1) ...
+Setting up libglx0:arm64 (1.6.0-1) ...
+Setting up libxaw7:arm64 (2:1.0.14-1) ...
+Setting up libgl1:arm64 (1.6.0-1) ...
+Setting up x11-xkb-utils (7.7+7) ...
+Setting up xserver-common (2:21.1.7-3+deb12u11) ...
+Setting up xvfb (2:21.1.7-3+deb12u11) ...
+Processing triggers for libc-bin (2.36-9+deb12u13) ...
+──────────────────────────────────────
+[13:21:29] $ mkdir -p /home/claude/workdir/ai-outbound-calling/tests/e2e
+──────────────────────────────────────
+[13:22:24] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 tests/unit/dashboard/ tests/integration/dashboard-api.test.ts 2>&1 | tail -30
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/dashboard/dashboard-usecase.test.ts (16.578 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/dashboard-api.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        17.726 s
+Ran all test suites matching tests/unit/dashboard/|tests/integration/dashboard-api.test.ts.
+──────────────────────────────────────
+[13:22:54] $ npx playwright test 2>&1
+Running 10 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:106:7 › Dashboard › should display KPI cards with correct values (316ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:118:7 › Dashboard › should display lead list (253ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:128:7 › Dashboard › should filter leads by pending tab (786ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:140:7 › Dashboard › should display call history (270ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:149:7 › Dashboard › should show orchestrator state as idle (232ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:159:7 › Dashboard › should have Google Sheets link (274ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:166:7 › Dashboard › should toggle add lead form (402ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:179:7 › Dashboard › should submit new lead (850ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:205:7 › Dashboard › should show validation error for empty fields (385ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:216:7 › Dashboard › should update controls when orchestrator is running (313ms)
+
+  10 passed (6.0s)
+──────────────────────────────────────
+[13:23:09] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/integration/call-api.test.ts
+PASS tests/integration/follow-up-email-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/integration/call-history-api.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/orchestrator/orchestrator-state.test.ts
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+PASS tests/unit/orchestrator/business-hours.test.ts
+PASS tests/unit/utils/formatters.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+
+Test Suites: 22 passed, 22 total
+Tests:       171 passed, 171 total
+Snapshots:   0 total
+Time:        9.731 s, estimated 39 s
+Ran all test suites.
+──────────────────────────────────────
+[13:23:17] $ git status
+On branch feature/#4-auto-analyze-and-save
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   backend/src/container/index.ts
+	modified:   backend/src/domain/entities/orchestrator/lead.ts
+	modified:   backend/src/domain/repositories/orchestrator/lead-repository.ts
+	modified:   backend/src/infrastructure/external/google/google-sheets-lead-repository.ts
+	modified:   backend/src/server.ts
+	modified:   dev-log/auto/2026-02-28-tools.log
+	modified:   dev-log/auto/2026-02-28.log
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   tests/integration/orchestrator-api.test.ts
+	modified:   tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	backend/public/
+	backend/src/application/dto/dashboard/
+	backend/src/application/usecases/dashboard/
+	backend/src/presentation/controllers/dashboard/
+	backend/src/presentation/routes/dashboard/
+	playwright.config.ts
+	tests/e2e/
+	tests/integration/dashboard-api.test.ts
+	tests/unit/dashboard/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+──────────────────────────────────────
+[13:23:21] $ git add package.json package-lock.json
+──────────────────────────────────────
+[13:23:26] $ git commit -m "$(cat <<'EOF'
+chore(deps): add @fastify/static and @playwright/test
+
+Static file serving for dashboard and E2E testing framework.
+
+Refs #4
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+EOF
+)"
+[feature/#4-auto-analyze-and-save e7470aa] chore(deps): add @fastify/static and @playwright/test
+ 2 files changed, 280 insertions(+)
+──────────────────────────────────────
+[13:23:32] $ git add backend/src/domain/entities/orchestrator/lead.ts backend/src/domain/repositories/orchestrator/lead-repository.ts backend/src/infrastructure/external/google/google-sheets-lead-repository.ts backend/src/application/dto/dashboard/ backend/src/application/usecases/dashboard/ backend/src/presentation/controllers/dashboard/ backend/src/presentation/routes/dashboard/ backend/src/container/index.ts backend/src/server.ts backend/public/ tests/unit/dashboard/ tests/integration/dashboard-api.test.ts tests/integration/orchestrator-api.test.ts tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts playwright.config.ts tests/e2e/
+──────────────────────────────────────
+[13:23:40] $ git commit -m "$(cat <<'EOF'
+feat(dashboard): add web dashboard with KPIs, lead management, and live status
+
+Implement browser-based dashboard at /dashboard with:
+- KPI cards: total leads, calls, success rate, avg interest, pending, retry limit
+- Lead list with status filter tabs (all/pending/completed/retry limit)
+- Call history timeline sorted by most recent
+- Live orchestrator status with start/pause/resume/stop controls
+- Add new lead form with validation
+- Google Sheets direct link
+
+Backend: dashboard API endpoints (GET kpis/leads/call-history/status, POST leads)
+Frontend: static HTML + Tailwind CSS CDN + vanilla JS
+
+Includes unit tests (DashboardUseCase), integration tests (API endpoints),
+and E2E tests (Playwright - 10 scenarios covering all dashboard features).
+
+Refs #4
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+EOF
+)"
+[feature/#4-auto-analyze-and-save 1803578] feat(dashboard): add web dashboard with KPIs, lead management, and live status
+ 17 files changed, 1392 insertions(+), 2 deletions(-)
+ create mode 100644 backend/public/dashboard.html
+ create mode 100644 backend/src/application/dto/dashboard/dashboard-dto.ts
+ create mode 100644 backend/src/application/usecases/dashboard/dashboard-usecase.ts
+ create mode 100644 backend/src/presentation/controllers/dashboard/dashboard-controller.ts
+ create mode 100644 backend/src/presentation/routes/dashboard/dashboard-routes.ts
+ create mode 100644 playwright.config.ts
+ create mode 100644 tests/e2e/dashboard.spec.ts
+ create mode 100644 tests/e2e/serve-dashboard.ts
+ create mode 100644 tests/integration/dashboard-api.test.ts
+ create mode 100644 tests/unit/dashboard/dashboard-usecase.test.ts
