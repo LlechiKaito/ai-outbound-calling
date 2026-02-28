@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+*.js.map
+*.d.ts
+!jest.config.ts
+coverage/
+test-results/
+playwright-report/
+credentials.json

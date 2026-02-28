@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    env_file:
+      - .env
+    volumes:
+      - ./credentials.json:/app/credentials.json:ro
+    restart: unless-stopped
+
+  test:
+    build:
+      context: .
+      target: test
+    env_file:
+      - .env
+    profiles:
+      - test
