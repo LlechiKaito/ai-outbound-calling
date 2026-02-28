@@ -1,0 +1,1031 @@
+──────────────────────────────────────
+[00:30:25] $ cat node_modules/@elevenlabs/elevenlabs-js/package.json 2>/dev/null | head -5
+{
+    "name": "@elevenlabs/elevenlabs-js",
+    "version": "v2.36.0",
+    "private": false,
+    "repository": "github:elevenlabs/elevenlabs-js",
+──────────────────────────────────────
+[00:30:44] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/
+BaseClient.d.ts
+BaseClient.js
+CONTRIBUTING.md
+Client.d.ts
+Client.js
+LICENSE
+README.md
+api
+assets
+biome.json
+core
+dist
+environments.d.ts
+environments.js
+errors
+exports.d.ts
+exports.js
+index.d.ts
+index.js
+jest.config.mjs
+package.json
+reference.md
+scripts
+serialization
+version.d.ts
+version.js
+wrapper
+──────────────────────────────────────
+[00:30:48] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/
+client
+conversation
+index.d.ts
+index.js
+resources
+──────────────────────────────────────
+[00:30:49] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/wrapper/
+ElevenLabsClient.d.ts
+ElevenLabsClient.js
+index.d.ts
+index.js
+music.d.ts
+music.js
+play.d.ts
+play.js
+realtime
+speechToText.d.ts
+speechToText.js
+stream.d.ts
+stream.js
+utils.d.ts
+utils.js
+webhooks.d.ts
+webhooks.js
+──────────────────────────────────────
+[00:30:52] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/conversation/
+AudioInterface.d.ts
+AudioInterface.js
+ClientTools.d.ts
+ClientTools.js
+Conversation.d.ts
+Conversation.js
+ConversationConfig.d.ts
+ConversationConfig.js
+DefaultAudioInterface.d.ts
+DefaultAudioInterface.js
+__tests__
+events.d.ts
+events.js
+index.d.ts
+index.js
+interfaces
+mocks
+──────────────────────────────────────
+[00:30:52] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/wrapper/realtime/
+connection.d.ts
+connection.js
+index.d.ts
+index.js
+scribe.d.ts
+scribe.js
+──────────────────────────────────────
+[00:31:03] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/conversation/interfaces/
+ConversationClient.d.ts
+ConversationClient.js
+WebSocketInterface.d.ts
+WebSocketInterface.js
+──────────────────────────────────────
+[00:31:17] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/client/
+Client.d.ts
+Client.js
+index.d.ts
+index.js
+requests
+──────────────────────────────────────
+[00:31:23] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/resources/conversations/
+client
+index.d.ts
+index.js
+resources
+types
+──────────────────────────────────────
+[00:31:23] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/resources/
+agents
+analytics
+batchCalls
+conversations
+dashboard
+index.d.ts
+index.js
+knowledgeBase
+llmUsage
+mcpServers
+phoneNumbers
+secrets
+settings
+sipTrunk
+tests
+tools
+twilio
+users
+whatsapp
+whatsappAccounts
+──────────────────────────────────────
+[00:31:26] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/resources/conversations/client/
+Client.d.ts
+Client.js
+index.d.ts
+index.js
+requests
+──────────────────────────────────────
+[00:31:48] $ ls /home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/resources/conversations/client/requests/
+ConversationsGetSignedUrlRequest.d.ts
+ConversationsGetSignedUrlRequest.js
+ConversationsGetWebrtcTokenRequest.d.ts
+ConversationsGetWebrtcTokenRequest.js
+ConversationsListRequest.d.ts
+ConversationsListRequest.js
+index.d.ts
+index.js
+──────────────────────────────────────
+[00:36:49] $ curl -sL https://raw.githubusercontent.com/louisjoecodes/elevenlabs-twilio-i-o/refs/heads/main/outbound-calls.js 2>/dev/null | head -200
+import WebSocket from "ws";
+import Twilio from "twilio";
+
+export function registerOutboundRoutes(fastify) {
+  // Check for required environment variables
+  const { 
+    ELEVENLABS_API_KEY, 
+    ELEVENLABS_AGENT_ID,
+    TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN,
+    TWILIO_PHONE_NUMBER
+  } = process.env;
+
+  if (!ELEVENLABS_API_KEY || !ELEVENLABS_AGENT_ID || !TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
+    console.error("Missing required environment variables");
+    throw new Error("Missing required environment variables");
+  }
+
+  // Initialize Twilio client
+  const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+
+  // Helper function to get signed URL for authenticated conversations
+  async function getSignedUrl() {
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${ELEVENLABS_AGENT_ID}`,
+        {
+          method: 'GET',
+          headers: {
+            'xi-api-key': ELEVENLABS_API_KEY
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to get signed URL: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.signed_url;
+    } catch (error) {
+      console.error("Error getting signed URL:", error);
+      throw error;
+    }
+  }
+
+  // Route to initiate outbound calls
+  fastify.post("/outbound-call", async (request, reply) => {
+    const { number, prompt } = request.body;
+
+... (199 lines total, truncated)
+──────────────────────────────────────
+[00:36:50] $ curl -sL https://raw.githubusercontent.com/louisjoecodes/elevenlabs-twilio-i-o/refs/heads/main/inbound-calls.js 2>/dev/null | head -200
+import WebSocket from "ws";
+
+export function registerInboundRoutes(fastify) {
+  // Check for the required environment variables
+  const { ELEVENLABS_API_KEY, ELEVENLABS_AGENT_ID } = process.env;
+
+  if (!ELEVENLABS_API_KEY || !ELEVENLABS_AGENT_ID) {
+    console.error("Missing required environment variables");
+    throw new Error("Missing ELEVENLABS_API_KEY or ELEVENLABS_AGENT_ID");
+  }
+
+  // Helper function to get signed URL for authenticated conversations
+  async function getSignedUrl() {
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${ELEVENLABS_AGENT_ID}`,
+        {
+          method: 'GET',
+          headers: {
+            'xi-api-key': ELEVENLABS_API_KEY
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to get signed URL: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.signed_url;
+    } catch (error) {
+      console.error("Error getting signed URL:", error);
+      throw error;
+    }
+  }
+
+  // Route to handle incoming calls from Twilio
+  fastify.all("/incoming-call-eleven", async (request, reply) => {
+    const twimlResponse = `<?xml version="1.0" encoding="UTF-8"?>
+      <Response>
+        <Connect>
+          <Stream url="wss://${request.headers.host}/media-stream" />
+        </Connect>
+      </Response>`;
+
+    reply.type("text/xml").send(twimlResponse);
+  });
+
+  // WebSocket route for handling media streams from Twilio
+  fastify.register(async (fastifyInstance) => {
+... (180 lines total, truncated)
+──────────────────────────────────────
+[00:36:54] $ curl -sL https://raw.githubusercontent.com/louisjoecodes/elevenlabs-twilio-i-o/refs/heads/main/outbound-calls.js 2>/dev/null | tail -100
+                        }
+                      };
+                      ws.send(JSON.stringify(audioData));
+                    }
+                  } else {
+                    console.log("[ElevenLabs] Received audio but no StreamSid yet");
+                  }
+                  break;
+
+                case "interruption":
+                  if (streamSid) {
+                    ws.send(JSON.stringify({ 
+                      event: "clear",
+                      streamSid 
+                    }));
+                  }
+                  break;
+
+                case "ping":
+                  if (message.ping_event?.event_id) {
+                    elevenLabsWs.send(JSON.stringify({
+                      type: "pong",
+                      event_id: message.ping_event.event_id
+                    }));
+                  }
+                  break;
+
+                default:
+                  console.log(`[ElevenLabs] Unhandled message type: ${message.type}`);
+              }
+            } catch (error) {
+              console.error("[ElevenLabs] Error processing message:", error);
+            }
+          });
+
+          elevenLabsWs.on("error", (error) => {
+            console.error("[ElevenLabs] WebSocket error:", error);
+          });
+
+          elevenLabsWs.on("close", () => {
+            console.log("[ElevenLabs] Disconnected");
+          });
+
+        } catch (error) {
+          console.error("[ElevenLabs] Setup error:", error);
+        }
+      };
+
+      // Set up ElevenLabs connection
+      setupElevenLabs();
+... (100 lines total, truncated)
+──────────────────────────────────────
+[00:37:21] $ ls /home/claude/workdir/node_modules/ws/package.json 2>/dev/null && echo "ws available" || echo "ws not available"
+/home/claude/workdir/node_modules/ws/package.json
+ws available
+──────────────────────────────────────
+[00:37:25] $ ls /home/claude/workdir/docs/ 2>/dev/null || echo "docs dir not found"
+docs dir not found
+──────────────────────────────────────
+[00:37:29] $ ls /home/claude/.claude/docs/ 2>/dev/null || echo "not found"
+not found
+──────────────────────────────────────
+[00:37:33] $ git remote get-url origin
+https://github.com/LlechiKaito/ai-outbound-calling.git
+──────────────────────────────────────
+[00:37:51] $ git checkout -b feature/#1-media-stream-bridge develop
+Switched to a new branch 'feature/#1-media-stream-bridge'
+M	README.md
+──────────────────────────────────────
+[00:37:56] $ npm install ws && npm install --save-dev @types/ws
+up to date, audited 495 packages in 755ms
+
+97 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+added 1 package, and audited 496 packages in 527ms
+
+97 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[00:42:31] $ mkdir -p /home/claude/workdir/backend/src/infrastructure/external/elevenlabs
+──────────────────────────────────────
+[00:42:39] $ mkdir -p /home/claude/workdir/backend/src/presentation/handlers/media-stream
+──────────────────────────────────────
+[00:44:09] $ npx tsc --noEmit 2>&1
+──────────────────────────────────────
+[00:44:38] $ mkdir -p /home/claude/workdir/tests/unit/media-stream
+──────────────────────────────────────
+[00:48:09] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/make-call-usecase.test.ts (5.071 s)
+PASS tests/unit/call/phone-number.test.ts (5.088 s)
+PASS tests/integration/call-api.test.ts (5.646 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        6.763 s
+Ran all test suites.
+──────────────────────────────────────
+[00:48:15] $ npx tsc --noEmit 2>&1
+──────────────────────────────────────
+[00:51:52] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/integration/call-api.test.ts (5.197 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        5.67 s, estimated 6 s
+Ran all test suites.
+──────────────────────────────────────
+[00:54:17] $ mkdir -p /home/claude/workdir/backend/src/domain/repositories/conversation
+──────────────────────────────────────
+[00:55:59] $ npx tsc --noEmit 2>&1 && npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (6.82 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        7.303 s
+Ran all test suites.
+──────────────────────────────────────
+[01:05:21] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/phone-number.test.ts (5.23 s)
+PASS tests/unit/call/make-call-usecase.test.ts (5.256 s)
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (6.843 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        7.348 s
+Ran all test suites.
+──────────────────────────────────────
+[01:05:47] $ docker compose up -d 2>&1
+ Image workdir-app Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 503B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 304B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22-slim
+#3 DONE 2.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 103B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 293.33kB 0.0s done
+#5 DONE 0.0s
+
+#6 [base 1/6] FROM docker.io/library/node:22-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94
+#6 resolve docker.io/library/node:22-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94 done
+#6 sha256:65614da1506aaac2ab7e3f898c006e029e2e84d1e9e265aa8a8691999c811abd 0B / 1.71MB 0.2s
+#6 sha256:c5491356fc5efa6354743577e97da5670d969ce1e1676f1489484e2e57fcad28 0B / 448B 0.3s
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 0B / 49.61MB 0.2s
+#6 sha256:24c00b700caca8ca4802abc3e1fc2ba1083f26bf28721b36aa8442c7fc68f7d5 0B / 3.31kB 0.2s
+#6 sha256:c5491356fc5efa6354743577e97da5670d969ce1e1676f1489484e2e57fcad28 448B / 448B 0.5s done
+#6 sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 0B / 28.12MB 0.2s
+#6 sha256:65614da1506aaac2ab7e3f898c006e029e2e84d1e9e265aa8a8691999c811abd 1.71MB / 1.71MB 0.8s done
+#6 sha256:24c00b700caca8ca4802abc3e1fc2ba1083f26bf28721b36aa8442c7fc68f7d5 3.31kB / 3.31kB 0.8s done
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 6.29MB / 49.61MB 1.1s
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 11.53MB / 49.61MB 1.2s
+#6 sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 2.10MB / 28.12MB 0.6s
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 16.78MB / 49.61MB 1.4s
+#6 sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 7.34MB / 28.12MB 0.8s
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 22.02MB / 49.61MB 1.5s
+#6 sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 12.58MB / 28.12MB 0.9s
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 27.26MB / 49.61MB 1.7s
+#6 sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 17.83MB / 28.12MB 1.1s
+#6 sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 28.12MB / 28.12MB 1.3s done
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 38.80MB / 49.61MB 2.0s
+#6 extracting sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 45.09MB / 49.61MB 2.1s
+#6 extracting sha256:eb04ef52de3a23999fcda632f100324a4d1dbebd588b4df190c4a172bb88c603 0.4s done
+#6 sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 49.61MB / 49.61MB 2.2s done
+#6 extracting sha256:24c00b700caca8ca4802abc3e1fc2ba1083f26bf28721b36aa8442c7fc68f7d5 done
+#6 extracting sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a
+#6 extracting sha256:e0efe4312ea5f2c4a62515aaae9d4b5e534498ac14d69896dce3becdbe7aa71a 0.6s done
+#6 DONE 2.9s
+
+... (109 lines total, truncated)
+──────────────────────────────────────
+[01:05:51] $ docker compose logs --tail=20 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+app-1  | {"level":30,"time":1772067948577,"pid":30,"hostname":"7e55b9b7902e","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772067948577,"pid":30,"hostname":"7e55b9b7902e","msg":"Server listening at http://172.19.0.2:3000"}
+──────────────────────────────────────
+[01:05:55] $ docker compose down 2>&1
+ Container workdir-app-1 Stopping 
+ Container workdir-app-1 Stopped 
+ Container workdir-app-1 Removing 
+ Container workdir-app-1 Removed 
+ Network workdir_default Removing 
+ Network workdir_default Removed
+──────────────────────────────────────
+[01:18:09] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/phone-number.test.ts (5.912 s)
+PASS tests/unit/call/make-call-usecase.test.ts (5.951 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (8.1 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        8.618 s
+Ran all test suites.
+──────────────────────────────────────
+[01:21:28] $ docker compose logs --tail=30 2>&1
+──────────────────────────────────────
+[01:21:31] $ docker compose ps 2>&1
+NAME      IMAGE     COMMAND   SERVICE   CREATED   STATUS    PORTS
+──────────────────────────────────────
+[01:21:35] $ grep -c "ELEVENLABS_LANGUAGE\|ELEVENLABS_FIRST_MESSAGE" /home/claude/workdir/.env 2>&1
+2
+──────────────────────────────────────
+[01:21:38] $ grep "ELEVENLABS" /home/claude/workdir/.env 2>&1
+ELEVENLABS_API_KEY=***REDACTED***
+ELEVENLABS_AGENT_ID=agent_3901kjbk9j6ffwbrn8eqfz012fgk
+ELEVENLABS_LANGUAGE=ja
+ELEVENLABS_FIRST_MESSAGE=こんにちは、お電話ありがとうございます。ご用件をお伺いします。
+ELEVENLABS_API_KEY=***REDACTED***
+──────────────────────────────────────
+[01:22:02] $ docker compose up -d --build 2>&1
+ Image workdir-app Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 503B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 304B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22-slim
+#3 DONE 1.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 103B done
+#4 DONE 0.0s
+
+#5 [base 1/6] FROM docker.io/library/node:22-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94
+#5 resolve docker.io/library/node:22-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 12.95kB 0.0s done
+#6 DONE 0.0s
+
+#7 [base 2/6] WORKDIR /app
+#7 CACHED
+
+#8 [base 3/6] COPY package.json package-lock.json ./
+#8 CACHED
+
+#9 [base 4/6] RUN npm ci
+#9 CACHED
+
+#10 [base 5/6] COPY tsconfig.json ./
+#10 CACHED
+
+#11 [base 6/6] COPY backend/ ./backend/
+#11 DONE 0.0s
+
+#12 exporting to image
+#12 exporting layers 0.0s done
+#12 exporting manifest sha256:407cbbdd404235af203e792aec8fa39d3681ebf5c3235fbc0be1fe5e6ebf49e7 done
+#12 exporting config sha256:68f0e897393860a1a4306b37062ca3060c33548a387531d1949ab55f609d9670 done
+#12 exporting attestation manifest sha256:1f03f275ad32d92d2c02ec8aa528dc4856eee89a7f975dd081c790c7ab453dde done
+#12 exporting manifest list sha256:057dd8a5c64b17923f2a6fad6ccc698fe63b5771f0a63a495524c251eb1c3db6 done
+#12 naming to docker.io/library/workdir-app:latest done
+#12 unpacking to docker.io/library/workdir-app:latest 0.0s done
+#12 DONE 0.1s
+
+#13 resolving provenance for metadata file
+... (58 lines total, truncated)
+──────────────────────────────────────
+[01:22:06] $ docker compose logs --tail=10 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://172.19.0.2:3000"}
+──────────────────────────────────────
+[01:25:09] $ docker compose exec app env | grep ELEVENLABS 2>&1
+ELEVENLABS_LANGUAGE=ja
+ELEVENLABS_AGENT_ID=agent_3901kjbk9j6ffwbrn8eqfz012fgk
+ELEVENLABS_API_KEY=***REDACTED***
+ELEVENLABS_FIRST_MESSAGE=こんにちは、お電話ありがとうございます。ご用件をお伺いします。
+──────────────────────────────────────
+[01:25:15] $ docker compose logs --tail=50 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://172.19.0.2:3000"}
+──────────────────────────────────────
+[01:25:22] $ docker compose exec app wget -q -O- --post-data='{"to":"+819012345678"}' --header='Content-Type: application/json' http://localhost:3000/api/make-call 2>&1 || echo "---" && docker compose logs --tail=30 2>&1
+OCI runtime exec failed: exec failed: unable to start container process: exec: "wget": executable file not found in $PATH
+---
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://172.19.0.2:3000"}
+──────────────────────────────────────
+[01:25:28] $ docker compose exec app node -e "
+const http = require('http');
+const data = JSON.stringify({to: '+819012345678'});
+const req = http.request({hostname:'localhost',port:3000,path:'/api/make-call',method:'POST',headers:{'Content-Type':'application/json','Content-Length':data.length}}, res => {
+  let body = '';
+  res.on('data', c => body += c);
+  res.on('end', () => console.log(res.statusCode, body));
+});
+req.write(data);
+req.end();
+" 2>&1
+500 {"isSuccess":false,"message":"Internal server error","code":"INTERNAL_ERROR"}
+──────────────────────────────────────
+[01:25:32] $ docker compose logs --tail=20 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772068922992,"pid":30,"hostname":"3c07de154108","msg":"Server listening at http://172.19.0.2:3000"}
+app-1  | {"level":30,"time":1772069127645,"pid":30,"hostname":"3c07de154108","reqId":"req-1","req":{"method":"POST","url":"/api/make-call","host":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":35510},"msg":"incoming request"}
+app-1  | {"level":50,"time":1772069128339,"pid":30,"hostname":"3c07de154108","reqId":"req-1","err":{"type":"RestException","message":"The number +819012345678 is unverified. Trial accounts may only make calls to verified numbers.","stack":"Error: The number +819012345678 is unverified. Trial accounts may only make calls to verified numbers.\n    at V2010.throwException (/app/node_modules/twilio/lib/base/Version.js:50:15)\n    at /app/node_modules/twilio/lib/base/Version.js:108:22\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async TwilioCallRepository.initiateCall (/app/backend/src/infrastructure/repositories/call/twilio-call-repository.ts:18:26)\n    at async MakeCallUseCase.execute (/app/backend/src/application/usecases/call/make-call-usecase.ts:19:20)\n    at async CallController.makeCall (/app/backend/src/presentation/controllers/call/call-controller.ts:18:20)","status":400,"code":21219,"moreInfo":"https://www.twilio.com/docs/errors/21219"},"msg":"Unhandled error"}
+app-1  | {"level":30,"time":1772069128345,"pid":30,"hostname":"3c07de154108","reqId":"req-1","res":{"statusCode":500},"responseTime":698.916541993618,"msg":"request completed"}
+──────────────────────────────────────
+[01:35:49] $ docker compose exec app node -e "
+const https = require('https');
+const req = https.request('https://bureaucratically-parliamentary-shelley.ngrok-free.dev/api/twiml', {method:'POST'}, res => {
+  let body = '';
+  res.on('data', c => body += c);
+  res.on('end', () => { console.log('status:', res.statusCode); console.log('body:', body.substring(0, 500)); });
+});
+req.on('error', e => console.log('error:', e.message));
+req.end();
+" 2>&1
+status: 200
+body: <?xml version="1.0" encoding="UTF-8"?><Response><Connect><Stream url="wss://bureaucratically-parliamentary-shelley.ngrok-free.dev/api/media-stream"/></Connect></Response>
+──────────────────────────────────────
+[01:38:38] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/make-call-usecase.test.ts (5.237 s)
+PASS tests/unit/call/phone-number.test.ts (5.254 s)
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (7.133 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        7.66 s, estimated 9 s
+Ran all test suites.
+──────────────────────────────────────
+[01:42:43] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/phone-number.test.ts (5.4 s)
+PASS tests/unit/call/make-call-usecase.test.ts (5.427 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (7.707 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        8.25 s
+Ran all test suites.
+──────────────────────────────────────
+[01:46:39] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts (5.008 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (6.696 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        7.175 s, estimated 8 s
+Ran all test suites.
+──────────────────────────────────────
+[10:26:07] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/integration/call-api.test.ts (5.36 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts (5.994 s)
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        6.444 s, estimated 8 s
+Ran all test suites.
+──────────────────────────────────────
+[11:50:50] $ git remote -v 2>&1
+origin	https://github.com/LlechiKaito/ai-outbound-calling.git (fetch)
+origin	https://github.com/LlechiKaito/ai-outbound-calling.git (push)
+──────────────────────────────────────
+[11:50:51] $ cat /home/claude/workdir/package.json | grep -A5 '"dependencies"' 2>&1
+  "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.36.0",
+    "@fastify/websocket": "^11.2.0",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.7.4",
+    "googleapis": "^171.4.0",
+──────────────────────────────────────
+[11:50:55] $ cat /home/claude/workdir/package.json | grep "openai" 2>&1
+    "openai": "^6.25.0",
+──────────────────────────────────────
+[11:51:04] $ find /home/claude/workdir -type f -name "*.md" | grep -E "(issue|template)" | head -20
+/home/claude/workdir/node_modules/@types/babel__template/README.md
+/home/claude/workdir/node_modules/url-template/README.md
+/home/claude/workdir/node_modules/url-template/uritemplate-test/README.md
+/home/claude/workdir/node_modules/@babel/template/README.md
+──────────────────────────────────────
+[11:51:06] $ ls -la /home/claude/workdir/docs/ 2>/dev/null || echo "docs directory not found"
+docs directory not found
+──────────────────────────────────────
+[11:51:08] $ find /home/claude/workdir/backend -type d | head -20
+/home/claude/workdir/backend
+/home/claude/workdir/backend/src
+/home/claude/workdir/backend/src/config
+/home/claude/workdir/backend/src/constants
+/home/claude/workdir/backend/src/utils
+/home/claude/workdir/backend/src/container
+/home/claude/workdir/backend/src/application
+/home/claude/workdir/backend/src/application/dto
+/home/claude/workdir/backend/src/application/dto/call
+/home/claude/workdir/backend/src/application/errors
+/home/claude/workdir/backend/src/application/usecases
+/home/claude/workdir/backend/src/application/usecases/call
+/home/claude/workdir/backend/src/application/services
+/home/claude/workdir/backend/src/infrastructure
+/home/claude/workdir/backend/src/infrastructure/repositories
+/home/claude/workdir/backend/src/infrastructure/repositories/call
+/home/claude/workdir/backend/src/infrastructure/mappers
+/home/claude/workdir/backend/src/infrastructure/mappers/call
+/home/claude/workdir/backend/src/infrastructure/external
+/home/claude/workdir/backend/src/infrastructure/external/elevenlabs
+──────────────────────────────────────
+[11:51:09] $ find /home/claude/workdir/backend/src/domain -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/domain/commons/result.ts
+/home/claude/workdir/backend/src/domain/entities/call/call.ts
+/home/claude/workdir/backend/src/domain/errors/call-error-messages.ts
+/home/claude/workdir/backend/src/domain/errors/domain-error.ts
+/home/claude/workdir/backend/src/domain/repositories/call/call-repository.ts
+/home/claude/workdir/backend/src/domain/repositories/conversation/conversation-repository.ts
+/home/claude/workdir/backend/src/domain/value-objects/call/call-sid.ts
+/home/claude/workdir/backend/src/domain/value-objects/call/phone-number.ts
+──────────────────────────────────────
+[11:51:11] $ find /home/claude/workdir/backend/src/application -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/application/dto/call/make-call-dto.ts
+/home/claude/workdir/backend/src/application/errors/application-error.ts
+/home/claude/workdir/backend/src/application/usecases/call/make-call-usecase.ts
+──────────────────────────────────────
+[11:51:12] $ find /home/claude/workdir/backend/src/infrastructure -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/infrastructure/external/elevenlabs/elevenlabs-signed-url-client.ts
+/home/claude/workdir/backend/src/infrastructure/mappers/call/call-mapper.ts
+/home/claude/workdir/backend/src/infrastructure/repositories/call/twilio-call-repository.ts
+──────────────────────────────────────
+[11:51:14] $ find /home/claude/workdir/backend/src/presentation -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/presentation/controllers/call/call-controller.ts
+/home/claude/workdir/backend/src/presentation/errors/error-handler.ts
+/home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts
+/home/claude/workdir/backend/src/presentation/middleware/twilio-signature-middleware.ts
+/home/claude/workdir/backend/src/presentation/routes/call/call-routes.ts
+/home/claude/workdir/backend/src/presentation/routes/health-routes.ts
+──────────────────────────────────────
+[11:51:15] $ find /home/claude/workdir/backend/src/constants -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/constants/elevenlabs.ts
+/home/claude/workdir/backend/src/constants/error-messages.ts
+/home/claude/workdir/backend/src/constants/http.ts
+/home/claude/workdir/backend/src/constants/twiml.ts
+──────────────────────────────────────
+[11:51:16] $ find /home/claude/workdir/backend/src -maxdepth 1 -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/server.ts
+──────────────────────────────────────
+[11:51:27] $ find /home/claude/workdir/backend/src/container -type f 2>/dev/null | sort
+/home/claude/workdir/backend/src/container/index.ts
+──────────────────────────────────────
+[11:51:35] $ find /home/claude/workdir -name "tests" -type d 2>/dev/null
+/home/claude/workdir/node_modules/sonic-boom/types/tests
+/home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/dist/serialization/resources/conversationalAi/resources/tests
+/home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/dist/api/resources/conversationalAi/resources/tests
+/home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/serialization/resources/conversationalAi/resources/tests
+/home/claude/workdir/node_modules/@elevenlabs/elevenlabs-js/api/resources/conversationalAi/resources/tests
+/home/claude/workdir/tests
+──────────────────────────────────────
+[11:51:36] $ find /home/claude/workdir/tests -type f 2>/dev/null | sort
+/home/claude/workdir/tests/integration/call-api.test.ts
+/home/claude/workdir/tests/unit/call/make-call-usecase.test.ts
+/home/claude/workdir/tests/unit/call/phone-number.test.ts
+/home/claude/workdir/tests/unit/media-stream/media-stream-handler.test.ts
+──────────────────────────────────────
+[11:52:20] $ git checkout develop && git checkout -b feature/#2-call-analysis 2>&1
+Switched to branch 'develop'
+M	README.md
+Your branch is up to date with 'origin/develop'.
+Switched to a new branch 'feature/#2-call-analysis'
+──────────────────────────────────────
+[11:56:36] $ npx jest --testPathPatterns="tests/unit/analysis" --passWithNoTests 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/analysis/analyze-call-usecase.test.ts (5.638 s)
+PASS tests/unit/analysis/interest-level.test.ts (5.656 s)
+
+Test Suites: 2 passed, 2 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        6.254 s
+Ran all test suites matching tests/unit/analysis.
+──────────────────────────────────────
+[11:57:13] $ npx jest --testPathPatterns="tests/integration/analysis-api" --passWithNoTests 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/analysis-api.test.ts
+  Analysis API
+    POST /api/analyze-call
+      ✓ should return 200 with analysis data when successful (13 ms)
+      ✓ should return 500 when analysis fails (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        3.81 s
+Ran all test suites matching tests/integration/analysis-api.
+──────────────────────────────────────
+[11:57:23] $ npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/integration/call-api.test.ts
+
+Test Suites: 7 passed, 7 total
+Tests:       34 passed, 34 total
+Snapshots:   0 total
+Time:        5.738 s, estimated 11 s
+Ran all test suites.
+──────────────────────────────────────
+[11:57:30] $ npm run build 2>&1
+> ai-outbound-calling@1.0.0 build
+> tsc && tsc-alias
+──────────────────────────────────────
+[12:01:39] $ ls /home/claude/workdir/backend/src/infrastructure/external/openai/
+openai-call-analysis-repository.ts
+──────────────────────────────────────
+[12:02:21] $ npx tsx --tsconfig tsconfig.json scripts/test-call-analysis.ts 2>&1
+[dotenv@17.3.1] injecting env (18) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+=== 通話分析テスト ===
+
+--- トランスクリプト ---
+営業: お忙しいところ恐れ入ります。株式会社ABCの田中と申します。御社のDX推進についてご提案がありまして、お電話させていただきました。
+顧客: はい、どのようなご提案でしょうか？
+営業: 弊社では、業務効率化のためのクラウドソリューションを提供しております。御社のような製造業のお客様に導入いただいた事例では、月間の作業時間を約30%削減できた実績がございます。
+顧客: 30%ですか。それは結構な数字ですね。具体的にはどのような業務が対象になるんですか？
+営業: 主に在庫管理、受発注処理、そして社内の承認フローの自動化です。特に在庫管理では、AIを活用した需要予測も組み込んでおりまして。
+顧客: なるほど、在庫管理はうちも課題なんですよね。今のシステムだと手作業が多くて。
+営業: そうでしたか。もしよろしければ、一度デモをお見せできればと思うのですが、来週あたりご都合いかがでしょうか？
+顧客: 来週ですか…水曜か木曜なら時間取れそうです。
+営業: ありがとうございます。では水曜日の14時はいかがでしょうか？
+顧客: 14時で大丈夫です。オンラインでお願いできますか？
+営業: もちろんです。では水曜14時にオンラインでデモをさせていただきます。事前に資料もお送りしますね。
+顧客: お願いします。楽しみにしています。
+
+--- 分析中... ---
+
+--- 分析結果 ---
+興味度:       4 / 5
+要約:         営業は御社のDX推進に関する提案を行い、クラウドソリューションの導入による業務効率化の実績を紹介。顧客は在庫管理の課題を認識しており、提案に対して興味を示した。デモの日時も決まり、顧客は楽しみにしている様子。
+次のアクション: 水曜日の14時にオンラインデモを実施する。
+──────────────────────────────────────
+[12:08:48] $ npx tsx --tsconfig tsconfig.json scripts/test-call-analysis.ts 2>&1
+[dotenv@17.3.1] injecting env (18) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+=== 通話分析テスト ===
+
+--- トランスクリプト ---
+営業: お忙しいところ恐れ入ります。株式会社ABCの田中と申します。御社のDX推進についてご提案がありまして、お電話させていただきました。
+顧客: はい、どのようなご提案でしょうか？
+営業: 弊社では、業務効率化のためのクラウドソリューションを提供しております。御社のような製造業のお客様に導入いただいた事例では、月間の作業時間を約30%削減できた実績がございます。
+顧客: 30%ですか。それは結構な数字ですね。具体的にはどのような業務が対象になるんですか？
+営業: 主に在庫管理、受発注処理、そして社内の承認フローの自動化です。特に在庫管理では、AIを活用した需要予測も組み込んでおりまして。
+顧客: なるほど、在庫管理はうちも課題なんですよね。今のシステムだと手作業が多くて。
+営業: そうでしたか。もしよろしければ、一度デモをお見せできればと思うのですが、来週あたりご都合いかがでしょうか？
+顧客: 来週ですか…水曜か木曜なら時間取れそうです。
+営業: ありがとうございます。では水曜日の14時はいかがでしょうか？
+顧客: 14時で大丈夫です。オンラインでお願いできますか？
+営業: もちろんです。では水曜14時にオンラインでデモをさせていただきます。事前に資料もお送りしますね。
+顧客: お願いします。楽しみにしています。
+
+--- 分析中... ---
+
+--- 分析結果 ---
+{
+  "interestLevel": 4,
+  "summary": "顧客は営業の提案に対して興味を示しており、導入効果や具体的な提案内容について質問をしています。デモ日程も設定され、前向きに検討している様子が伺えます。",
+  "nextAction": "水曜日の14時にオンラインデモを実施し、事前に資料を送付する"
+}
+──────────────────────────────────────
+[12:13:55] $ ls /home/claude/workdir/docs/ 2>/dev/null || echo "docs/ does not exist"
+docs/ does not exist
+──────────────────────────────────────
+[12:14:12] $ git checkout develop && git checkout -b feature/#3-google-sheets-call-history
+Switched to branch 'develop'
+M	README.md
+Your branch is up to date with 'origin/develop'.
+Switched to a new branch 'feature/#3-google-sheets-call-history'
+──────────────────────────────────────
+[12:16:07] $ npm run build 2>&1
+> ai-outbound-calling@1.0.0 build
+> tsc && tsc-alias
+──────────────────────────────────────
+[12:18:33] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/unit/call-history" --maxWorkers=1 --passWithNoTests 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/save-call-history-usecase.test.ts (16.328 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/call-result.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        16.752 s
+Ran all test suites matching tests/unit/call-history.
+──────────────────────────────────────
+[12:18:55] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/integration/call-history" --maxWorkers=1 --passWithNoTests 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-history-api.test.ts (16.703 s)
+  Call History API
+    POST /api/call-history
+      ✓ should return 201 when save succeeds (19 ms)
+      ✓ should return 500 when repository fails (3 ms)
+      ✓ should return 500 when interest level is invalid (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        16.862 s
+Ran all test suites matching tests/integration/call-history.
+──────────────────────────────────────
+[12:19:22] $ NODE_OPTIONS="--max-old-space-size=4096" npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call-history/save-call-history-usecase.test.ts (11.17 s)
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/integration/call-history-api.test.ts (11.497 s)
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/integration/call-api.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+
+Test Suites: 10 passed, 10 total
+Tests:       50 passed, 50 total
+Snapshots:   0 total
+Time:        12.469 s, estimated 33 s
+Ran all test suites.
+──────────────────────────────────────
+[12:25:05] $ npm run build 2>&1
+> ai-outbound-calling@1.0.0 build
+> tsc && tsc-alias
+──────────────────────────────────────
+[12:25:22] $ NODE_OPTIONS="--max-old-space-size=4096" npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call-history/save-call-history-usecase.test.ts (11.275 s)
+PASS tests/integration/call-history-api.test.ts (11.713 s)
+PASS tests/integration/call-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+
+Test Suites: 10 passed, 10 total
+Tests:       50 passed, 50 total
+Snapshots:   0 total
+Time:        12.71 s
+Ran all test suites.

@@ -1,0 +1,1508 @@
+──────────────────────────────────────
+[01:15:43] $ git checkout develop && git checkout -b feature/#4-auto-analyze-and-save
+Switched to branch 'develop'
+M	README.md
+Your branch is up to date with 'origin/develop'.
+Switched to a new branch 'feature/#4-auto-analyze-and-save'
+──────────────────────────────────────
+[01:17:52] $ npm run build 2>&1
+> ai-outbound-calling@1.0.0 build
+> tsc && tsc-alias
+──────────────────────────────────────
+[01:18:48] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/unit/media-stream|tests/unit/call-history/post-call" --maxWorkers=1 --passWithNoTests 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (14.971 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        15.476 s
+Ran all test suites matching tests/unit/media-stream|tests/unit/call-history/post-call.
+──────────────────────────────────────
+[01:19:15] $ NODE_OPTIONS="--max-old-space-size=4096" npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (11.17 s)
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/integration/call-history-api.test.ts (11.663 s)
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (10.533 s)
+
+Test Suites: 11 passed, 11 total
+Tests:       56 passed, 56 total
+Snapshots:   0 total
+Time:        22.407 s
+Ran all test suites.
+──────────────────────────────────────
+[01:35:00] $ npm run build 2>&1
+> ai-outbound-calling@1.0.0 build
+> tsc && tsc-alias
+──────────────────────────────────────
+[01:35:52] $ NODE_OPTIONS="--max-old-space-size=4096" npm test 2>&1
+> ai-outbound-calling@1.0.0 test
+> jest --passWithNoTests
+
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (13.629 s)
+PASS tests/integration/call-history-api.test.ts (14.333 s)
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts (14.958 s)
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/integration/call-api.test.ts (16.153 s)
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+
+Test Suites: 11 passed, 11 total
+Tests:       56 passed, 56 total
+Snapshots:   0 total
+Time:        30.778 s
+Ran all test suites.
+──────────────────────────────────────
+[02:02:13] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns "post-call-processing|media-stream-handler" 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (23.025 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts (23.065 s)
+
+Test Suites: 2 passed, 2 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        23.766 s
+Ran all test suites matching post-call-processing|media-stream-handler.
+──────────────────────────────────────
+[02:14:46] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns "call-history|media-stream-handler" 2>&1
+PASS tests/unit/media-stream/media-stream-handler.test.ts (13.9 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (25.551 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/call-result.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-history-api.test.ts (12.809 s)
+
+Test Suites: 5 passed, 5 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        27.434 s, estimated 31 s
+Ran all test suites matching call-history|media-stream-handler.
+──────────────────────────────────────
+[02:16:03] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest 2>&1
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (12.947 s)
+PASS tests/integration/call-history-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call/make-call-usecase.test.ts (24.402 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (12.157 s)
+
+Test Suites: 11 passed, 11 total
+Tests:       56 passed, 56 total
+Snapshots:   0 total
+Time:        27.258 s
+Ran all test suites.
+──────────────────────────────────────
+[02:23:47] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns "post-call-processing" 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (16.962 s)
+  PostCallProcessingUseCase
+    ✓ should analyze transcript and save to sheets (3 ms)
+    ✓ should throw when analysis fails (5 ms)
+    ✓ should skip sheets save when repository is null
+    ✓ should throw when sheets save fails (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        17.15 s
+Ran all test suites matching post-call-processing.
+──────────────────────────────────────
+[02:24:09] $ git diff --name-only develop
+README.md
+──────────────────────────────────────
+[02:24:13] $ git diff --name-only HEAD
+README.md
+──────────────────────────────────────
+[02:24:16] $ git status
+On branch feature/#4-auto-analyze-and-save
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   README.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.dockerignore
+	.env.example
+	.gitignore
+	Dockerfile
+	backend/
+	dev-log/
+	docker-compose.yml
+	jest.config.ts
+	package-lock.json
+	package.json
+	scripts/
+	tests/
+	tsconfig.json
+
+no changes added to commit (use "git add" and/or "git commit -a")
+──────────────────────────────────────
+[02:25:58] $ wc -l /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts /home/claude/workdir/backend/src/container/index.ts /home/claude/workdir/backend/src/config/index.ts /home/claude/workdir/backend/src/server.ts
+  291 /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts
+  114 /home/claude/workdir/backend/src/container/index.ts
+   80 /home/claude/workdir/backend/src/config/index.ts
+   52 /home/claude/workdir/backend/src/server.ts
+  537 total
+──────────────────────────────────────
+[02:25:59] $ for f in $(find /home/claude/workdir/backend/src -name "*.ts" -type f); do lines=$(wc -l < "$f"); if [ "$lines" -gt 300 ]; then echo "OVER 300: $f ($lines lines)"; fi; done
+──────────────────────────────────────
+[02:26:00] $ for f in $(find /home/claude/workdir/tests -name "*.ts" -type f); do lines=$(wc -l < "$f"); if [ "$lines" -gt 300 ]; then echo "OVER 300: $f ($lines lines)"; fi; done
+OVER 300: /home/claude/workdir/tests/unit/media-stream/media-stream-handler.test.ts (304 lines)
+──────────────────────────────────────
+[02:26:12] $ python3 -c "
+import re, sys, os
+
+def check_function_length(filepath):
+    violations = []
+    with open(filepath, 'r') as f:
+        lines = f.readlines()
+    
+    func_pattern = re.compile(r'(async\s+)?(?:function\s+\w+|(?:\w+\s*(?::\s*\w+)?\s*\()|(?:(?:private|public|protected|static)\s+(?:async\s+)?(?:readonly\s+)?\w+\s*\())')
+    
+    # Simple brace counting approach
+    i = 0
+    while i < len(lines):
+        line = lines[i].rstrip()
+        stripped = line.strip()
+        
+        # Detect function/method start  
+        is_func = False
+        if re.match(r'\s*(async\s+)?function\s+\w+', line):
+            is_func = True
+        elif re.match(r'\s*(private|public|protected|static)\s+(readonly\s+)?(async\s+)?\w+\s*\(', line):
+            is_func = True
+        elif re.match(r'\s*async\s+\w+\s*\(', line):
+            is_func = True
+            
+        if is_func:
+            # Find opening brace
+            start = i
+            brace_count = 0
+            found_open = False
+            j = i
+            while j < len(lines):
+                for ch in lines[j]:
+                    if ch == '{':
+                        brace_count += 1
+                        found_open = True
+                    elif ch == '}':
+                        brace_count -= 1
+                if found_open and brace_count == 0:
+                    func_lines = j - start + 1
+                    if func_lines > 30:
+                        violations.append((start + 1, j + 1, func_lines, stripped[:60]))
+                    break
+                j += 1
+        i += 1
+    return violations
+
+for root, dirs, files in os.walk('backend/src'):
+    dirs[:] = [d for d in dirs if d != 'node_modules']
+    for fname in files:
+        if fname.endswith('.ts'):
+            fpath = os.path.join(root, fname)
+            violations = check_function_length(fpath)
+            for start, end, length, desc in violations:
+                print(f'{fpath}:{start}-{end} ({length} lines): {desc}')
+"
+backend/src/application/usecases/call-history/post-call-processing-usecase.ts:13-43 (31 lines): async execute(dto: PostCallProcessingDto): Promise<void> {
+backend/src/presentation/handlers/media-stream/media-stream-handler.ts:68-162 (95 lines): async handle(
+backend/src/presentation/handlers/media-stream/media-stream-handler.ts:164-195 (32 lines): private handleTwilioMessage(
+backend/src/presentation/handlers/media-stream/media-stream-handler.ts:197-272 (76 lines): private handleElevenLabsMessage(
+──────────────────────────────────────
+[02:26:40] $ ls -la /home/claude/workdir/tests/
+total 0
+drwxr-xr-x  5 claude claude 160 Feb 25 13:22 .
+drwxr-xr-x 21 claude claude 672 Feb 28 02:00 ..
+drwxr-xr-x  5 claude claude 160 Feb 28 02:14 integration
+drwxr-xr-x  2 claude claude  64 Feb 25 13:16 mocks
+drwxr-xr-x  6 claude claude 192 Feb 26 12:16 unit
+──────────────────────────────────────
+[02:26:41] $ ls -la /home/claude/workdir/tests/unit/ /home/claude/workdir/tests/integration/
+/home/claude/workdir/tests/integration/:
+total 12
+drwxr-xr-x 5 claude claude  160 Feb 28 02:14 .
+drwxr-xr-x 5 claude claude  160 Feb 25 13:22 ..
+-rw-r--r-- 1 claude claude 2840 Feb 26 11:57 analysis-api.test.ts
+-rw-r--r-- 1 claude claude 3665 Feb 26 01:42 call-api.test.ts
+-rw-r--r-- 1 claude claude 2812 Feb 28 02:14 call-history-api.test.ts
+
+/home/claude/workdir/tests/unit/:
+total 0
+drwxr-xr-x 6 claude claude 192 Feb 26 12:16 .
+drwxr-xr-x 5 claude claude 160 Feb 25 13:22 ..
+drwxr-xr-x 4 claude claude 128 Feb 26 11:54 analysis
+drwxr-xr-x 4 claude claude 128 Feb 28 02:15 call
+drwxr-xr-x 5 claude claude 160 Feb 28 02:23 call-history
+drwxr-xr-x 3 claude claude  96 Feb 28 02:01 media-stream
+──────────────────────────────────────
+[02:26:45] $ ls /home/claude/workdir/tests/mocks/
+──────────────────────────────────────
+[02:30:57] $ wc -l /home/claude/workdir/tests/unit/media-stream/media-stream-handler.test.ts
+304 /home/claude/workdir/tests/unit/media-stream/media-stream-handler.test.ts
+──────────────────────────────────────
+[02:31:01] $ ls /home/claude/workdir/tests/unit/media-stream/
+media-stream-handler.test.ts
+──────────────────────────────────────
+[02:31:44] $ wc -l /home/claude/workdir/tests/unit/media-stream/media-stream-handler.test.ts /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts
+  226 /home/claude/workdir/tests/unit/media-stream/media-stream-handler.test.ts
+  370 /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts
+  596 total
+──────────────────────────────────────
+[02:32:32] $ wc -l /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-types.ts
+  298 /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-handler.ts
+   52 /home/claude/workdir/backend/src/presentation/handlers/media-stream/media-stream-types.ts
+  350 total
+──────────────────────────────────────
+[02:33:12] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (23.852 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call/make-call-usecase.test.ts (23.91 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-history-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts (6.048 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/analysis-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call/phone-number.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+
+Test Suites: 11 passed, 11 total
+Tests:       56 passed, 56 total
+Snapshots:   0 total
+Time:        33.356 s
+... (51 lines total, truncated)
+──────────────────────────────────────
+[03:08:47] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns "formatters" 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/utils/formatters.test.ts (16.977 s)
+  formatDateTimeJST
+    ✓ should format UTC date to JST string (1 ms)
+    ✓ should handle date crossing midnight in JST
+  formatPhoneNumberDomestic
+    ✓ should convert +81 number to domestic format (1 ms)
+    ✓ should return non-JP number as-is
+    ✓ should return empty string as-is
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        17.198 s
+Ran all test suites matching formatters.
+──────────────────────────────────────
+[03:09:20] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest 2>&1
+PASS tests/unit/call/make-call-usecase.test.ts (11.175 s)
+PASS tests/unit/utils/formatters.test.ts
+PASS tests/integration/call-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (23.678 s)
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-history-api.test.ts (13.266 s)
+PASS tests/unit/call/phone-number.test.ts
+
+Test Suites: 12 passed, 12 total
+Tests:       61 passed, 61 total
+Snapshots:   0 total
+Time:        25.891 s, estimated 41 s
+Ran all test suites.
+──────────────────────────────────────
+[03:15:54] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns "formatters" 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/utils/formatters.test.ts (17.445 s)
+  formatDateTimeJST
+    ✓ should format UTC date to JST string (1 ms)
+    ✓ should handle date crossing midnight in JST
+  formatPhoneNumberDomestic
+    ✓ should convert +81 number to domestic format with text prefix (1 ms)
+    ✓ should return non-JP number as-is
+    ✓ should return empty string as-is
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        17.653 s
+Ran all test suites matching formatters.
+──────────────────────────────────────
+[03:18:33] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest 2>&1
+PASS tests/unit/utils/formatters.test.ts (12.42 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (25.58 s)
+PASS tests/unit/call/make-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-history-api.test.ts (14.176 s)
+PASS tests/integration/call-api.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+
+Test Suites: 12 passed, 12 total
+Tests:       61 passed, 61 total
+Snapshots:   0 total
+Time:        27.803 s, estimated 34 s
+Ran all test suites.
+──────────────────────────────────────
+[04:08:36] $ git remote -v
+origin	https://github.com/LlechiKaito/ai-outbound-calling.git (fetch)
+origin	https://github.com/LlechiKaito/ai-outbound-calling.git (push)
+──────────────────────────────────────
+[04:11:49] $ git status --short
+ M README.md
+?? .dockerignore
+?? .env.example
+?? .gitignore
+?? Dockerfile
+?? backend/
+?? dev-log/
+?? docker-compose.yml
+?? jest.config.ts
+?? package-lock.json
+?? package.json
+?? scripts/
+?? tests/
+?? tsconfig.json
+──────────────────────────────────────
+[04:11:50] $ git branch --show-current
+feature/#4-auto-analyze-and-save
+──────────────────────────────────────
+[04:12:22] $ find /home/claude/workdir/backend/src -type f -name "*.ts" | head -20
+/home/claude/workdir/backend/src/config/index.ts
+/home/claude/workdir/backend/src/constants/error-messages.ts
+/home/claude/workdir/backend/src/constants/google-sheets.ts
+/home/claude/workdir/backend/src/constants/elevenlabs.ts
+/home/claude/workdir/backend/src/constants/twiml.ts
+/home/claude/workdir/backend/src/constants/http.ts
+/home/claude/workdir/backend/src/constants/openai.ts
+/home/claude/workdir/backend/src/constants/twilio-stream.ts
+/home/claude/workdir/backend/src/constants/config.ts
+/home/claude/workdir/backend/src/utils/audio-converter.ts
+/home/claude/workdir/backend/src/utils/formatters.ts
+/home/claude/workdir/backend/src/container/index.ts
+/home/claude/workdir/backend/src/application/dto/analysis/analyze-call-dto.ts
+/home/claude/workdir/backend/src/application/dto/call-history/save-call-history-dto.ts
+/home/claude/workdir/backend/src/application/dto/call-history/post-call-processing-dto.ts
+/home/claude/workdir/backend/src/application/dto/call/make-call-dto.ts
+/home/claude/workdir/backend/src/application/errors/application-error.ts
+/home/claude/workdir/backend/src/application/usecases/analysis/analyze-call-usecase.ts
+/home/claude/workdir/backend/src/application/usecases/call-history/post-call-processing-usecase.ts
+/home/claude/workdir/backend/src/application/usecases/call-history/save-call-history-usecase.ts
+──────────────────────────────────────
+[04:13:59] $ mkdir -p /home/claude/workdir/backend/src/domain/entities/follow-up-email /home/claude/workdir/backend/src/domain/repositories/follow-up-email /home/claude/workdir/backend/src/domain/errors
+──────────────────────────────────────
+[04:14:32] $ mkdir -p /home/claude/workdir/backend/src/application/dto/follow-up-email /home/claude/workdir/backend/src/application/usecases/follow-up-email
+──────────────────────────────────────
+[04:15:18] $ mkdir -p /home/claude/workdir/backend/src/infrastructure/external/mail
+──────────────────────────────────────
+[04:16:36] $ mkdir -p /home/claude/workdir/backend/src/presentation/controllers/follow-up-email /home/claude/workdir/backend/src/presentation/routes/follow-up-email
+──────────────────────────────────────
+[04:18:05] $ mkdir -p /home/claude/workdir/tests/unit/follow-up-email
+──────────────────────────────────────
+[04:19:25] $ npx jest --no-coverage 2>&1 | tail -50
+ 1: 0xe13218 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/usr/local/bin/node]
+FAIL tests/integration/follow-up-email-api.test.ts
+  ● Test suite failed to run
+
+    Jest worker ran out of memory and crashed
+
+      at ChildProcessWorker._onExit (node_modules/jest-worker/build/index.js:928:26)
+
+
+<--- Last few GCs --->
+
+[47784:0xffffa5690000]    20663 ms: Mark-Compact (reduce) 2046.5 (2085.0) -> 2046.1 (2083.0) MB, pooled: 0 MB, 508.22 / 0.00 ms  (+ 0.0 ms in 0 steps since start of marking, biggest step 0.0 ms, walltime since start of marking 517 ms) (average mu = 0.238,
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0xe13218 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/usr/local/bin/node]
+FAIL tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+  ● Test suite failed to run
+
+    Jest worker ran out of memory and crashed
+
+      at ChildProcessWorker._onExit (node_modules/jest-worker/build/index.js:928:26)
+
+PASS tests/integration/call-history-api.test.ts (12.955 s)
+PASS tests/unit/utils/formatters.test.ts
+PASS tests/integration/call-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+FAIL tests/unit/call-history/post-call-processing-usecase.test.ts
+  ● Test suite failed to run
+
+    Jest worker ran out of memory and crashed
+
+      at ChildProcessWorker._onExit (node_modules/jest-worker/build/index.js:928:26)
+
+Test Suites: 3 failed, 11 passed, 14 total
+Tests:       57 passed, 57 total
+Snapshots:   0 total
+Time:        37.084 s
+Ran all test suites.
+──────────────────────────────────────
+[04:19:57] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --no-coverage --maxWorkers=2 2>&1 | tail -40
+PASS tests/integration/call-api.test.ts (11.616 s)
+PASS tests/integration/call-history-api.test.ts (11.618 s)
+PASS tests/unit/utils/formatters.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call/phone-number.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (11.128 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts (11.316 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/follow-up-email-api.test.ts
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+
+Test Suites: 14 passed, 14 total
+Tests:       73 passed, 73 total
+Snapshots:   0 total
+Time:        26.988 s
+Ran all test suites.
+──────────────────────────────────────
+[05:57:40] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --no-coverage --maxWorkers=2 2>&1 | grep -E "(PASS|FAIL|Tests:|Test Suites:)"
+PASS tests/integration/call-history-api.test.ts (12.859 s)
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/integration/call-api.test.ts (12.963 s)
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts
+PASS tests/integration/follow-up-email-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/utils/formatters.test.ts
+Test Suites: 14 passed, 14 total
+Tests:       73 passed, 73 total
+──────────────────────────────────────
+[07:16:56] $ ls -la /home/claude/.claude/projects/-home-claude-workdir/
+total 8688
+drwx------ 3 claude claude    4096 Feb 25 23:31 .
+drwx------ 3 claude claude    4096 Feb 25 23:30 ..
+drwx------ 4 claude claude    4096 Feb 25 23:31 65578b4c-9194-4d91-b930-df60130138b1
+-rw------- 1 claude claude 8878881 Feb 28 07:16 65578b4c-9194-4d91-b930-df60130138b1.jsonl
+──────────────────────────────────────
+[07:17:03] $ mkdir -p /home/claude/.claude/projects/-home-claude-workdir/memory
+──────────────────────────────────────
+[07:18:44] $ ls /home/claude/workdir/dev-log/ 2>/dev/null || echo "empty"
+auto
+sessions
+──────────────────────────────────────
+[07:18:52] $ ls /home/claude/workdir/dev-log/sessions/ 2>/dev/null; ls /home/claude/workdir/dev-log/auto/ 2>/dev/null
+2026-02-25_13-17-42.md
+2026-02-25_13-21-28.md
+2026-02-25_13-22-34.md
+2026-02-25_13-31-52.md
+2026-02-25_13-35-25.md
+2026-02-25_13-42-25.md
+2026-02-25_13-43-53.md
+2026-02-25_13-44-17.md
+2026-02-25_13-47-16.md
+2026-02-25_13-49-26.md
+2026-02-25_13-51-17.md
+2026-02-25_13-57-53.md
+2026-02-25_14-38-57.md
+2026-02-25_14-41-52.md
+2026-02-25_14-53-29.md
+2026-02-25_15-00-18.md
+2026-02-25_15-07-18.md
+2026-02-25_15-12-07.md
+2026-02-25_15-15-43.md
+2026-02-25_15-16-30.md
+2026-02-25_15-20-52.md
+2026-02-25_15-21-54.md
+2026-02-25_15-23-03.md
+2026-02-25_15-35-27.md
+2026-02-25_15-38-03.md
+2026-02-25_15-38-17.md
+2026-02-25_15-38-40.md
+2026-02-25_15-39-33.md
+2026-02-25_15-39-52.md
+2026-02-25_15-42-10.md
+2026-02-25_15-42-47.md
+2026-02-25_15-43-31.md
+2026-02-25_15-43-53.md
+2026-02-25_15-44-11.md
+2026-02-25_15-45-52.md
+2026-02-25_15-49-10.md
+2026-02-25_15-49-37.md
+2026-02-25_15-50-39.md
+2026-02-25_15-53-16.md
+2026-02-25_15-54-09.md
+2026-02-25_15-55-50.md
+2026-02-25_15-57-50.md
+2026-02-25_16-00-29.md
+2026-02-25_16-36-43.md
+2026-02-25_23-33-35.md
+2026-02-25_23-57-35.md
+2026-02-26_00-48-30.md
+2026-02-26_00-49-54.md
+2026-02-26_00-52-00.md
+2026-02-26_00-56-07.md
+... (120 lines total, truncated)
+──────────────────────────────────────
+[10:12:48] $ find /home/claude/workdir/ai-outbound-calling -type f -name ".*" -o -type f | head -100
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/server.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/config/index.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/config/index.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/config/index.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/config/index.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/server.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/server.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/google-sheets.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/error-messages.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/google-sheets.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/openai.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/http.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/error-messages.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/openai.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/twiml.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/http.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/openai.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/google-sheets.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/error-messages.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/http.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/elevenlabs.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/twiml.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/google-sheets.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/elevenlabs.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/elevenlabs.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/error-messages.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/elevenlabs.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/openai.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/twiml.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/twiml.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/constants/http.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/utils/audio-converter.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/utils/audio-converter.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/utils/audio-converter.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/utils/audio-converter.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/server.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/container/index.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/container/index.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/container/index.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/container/index.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/analysis/analyze-call-dto.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/analysis/analyze-call-dto.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/analysis/analyze-call-dto.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/analysis/analyze-call-dto.js.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/call-history/save-call-history-dto.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/call-history/post-call-processing-dto.js
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/call-history/post-call-processing-dto.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/call-history/post-call-processing-dto.d.ts.map
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/call-history/save-call-history-dto.d.ts
+/home/claude/workdir/ai-outbound-calling/dist/backend/src/application/dto/call-history/save-call-history-dto.js.map
+... (100 lines total, truncated)
+──────────────────────────────────────
+[10:12:51] $ find . -type d | sort | head -80
+.
+./.git
+./.git/cursor
+./.git/cursor/crepe
+./.git/hooks
+./.git/info
+./.git/logs
+./.git/logs/refs
+./.git/logs/refs/heads
+./.git/logs/refs/heads/feature
+./.git/logs/refs/remotes
+./.git/logs/refs/remotes/origin
+./.git/objects
+./.git/objects/3b
+./.git/objects/59
+./.git/objects/c3
+./.git/objects/info
+./.git/objects/pack
+./.git/refs
+./.git/refs/heads
+./.git/refs/heads/feature
+./.git/refs/remotes
+./.git/refs/remotes/origin
+./.git/refs/tags
+./backend
+./backend/src
+./backend/src/application
+./backend/src/application/dto
+./backend/src/application/dto/analysis
+./backend/src/application/dto/call
+./backend/src/application/dto/call-history
+./backend/src/application/dto/follow-up-email
+./backend/src/application/errors
+./backend/src/application/services
+./backend/src/application/usecases
+./backend/src/application/usecases/analysis
+./backend/src/application/usecases/call
+./backend/src/application/usecases/call-history
+./backend/src/application/usecases/follow-up-email
+./backend/src/config
+./backend/src/constants
+./backend/src/container
+./backend/src/domain
+./backend/src/domain/commons
+./backend/src/domain/entities
+./backend/src/domain/entities/analysis
+./backend/src/domain/entities/call
+./backend/src/domain/entities/call-history
+./backend/src/domain/entities/follow-up-email
+./backend/src/domain/errors
+... (80 lines total, truncated)
+──────────────────────────────────────
+[10:13:28] $ find /home/claude/workdir/ai-outbound-calling/backend/src -type f -name "*.ts" | sort
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/analysis/analyze-call-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call-history/post-call-processing-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call-history/save-call-history-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call/make-call-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/follow-up-email/send-follow-up-email-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/errors/application-error.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/analysis/analyze-call-usecase.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/call-history/post-call-processing-usecase.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/call-history/save-call-history-usecase.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/call/make-call-usecase.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/follow-up-email/send-follow-up-email-usecase.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/config/index.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/config.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/elevenlabs.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/follow-up-email.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/google-sheets.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/http.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/openai.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/twilio-stream.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/twiml.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/commons/result.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/analysis/call-analysis.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/call-history/call-history.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/call/call.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/follow-up-email/follow-up-email.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/analysis-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/call-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/call-history-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/conversation-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/domain-error.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/errors/follow-up-email-error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/analysis/call-analysis-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/call-history/call-history-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/call/call-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/conversation/conversation-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/follow-up-email/email-content-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/follow-up-email/email-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/value-objects/analysis/interest-level.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/value-objects/call-history/call-result.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/value-objects/call/call-sid.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/domain/value-objects/call/phone-number.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/elevenlabs/elevenlabs-signed-url-client.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/google/google-sheets-call-history-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/mail/nodemailer-email-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/mail/openai-email-content-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/external/openai/openai-call-analysis-repository.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/mappers/call/call-mapper.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/infrastructure/repositories/call/twilio-call-repository.ts
+... (66 lines total, truncated)
+──────────────────────────────────────
+[10:13:31] $ ls -la /home/claude/workdir/ai-outbound-calling/ | grep -E "^\-" | awk '{print $NF}'
+.dockerignore
+.env
+.env.example
+.gitignore
+Dockerfile
+README.md
+credentials.json
+docker-compose.yml
+jest.config.ts
+package-lock.json
+package.json
+tsconfig.json
+──────────────────────────────────────
+[10:18:15] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/src/domain/entities/orchestrator /home/claude/workdir/ai-outbound-calling/backend/src/domain/repositories/orchestrator /home/claude/workdir/ai-outbound-calling/backend/src/domain/value-objects/orchestrator
+──────────────────────────────────────
+[10:18:54] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/src/application/dto/orchestrator /home/claude/workdir/ai-outbound-calling/backend/src/application/usecases/orchestrator
+──────────────────────────────────────
+[10:20:04] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/src/presentation/controllers/orchestrator /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/orchestrator
+──────────────────────────────────────
+[10:21:23] $ mkdir -p /home/claude/workdir/ai-outbound-calling/tests/unit/orchestrator
+──────────────────────────────────────
+[10:24:14] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/unit/orchestrator/lead.test.ts --no-coverage --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/lead.test.ts (19.177 s)
+  Lead
+    isPending
+      ✓ should return true when status is empty (2 ms)
+      ✓ should return true when status is 未対応
+      ✓ should return false when status has other value
+    canRetry
+      ✓ should return true when retryCount is less than max
+      ✓ should return false when retryCount equals max
+      ✓ should return false when retryCount exceeds max (1 ms)
+    isCallable
+      ✓ should return true when pending and can retry
+      ✓ should return false when not pending
+      ✓ should return false when retry count exceeded
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        19.338 s
+Ran all test suites matching tests/unit/orchestrator/lead.test.ts.
+──────────────────────────────────────
+[10:24:37] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/unit/orchestrator/orchestrator-state.test.ts --no-coverage --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/orchestrator-state.test.ts (17.903 s)
+  OrchestratorState
+    create
+      ✓ should create state with valid value (2 ms)
+      ✓ should throw DomainError for invalid value (8 ms)
+    idle
+      ✓ should create idle state (1 ms)
+    canStart
+      ✓ should return true from idle
+      ✓ should return true from stopped
+      ✓ should return false from running
+      ✓ should return false from paused
+    canPause
+      ✓ should return true from running
+      ✓ should return false from idle
+    canResume
+      ✓ should return true from paused
+      ✓ should return false from running
+    canStop
+      ✓ should return true from running
+      ✓ should return true from paused
+      ✓ should return false from idle
+    toRunning
+      ✓ should transition from idle to running
+      ✓ should transition from paused to running
+      ✓ should throw from running (1 ms)
+    toPaused
+      ✓ should transition from running to paused
+      ✓ should throw from idle (1 ms)
+    toStopped
+      ✓ should transition from running to stopped
+      ✓ should transition from paused to stopped
+      ✓ should throw from idle (9 ms)
+    isRunning
+      ✓ should return true for running state
+      ✓ should return false for non-running state
+
+Test Suites: 1 passed, 1 total
+Tests:       24 passed, 24 total
+Snapshots:   0 total
+Time:        18.087 s
+Ran all test suites matching tests/unit/orchestrator/orchestrator-state.test.ts.
+──────────────────────────────────────
+[10:25:29] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/unit/orchestrator/business-hours.test.ts --no-coverage --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/business-hours.test.ts (16.939 s)
+  BusinessHours
+    isWithinBusinessHours
+      ✓ should return true at 9:00 on Monday (1 ms)
+      ✓ should return true at 10:30 on Wednesday (1 ms)
+      ✓ should return true at 17:29 on Friday
+      ✓ should return false at 8:59 (before business hours)
+      ✓ should return false at 17:30 (after business hours)
+      ✓ should return false at 12:00 (lunch break start)
+      ✓ should return false at 12:30 (during lunch break)
+      ✓ should return true at 13:00 (lunch break end)
+      ✓ should return false on Saturday
+      ✓ should return false on Sunday
+      ✓ should return true at 11:59 (just before lunch)
+    getNextBusinessTimeMs
+      ✓ should return 0 during business hours
+      ✓ should return remaining ms before business hours start (1 ms)
+      ✓ should return remaining ms during lunch break
+      ✓ should return positive ms on weekend
+      ✓ should return positive ms after business hours
+
+Test Suites: 1 passed, 1 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        17.125 s
+Ran all test suites matching tests/unit/orchestrator/business-hours.test.ts.
+──────────────────────────────────────
+[10:29:01] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts --no-coverage --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts (16.743 s)
+  AutoCallOrchestratorUseCase
+    getStatus
+      ✓ should return idle state initially (3 ms)
+    start
+      ✓ should throw when already running (10 ms)
+      ✓ should stop when no pending leads found (2 ms)
+      ✓ should stop when fetch leads fails
+      ✓ should filter out non-callable leads (1 ms)
+    pause
+      ✓ should throw when not running (3 ms)
+      ✓ should pause when running
+    resume
+      ✓ should throw when not paused
+      ✓ should resume when paused
+    stop
+      ✓ should throw when idle
+    notifyCallComplete
+      ✓ should return false when no pending call for phone number (1 ms)
+      ✓ should return true and resolve pending call (1 ms)
+    call processing
+      ✓ should update lead as no-answer on call timeout (10 ms)
+      ✓ should update lead as no-answer when call initiation fails (1 ms)
+      ✓ should send follow-up email when email is configured and lead has email (1 ms)
+      ✓ should skip follow-up email when lead has no email
+
+Test Suites: 1 passed, 1 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        16.916 s, estimated 59 s
+Ran all test suites matching tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts.
+──────────────────────────────────────
+[10:30:07] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/integration/orchestrator-api.test.ts --no-coverage --maxWorkers=1 2>&1
+──────────────────────────────────────
+[10:32:09] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/integration/orchestrator-api.test.ts --no-coverage --maxWorkers=1 --forceExit 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/orchestrator-api.test.ts (18.561 s)
+  Orchestrator API
+    GET /api/orchestrator/status
+      ✓ should return current status (90 ms)
+    POST /api/orchestrator/start
+      ✓ should return success when started (5 ms)
+    POST /api/orchestrator/pause
+      ✓ should pause a running orchestrator (5 ms)
+      ✓ should return error when not running (3 ms)
+    POST /api/orchestrator/stop
+      ✓ should stop a running orchestrator (3 ms)
+    POST /api/orchestrator/resume
+      ✓ should resume a paused orchestrator (6 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        18.746 s
+Ran all test suites matching tests/integration/orchestrator-api.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
+──────────────────────────────────────
+[10:32:39] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --no-coverage --maxWorkers=1 --forceExit 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts (15.69 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/follow-up-email-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/analysis-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/call-history-api.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call/make-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+... (69 lines total, truncated)
+──────────────────────────────────────
+[10:33:09] $ git stash && npx tsc --noEmit 2>&1 ; git stash pop
+Saved working directory and index state WIP on feature/#4-auto-analyze-and-save: 3b33a3a first commit
+backend/src/presentation/handlers/media-stream/media-stream-types.ts(50,30): error TS2694: Namespace 'WebSocket' has no exported member 'default'.
+On branch feature/#4-auto-analyze-and-save
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   README.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.dockerignore
+	.env.example
+	.gitignore
+	Dockerfile
+	backend/
+	dev-log/
+	docker-compose.yml
+	jest.config.ts
+	package-lock.json
+	package.json
+	scripts/
+	tests/
+	tsconfig.json
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (08ef2374ce876481e9217de67409ec79dea89850)
+──────────────────────────────────────
+[12:25:14] $ ls /home/claude/workdir/ai-outbound-calling/tests/unit/orchestrator/
+auto-call-orchestrator-usecase.test.ts
+business-hours.test.ts
+lead.test.ts
+orchestrator-state.test.ts
+──────────────────────────────────────
+[12:27:16] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest tests/unit/orchestrator/google-sheets-lead-repository.test.ts --no-coverage --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts (17.758 s)
+  GoogleSheetsLeadRepository
+    fetchAllLeads - phone number normalization
+      ✓ should convert domestic format 09012345678 to E.164 (2 ms)
+      ✓ should convert Sheets-stripped number 9012345678 to E.164 (1 ms)
+      ✓ should keep E.164 format as-is
+      ✓ should handle text-prefixed number with apostrophe
+      ✓ should handle landline number stripped of leading zero (1 ms)
+      ✓ should handle number with hyphens
+    fetchAllLeads - row parsing
+      ✓ should return empty array when only header exists (1 ms)
+      ✓ should parse retry count correctly
+      ✓ should default retry count to 0 when empty (1 ms)
+      ✓ should set correct row index for sheet update
+
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        17.983 s
+Ran all test suites matching tests/unit/orchestrator/google-sheets-lead-repository.test.ts.
+──────────────────────────────────────
+[12:30:40] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts (8.9 s)
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts
+PASS tests/integration/call-api.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/integration/follow-up-email-api.test.ts
+PASS tests/integration/call-history-api.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/utils/formatters.test.ts
+PASS tests/integration/orchestrator-api.test.ts
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+PASS tests/unit/orchestrator/orchestrator-state.test.ts
+PASS tests/unit/orchestrator/business-hours.test.ts
+
+Test Suites: 20 passed, 20 total
+Tests:       154 passed, 154 total
+Snapshots:   0 total
+Time:        10.591 s, estimated 42 s
+Ran all test suites.
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
+──────────────────────────────────────
+[12:36:11] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts (16.94 s)
+  AutoCallOrchestratorUseCase
+    getStatus
+      ✓ should return idle state initially (3 ms)
+    start
+      ✓ should throw when already running (10 ms)
+      ✓ should stop when no pending leads found (2 ms)
+      ✓ should stop when fetch leads fails (1 ms)
+      ✓ should filter out non-callable leads
+      ✓ should set totalLeads before returning from start
+    pause
+      ✓ should throw when not running (3 ms)
+      ✓ should pause when running
+    resume
+      ✓ should throw when not paused
+      ✓ should resume when paused
+    stop
+      ✓ should throw when idle (1 ms)
+    notifyCallComplete
+      ✓ should return false when no pending call for phone number
+      ✓ should return true and resolve pending call (1 ms)
+    call processing
+      ✓ should update lead as no-answer on call timeout (1 ms)
+      ✓ should update lead as no-answer when call initiation fails
+      ✓ should send follow-up email when email is configured and lead has email (1 ms)
+      ✓ should skip follow-up email when lead has no email (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       17 passed, 17 total
+Snapshots:   0 total
+Time:        17.129 s
+Ran all test suites matching tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts.
+──────────────────────────────────────
+[12:37:14] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 tests/integration/orchestrator-api.test.ts 2>&1
+──────────────────────────────────────
+[12:38:45] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts (8.701 s)
+PASS tests/integration/orchestrator-api.test.ts
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts
+PASS tests/integration/call-api.test.ts
+PASS tests/integration/follow-up-email-api.test.ts
+PASS tests/integration/call-history-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/orchestrator/orchestrator-state.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/orchestrator/business-hours.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/utils/formatters.test.ts
+
+Test Suites: 20 passed, 20 total
+Tests:       155 passed, 155 total
+Snapshots:   0 total
+Time:        10.18 s, estimated 44 s
+Ran all test suites.
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
+──────────────────────────────────────
+[12:49:12] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/integration/call-api.test.ts
+PASS tests/integration/follow-up-email-api.test.ts
+PASS tests/integration/call-history-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/orchestrator/orchestrator-state.test.ts
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+PASS tests/unit/orchestrator/business-hours.test.ts
+PASS tests/unit/utils/formatters.test.ts
+
+Test Suites: 20 passed, 20 total
+Tests:       155 passed, 155 total
+Snapshots:   0 total
+Time:        20.969 s
+Ran all test suites.
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
+──────────────────────────────────────
+[12:53:26] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/integration/call-api.test.ts
+PASS tests/integration/call-history-api.test.ts
+PASS tests/integration/analysis-api.test.ts
+PASS tests/integration/follow-up-email-api.test.ts
+PASS tests/unit/orchestrator/orchestrator-state.test.ts
+PASS tests/unit/call-history/post-call-processing-usecase.test.ts
+PASS tests/unit/media-stream/media-stream-handler.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/call-history/call-result.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/business-hours.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+PASS tests/unit/call/make-call-usecase.test.ts
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/call/phone-number.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts
+PASS tests/unit/utils/formatters.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+
+Test Suites: 20 passed, 20 total
+Tests:       155 passed, 155 total
+Snapshots:   0 total
+Time:        20.634 s, estimated 21 s
+Ran all test suites.
+──────────────────────────────────────
+[12:53:41] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts tests/integration/orchestrator-api.test.ts 2>&1 | tail -30
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts (8.504 s)
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/integration/orchestrator-api.test.ts
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+
+Test Suites: 2 passed, 2 total
+Tests:       23 passed, 23 total
+Snapshots:   0 total
+Time:        8.915 s, estimated 19 s
+Ran all test suites matching tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts|tests/integration/orchestrator-api.test.ts.
+──────────────────────────────────────
+[13:03:09] $ ls /home/claude/workdir/ai-outbound-calling/backend/src/presentation/routes/
+analysis
+call
+call-history
+follow-up-email
+health-routes.ts
+orchestrator
+──────────────────────────────────────
+[13:11:17] $ git status
+On branch feature/#4-auto-analyze-and-save
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   README.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.dockerignore
+	.env.example
+	.gitignore
+	Dockerfile
+	backend/
+	dev-log/
+	docker-compose.yml
+	jest.config.ts
+	package-lock.json
+	package.json
+	scripts/
+	tests/
+	tsconfig.json
+
+no changes added to commit (use "git add" and/or "git commit -a")
+──────────────────────────────────────
+[13:11:18] $ git diff --stat
+ README.md | 703 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 703 insertions(+)
+──────────────────────────────────────
+[13:11:18] $ git log --oneline -5
+3b33a3a first commit
+──────────────────────────────────────
+[13:11:24] $ cat /home/claude/workdir/ai-outbound-calling/.gitignore
+node_modules/
+dist/
+.env
+*.js.map
+*.d.ts
+!jest.config.ts
+coverage/
+test-results/
+playwright-report/
+credentials.json
+──────────────────────────────────────
+[13:11:28] $ git diff README.md | head -50
+diff --git a/README.md b/README.md
+index 594b18c..bce354f 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,704 @@
+ # ai-outbound-calling
++
++AI を使った電話営業の自動化システム。Twilio で発信し、ElevenLabs Conversational AI がリアルタイムで会話。通話後は OpenAI で分析し、Google Sheets に記録、興味度に応じたフォローアップメールを自動送信する。
++
++## 機能一覧
++
++| 機能 | 説明 |
++|------|------|
++| AI 電話発信 | Twilio + ElevenLabs でリアルタイム音声会話 |
++| 通話分析 | OpenAI gpt-4o-mini でトランスクリプトを分析（興味度・要約・次のアクション） |
++| 架電履歴記録 | Google Sheets に自動記録（11カラム） |
++| 通話後自動処理 | 通話終了後に分析→記録→メール送信を自動実行 |
++| フォローアップメール | AI が興味度に応じたメール文面を生成し、Gmail SMTP で送信 |
++| 自動架電オーケストレーター | スプレッドシートのリードに対して順次自動架電。営業時間判定・不在リトライ・開始/一時停止/停止コントロール付き |
++
++## 必要なもの
++
++- Docker / Docker Compose
++- ngrok アカウント（https://ngrok.com）
++- Twilio アカウント（https://www.twilio.com）
++- ElevenLabs アカウント（https://elevenlabs.io）
++- OpenAI アカウント（https://platform.openai.com）
++- Google Cloud サービスアカウント（Google Sheets 連携を使う場合）
++- Gmail アカウント + アプリパスワード（メール送信を使う場合）
++
++## セットアップ
++
++### 1. リポジトリをクローン
++
++```bash
++git clone https://github.com/LlechiKaito/ai-outbound-calling.git
++cd ai-outbound-calling
++```
++
++### 2. 環境変数を設定
++
++```bash
++cp .env.example .env
++```
++
++`.env` を編集して各値を設定する。
++
++#### 必須（電話発信に必要）
++
++```
+──────────────────────────────────────
+[13:11:37] $ git add .gitignore .dockerignore Dockerfile docker-compose.yml jest.config.ts package.json package-lock.json tsconfig.json
+──────────────────────────────────────
+[13:11:43] $ git add -- '.env.example'
+──────────────────────────────────────
+[13:11:48] $ git commit -m "$(cat <<'EOF'
+chore(deps): add project configuration and dependencies
+
+Project scaffolding with TypeScript, Fastify, Twilio, ElevenLabs,
+Google Sheets API, and OpenAI integration.
+
+Refs #4
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+EOF
+)"
+[feature/#4-auto-analyze-and-save 06fac12] chore(deps): add project configuration and dependencies
+ 9 files changed, 7557 insertions(+)
+ create mode 100644 .dockerignore
+ create mode 100644 .env.example
+ create mode 100644 .gitignore
+ create mode 100644 Dockerfile
+ create mode 100644 docker-compose.yml
+ create mode 100644 jest.config.ts
+ create mode 100644 package-lock.json
+ create mode 100644 package.json
+ create mode 100644 tsconfig.json
+──────────────────────────────────────
+[13:11:52] $ git add backend/ tests/ scripts/
+──────────────────────────────────────
+[13:12:00] $ git commit -m "$(cat <<'EOF'
+feat(orchestrator): add auto-call orchestrator with full pipeline
+
+Implement auto-calling orchestrator that fetches leads from Google
+Sheets, executes calls sequentially, analyzes transcripts via OpenAI,
+records results back to the sheet, and sends follow-up emails.
+
+Features:
+- Lead management with status tracking (pending/completed/retry limit)
+- Business hours enforcement (9:00-17:30 JST, lunch break excluded)
+- Auto-retry on no-answer (max 3 times)
+- Start/pause/resume/stop controls via REST API
+- Phone number normalization for Google Sheets formats
+- SKIP_BUSINESS_HOURS_CHECK env var for testing
+
+Includes unit tests (lead, state machine, business hours, orchestrator,
+sheets repository) and integration tests (API endpoints).
+
+Refs #4
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+EOF
+)"
+[feature/#4-auto-analyze-and-save 7dbe76c] feat(orchestrator): add auto-call orchestrator with full pipeline
+ 100 files changed, 5310 insertions(+)
+ create mode 100644 backend/src/application/dto/analysis/analyze-call-dto.ts
+ create mode 100644 backend/src/application/dto/call-history/post-call-processing-dto.ts
+ create mode 100644 backend/src/application/dto/call-history/save-call-history-dto.ts
+ create mode 100644 backend/src/application/dto/call/make-call-dto.ts
+ create mode 100644 backend/src/application/dto/follow-up-email/send-follow-up-email-dto.ts
+ create mode 100644 backend/src/application/dto/orchestrator/orchestrator-dto.ts
+ create mode 100644 backend/src/application/errors/application-error.ts
+ create mode 100644 backend/src/application/usecases/analysis/analyze-call-usecase.ts
+ create mode 100644 backend/src/application/usecases/call-history/post-call-processing-usecase.ts
+ create mode 100644 backend/src/application/usecases/call-history/save-call-history-usecase.ts
+ create mode 100644 backend/src/application/usecases/call/make-call-usecase.ts
+ create mode 100644 backend/src/application/usecases/follow-up-email/send-follow-up-email-usecase.ts
+ create mode 100644 backend/src/application/usecases/orchestrator/auto-call-orchestrator-usecase.ts
+ create mode 100644 backend/src/config/index.ts
+ create mode 100644 backend/src/constants/config.ts
+ create mode 100644 backend/src/constants/elevenlabs.ts
+ create mode 100644 backend/src/constants/error-messages.ts
+ create mode 100644 backend/src/constants/follow-up-email.ts
+ create mode 100644 backend/src/constants/google-sheets.ts
+ create mode 100644 backend/src/constants/http.ts
+ create mode 100644 backend/src/constants/openai.ts
+ create mode 100644 backend/src/constants/orchestrator.ts
+ create mode 100644 backend/src/constants/twilio-stream.ts
+ create mode 100644 backend/src/constants/twiml.ts
+ create mode 100644 backend/src/container/index.ts
+ create mode 100644 backend/src/domain/commons/result.ts
+ create mode 100644 backend/src/domain/entities/analysis/call-analysis.ts
+ create mode 100644 backend/src/domain/entities/call-history/call-history.ts
+ create mode 100644 backend/src/domain/entities/call/call.ts
+ create mode 100644 backend/src/domain/entities/follow-up-email/follow-up-email.ts
+ create mode 100644 backend/src/domain/entities/orchestrator/lead.ts
+ create mode 100644 backend/src/domain/errors/analysis-error-messages.ts
+ create mode 100644 backend/src/domain/errors/call-error-messages.ts
+ create mode 100644 backend/src/domain/errors/call-history-error-messages.ts
+ create mode 100644 backend/src/domain/errors/conversation-error-messages.ts
+ create mode 100644 backend/src/domain/errors/domain-error.ts
+ create mode 100644 backend/src/domain/errors/follow-up-email-error-messages.ts
+ create mode 100644 backend/src/domain/errors/orchestrator-error-messages.ts
+ create mode 100644 backend/src/domain/repositories/analysis/call-analysis-repository.ts
+ create mode 100644 backend/src/domain/repositories/call-history/call-history-repository.ts
+ create mode 100644 backend/src/domain/repositories/call/call-repository.ts
+ create mode 100644 backend/src/domain/repositories/conversation/conversation-repository.ts
+ create mode 100644 backend/src/domain/repositories/follow-up-email/email-content-repository.ts
+ create mode 100644 backend/src/domain/repositories/follow-up-email/email-repository.ts
+ create mode 100644 backend/src/domain/repositories/orchestrator/lead-repository.ts
+ create mode 100644 backend/src/domain/value-objects/analysis/interest-level.ts
+ create mode 100644 backend/src/domain/value-objects/call-history/call-result.ts
+ create mode 100644 backend/src/domain/value-objects/call/call-sid.ts
+... (102 lines total, truncated)
