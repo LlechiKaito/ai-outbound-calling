@@ -7,6 +7,11 @@ export class Lead {
     readonly email: string,
     readonly status: string,
     readonly retryCount: number,
+    readonly lastCalledAt: string = "",
+    readonly callResult: string = "",
+    readonly interestLevel: string = "",
+    readonly nextAction: string = "",
+    readonly memo: string = "",
   ) {}
 
   isPending(): boolean {

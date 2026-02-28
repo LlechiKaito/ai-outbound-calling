@@ -1,0 +1,47 @@
+import type { OrchestratorStateValue } from "@/domain/value-objects/orchestrator/orchestrator-state.js";
+
+export interface DashboardKpiDto {
+  readonly totalLeads: number;
+  readonly totalCalled: number;
+  readonly successCount: number;
+  readonly successRate: number;
+  readonly avgInterestLevel: number;
+  readonly pendingCount: number;
+  readonly retryLimitCount: number;
+}
+
+export interface DashboardLeadDto {
+  readonly rowIndex: number;
+  readonly companyName: string;
+  readonly contactName: string;
+  readonly phoneNumber: string;
+  readonly email: string;
+  readonly status: string;
+  readonly retryCount: number;
+  readonly lastCalledAt: string;
+  readonly callResult: string;
+  readonly interestLevel: string;
+  readonly nextAction: string;
+  readonly memo: string;
+}
+
+export interface CallHistoryEntryDto {
+  readonly companyName: string;
+  readonly contactName: string;
+  readonly phoneNumber: string;
+  readonly callResult: string;
+  readonly interestLevel: string;
+  readonly lastCalledAt: string;
+  readonly memo: string;
+}
+
+export interface DashboardStatusDto {
+  readonly orchestratorState: OrchestratorStateValue;
+  readonly processedCount: number;
+  readonly totalLeads: number;
+  readonly currentLead: {
+    readonly companyName: string;
+    readonly contactName: string;
+    readonly phoneNumber: string;
+  } | null;
+}

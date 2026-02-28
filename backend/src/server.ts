@@ -1,16 +1,21 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import Fastify from "fastify";
 import fastifyWebSocket from "@fastify/websocket";
+import fastifyStatic from "@fastify/static";
 
 import { config } from "@/config/index.js";
 import { errorHandler } from "@/presentation/errors/error-handler.js";
 import { CONTENT_TYPE } from "@/constants/http.js";
 import { healthRoutes } from "@/presentation/routes/health-routes.js";
-import { createCallController, createMediaStreamHandler, createAnalysisController, createCallHistoryController, createFollowUpEmailController, createOrchestratorController } from "@/container/index.js";
+import { createCallController, createMediaStreamHandler, createAnalysisController, createCallHistoryController, createFollowUpEmailController, createOrchestratorController, createDashboardController } from "@/container/index.js";
 import { callRoutes } from "@/presentation/routes/call/call-routes.js";
 import { analysisRoutes } from "@/presentation/routes/analysis/analysis-routes.js";
 import { callHistoryRoutes } from "@/presentation/routes/call-history/call-history-routes.js";
 import { followUpEmailRoutes } from "@/presentation/routes/follow-up-email/follow-up-email-routes.js";
 import { orchestratorRoutes } from "@/presentation/routes/orchestrator/orchestrator-routes.js";
+import { dashboardRoutes } from "@/presentation/routes/dashboard/dashboard-routes.js";
 
 export function buildApp() {
   const app = Fastify({
@@ -49,6 +54,21 @@ export function buildApp() {
   if (orchestratorController) {
     app.register(orchestratorRoutes(orchestratorController));
   }
+
+  const dashboardController = createDashboardController();
+  if (dashboardController) {
+    app.register(dashboardRoutes(dashboardController));
+  }
+
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  app.register(fastifyStatic, {
+    root: path.join(__dirname, "..", "public"),
+    prefix: "/",
+  });
+
+  app.get("/dashboard", (_request, reply) => {
+    reply.sendFile("dashboard.html");
+  });
 
   return app;
 }

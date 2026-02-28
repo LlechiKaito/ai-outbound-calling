@@ -24,6 +24,8 @@ import { AnalysisController } from "@/presentation/controllers/analysis/analysis
 import { CallHistoryController } from "@/presentation/controllers/call-history/call-history-controller.js";
 import { FollowUpEmailController } from "@/presentation/controllers/follow-up-email/follow-up-email-controller.js";
 import { OrchestratorController } from "@/presentation/controllers/orchestrator/orchestrator-controller.js";
+import { DashboardUseCase } from "@/application/usecases/dashboard/dashboard-usecase.js";
+import { DashboardController } from "@/presentation/controllers/dashboard/dashboard-controller.js";
 import { MediaStreamHandler } from "@/presentation/handlers/media-stream/media-stream-handler.js";
 
 export function createCallController(): CallController {
@@ -206,6 +208,17 @@ export function createOrchestratorController(
   );
 
   return new OrchestratorController(orchestratorInstance);
+}
+
+export function createDashboardController(): DashboardController | null {
+  if (!config.isGoogleConfigured()) {
+    return null;
+  }
+
+  const leadRepository = createGoogleSheetsLeadRepository();
+  const dashboardUseCase = new DashboardUseCase(leadRepository);
+
+  return new DashboardController(dashboardUseCase, orchestratorInstance, config.google.sheetsId);
 }
 
 function createGoogleSheetsLeadRepository(): GoogleSheetsLeadRepository {

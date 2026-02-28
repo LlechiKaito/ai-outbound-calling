@@ -17,6 +17,7 @@ function createMocks() {
   const mockLeadRepo: jest.Mocked<LeadRepository> = {
     fetchAllLeads: jest.fn(),
     updateLeadResult: jest.fn(),
+    addLead: jest.fn(),
   };
   const mockMakeCallUseCase: jest.Mocked<Pick<MakeCallUseCase, "execute">> = {
     execute: jest.fn(),

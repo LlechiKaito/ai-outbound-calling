@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Outbound Calling - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .status-badge { @apply px-2 py-0.5 rounded-full text-xs font-medium; }
+    .tab-active { @apply border-b-2 border-blue-500 text-blue-600 font-medium; }
+    .tab-inactive { @apply text-gray-500 hover:text-gray-700; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold text-gray-900">AI Outbound Calling</h1>
+        <p class="text-sm text-gray-500">Dashboard</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a id="sheets-link" href="#" target="_blank" rel="noopener noreferrer"
+           class="text-sm px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 border border-green-200">
+          Google Sheets
+        </a>
+        <button id="btn-refresh" onclick="refreshAll()"
+                class="text-sm px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+          Refresh
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <!-- Live Activity -->
+    <section id="live-activity" class="bg-white rounded-lg shadow-sm border p-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-gray-400"></div>
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Live Activity</h2>
+          <span id="orchestrator-state" class="status-badge bg-gray-100 text-gray-600">idle</span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="orchestratorAction('start')" id="btn-start"
+                  class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50">Start</button>
+          <button onclick="orchestratorAction('pause')" id="btn-pause"
+                  class="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:opacity-50" disabled>Pause</button>
+          <button onclick="orchestratorAction('resume')" id="btn-resume"
+                  class="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50" disabled>Resume</button>
+          <button onclick="orchestratorAction('stop')" id="btn-stop"
+                  class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50" disabled>Stop</button>
+        </div>
+      </div>
+      <div id="live-detail" class="text-sm text-gray-600">
+        <span id="live-progress"></span>
+        <span id="live-current-lead" class="ml-4"></span>
+      </div>
+    </section>
+
+    <!-- KPI Cards -->
+    <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Total Leads</p>
+        <p id="kpi-total-leads" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Total Called</p>
+        <p id="kpi-total-called" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Success</p>
+        <p id="kpi-success-count" class="text-2xl font-bold text-green-600 mt-1">-</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Success Rate</p>
+        <p id="kpi-success-rate" class="text-2xl font-bold text-blue-600 mt-1">-</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Avg Interest</p>
+        <p id="kpi-avg-interest" class="text-2xl font-bold text-purple-600 mt-1">-</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Pending</p>
+        <p id="kpi-pending" class="text-2xl font-bold text-yellow-600 mt-1">-</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4">
+        <p class="text-xs text-gray-500 uppercase">Retry Limit</p>
+        <p id="kpi-retry-limit" class="text-2xl font-bold text-red-600 mt-1">-</p>
+      </div>
+    </section>
+
+    <!-- Lead List + Add Lead -->
+    <section class="bg-white rounded-lg shadow-sm border">
+      <div class="p-4 border-b flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <h2 class="font-semibold text-gray-900">Leads</h2>
+          <nav class="flex gap-4 text-sm" id="lead-tabs">
+            <button onclick="filterLeads('')" class="tab-active pb-1" data-tab="all">All</button>
+            <button onclick="filterLeads('pending')" class="tab-inactive pb-1" data-tab="pending">Pending</button>
+            <button onclick="filterLeads('completed')" class="tab-inactive pb-1" data-tab="completed">Completed</button>
+            <button onclick="filterLeads('retry_limit')" class="tab-inactive pb-1" data-tab="retry_limit">Retry Limit</button>
+          </nav>
+        </div>
+        <button onclick="toggleAddLeadForm()" id="btn-add-lead"
+                class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">+ Add Lead</button>
+      </div>
+
+      <!-- Add Lead Form (hidden by default) -->
+      <div id="add-lead-form" class="hidden p-4 bg-blue-50 border-b">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+          <input type="text" id="new-company" placeholder="Company Name"
+                 class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+          <input type="text" id="new-contact" placeholder="Contact Name"
+                 class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+          <input type="tel" id="new-phone" placeholder="09012345678"
+                 class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+          <input type="email" id="new-email" placeholder="email@example.com"
+                 class="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+          <div class="flex gap-2">
+            <button onclick="submitNewLead()" class="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex-1">Add</button>
+            <button onclick="toggleAddLeadForm()" class="px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">Cancel</button>
+          </div>
+        </div>
+        <p id="add-lead-error" class="text-red-500 text-xs mt-2 hidden"></p>
+      </div>
+
+      <!-- Lead Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-left text-xs text-gray-500 uppercase">
+            <tr>
+              <th class="px-4 py-3">Company</th>
+              <th class="px-4 py-3">Contact</th>
+              <th class="px-4 py-3">Phone</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Result</th>
+              <th class="px-4 py-3">Interest</th>
+              <th class="px-4 py-3">Last Called</th>
+              <th class="px-4 py-3">Next Action</th>
+              <th class="px-4 py-3">Retry</th>
+            </tr>
+          </thead>
+          <tbody id="leads-tbody" class="divide-y">
+            <tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Call History -->
+    <section class="bg-white rounded-lg shadow-sm border">
+      <div class="p-4 border-b">
+        <h2 class="font-semibold text-gray-900">Call History</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-left text-xs text-gray-500 uppercase">
+            <tr>
+              <th class="px-4 py-3">Date</th>
+              <th class="px-4 py-3">Company</th>
+              <th class="px-4 py-3">Contact</th>
+              <th class="px-4 py-3">Result</th>
+              <th class="px-4 py-3">Interest</th>
+              <th class="px-4 py-3">Summary</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody" class="divide-y">
+            <tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API = '';
+    let currentFilter = '';
+    let autoRefreshTimer = null;
+
+    // --- API helpers ---
+    async function apiFetch(path) {
+      const res = await fetch(API + path);
+      return res.json();
+    }
+
+    async function apiPost(path, body) {
+      const res = await fetch(API + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      return res.json();
+    }
+
+    // --- KPI ---
+    async function loadKpis() {
+      const res = await apiFetch('/api/dashboard/kpis');
+      if (!res.isSuccess) return;
+      const d = res.data;
+      document.getElementById('kpi-total-leads').textContent = d.totalLeads;
+      document.getElementById('kpi-total-called').textContent = d.totalCalled;
+      document.getElementById('kpi-success-count').textContent = d.successCount;
+      document.getElementById('kpi-success-rate').textContent = d.successRate + '%';
+      document.getElementById('kpi-avg-interest').textContent = d.avgInterestLevel;
+      document.getElementById('kpi-pending').textContent = d.pendingCount;
+      document.getElementById('kpi-retry-limit').textContent = d.retryLimitCount;
+    }
+
+    // --- Leads ---
+    function statusBadge(status) {
+      if (!status || status === '未対応') return '<span class="status-badge bg-yellow-100 text-yellow-700">Pending</span>';
+      if (status === '完了') return '<span class="status-badge bg-green-100 text-green-700">Completed</span>';
+      if (status === 'リトライ上限') return '<span class="status-badge bg-red-100 text-red-700">Retry Limit</span>';
+      return '<span class="status-badge bg-gray-100 text-gray-600">' + status + '</span>';
+    }
+
+    function resultBadge(result) {
+      if (!result) return '-';
+      if (result === '応答') return '<span class="status-badge bg-green-100 text-green-700">Answered</span>';
+      if (result === '不在') return '<span class="status-badge bg-orange-100 text-orange-700">No Answer</span>';
+      return result;
+    }
+
+    function interestBar(level) {
+      if (!level) return '-';
+      const n = parseInt(level, 10);
+      if (isNaN(n)) return '-';
+      const color = n >= 7 ? 'bg-green-500' : n >= 4 ? 'bg-yellow-500' : 'bg-red-500';
+      return '<div class="flex items-center gap-1"><div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="' + color + ' h-1.5 rounded-full" style="width:' + (n * 10) + '%"></div></div><span class="text-xs">' + n + '</span></div>';
+    }
+
+    async function loadLeads() {
+      const q = currentFilter ? '?status=' + currentFilter : '';
+      const res = await apiFetch('/api/dashboard/leads' + q);
+      if (!res.isSuccess) return;
+      const tbody = document.getElementById('leads-tbody');
+      if (res.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">No leads found</td></tr>';
+        return;
+      }
+      tbody.innerHTML = res.data.map(l => `<tr class="hover:bg-gray-50">
+        <td class="px-4 py-3">${esc(l.companyName)}</td>
+        <td class="px-4 py-3">${esc(l.contactName)}</td>
+        <td class="px-4 py-3 font-mono text-xs">${esc(l.phoneNumber)}</td>
+        <td class="px-4 py-3">${statusBadge(l.status)}</td>
+        <td class="px-4 py-3">${resultBadge(l.callResult)}</td>
+        <td class="px-4 py-3">${interestBar(l.interestLevel)}</td>
+        <td class="px-4 py-3 text-xs text-gray-500">${esc(l.lastCalledAt)}</td>
+        <td class="px-4 py-3 text-xs">${esc(l.nextAction)}</td>
+        <td class="px-4 py-3 text-center">${l.retryCount}</td>
+      </tr>`).join('');
+    }
+
+    function filterLeads(status) {
+      currentFilter = status;
+      document.querySelectorAll('#lead-tabs button').forEach(btn => {
+        const tab = btn.dataset.tab;
+        const isActive = (tab === 'all' && status === '') || tab === status;
+        btn.className = isActive ? 'tab-active pb-1' : 'tab-inactive pb-1';
+      });
+      loadLeads();
+    }
+
+    // --- Call History ---
+    async function loadCallHistory() {
+      const res = await apiFetch('/api/dashboard/call-history');
+      if (!res.isSuccess) return;
+      const tbody = document.getElementById('history-tbody');
+      if (res.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No call history</td></tr>';
+        return;
+      }
+      tbody.innerHTML = res.data.map(h => `<tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">${esc(h.lastCalledAt)}</td>
+        <td class="px-4 py-3">${esc(h.companyName)}</td>
+        <td class="px-4 py-3">${esc(h.contactName)}</td>
+        <td class="px-4 py-3">${resultBadge(h.callResult)}</td>
+        <td class="px-4 py-3">${interestBar(h.interestLevel)}</td>
+        <td class="px-4 py-3 text-xs text-gray-600 max-w-xs truncate">${esc(h.memo)}</td>
+      </tr>`).join('');
+    }
+
+    // --- Live Status ---
+    async function loadStatus() {
+      const res = await apiFetch('/api/dashboard/status');
+      if (!res.isSuccess) return;
+      const d = res.data;
+      const stateEl = document.getElementById('orchestrator-state');
+      const dotEl = document.getElementById('status-dot');
+
+      stateEl.textContent = d.orchestratorState;
+
+      const stateColors = {
+        idle: { badge: 'bg-gray-100 text-gray-600', dot: 'bg-gray-400' },
+        running: { badge: 'bg-green-100 text-green-700', dot: 'bg-green-500' },
+        paused: { badge: 'bg-yellow-100 text-yellow-700', dot: 'bg-yellow-500' },
+        stopped: { badge: 'bg-red-100 text-red-700', dot: 'bg-red-500' },
+      };
+      const colors = stateColors[d.orchestratorState] || stateColors.idle;
+      stateEl.className = 'status-badge ' + colors.badge;
+      dotEl.className = 'w-2.5 h-2.5 rounded-full ' + colors.dot + (d.orchestratorState === 'running' ? ' pulse-dot' : '');
+
+      const isRunning = d.orchestratorState === 'running';
+      const isPaused = d.orchestratorState === 'paused';
+      const canStart = d.orchestratorState === 'idle' || d.orchestratorState === 'stopped';
+
+      document.getElementById('btn-start').disabled = !canStart;
+      document.getElementById('btn-pause').disabled = !isRunning;
+      document.getElementById('btn-resume').disabled = !isPaused;
+      document.getElementById('btn-stop').disabled = !isRunning && !isPaused;
+
+      const progressEl = document.getElementById('live-progress');
+      const currentEl = document.getElementById('live-current-lead');
+
+      if (d.spreadsheetUrl) {
+        const link = document.getElementById('sheets-link');
+        link.href = d.spreadsheetUrl;
+      }
+
+      if (isRunning || isPaused) {
+        progressEl.textContent = 'Progress: ' + d.processedCount + ' / ' + d.totalLeads;
+        if (d.currentLead) {
+          currentEl.textContent = 'Current: ' + d.currentLead.companyName + ' (' + d.currentLead.contactName + ')';
+        } else {
+          currentEl.textContent = '';
+        }
+      } else {
+        progressEl.textContent = '';
+        currentEl.textContent = '';
+      }
+    }
+
+    async function orchestratorAction(action) {
+      await apiPost('/api/orchestrator/' + action);
+      await loadStatus();
+      if (action === 'start') {
+        await loadKpis();
+        await loadLeads();
+      }
+    }
+
+    // --- Add Lead ---
+    function toggleAddLeadForm() {
+      const form = document.getElementById('add-lead-form');
+      form.classList.toggle('hidden');
+      if (!form.classList.contains('hidden')) {
+        document.getElementById('new-company').focus();
+      }
+    }
+
+    async function submitNewLead() {
+      const companyName = document.getElementById('new-company').value.trim();
+      const contactName = document.getElementById('new-contact').value.trim();
+      const phoneNumber = document.getElementById('new-phone').value.trim();
+      const email = document.getElementById('new-email').value.trim();
+      const errorEl = document.getElementById('add-lead-error');
+
+      if (!companyName || !contactName || !phoneNumber) {
+        errorEl.textContent = 'Company, Contact, Phone are required.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      errorEl.classList.add('hidden');
+      const res = await apiPost('/api/dashboard/leads', { companyName, contactName, phoneNumber, email });
+
+      if (res.isSuccess) {
+        document.getElementById('new-company').value = '';
+        document.getElementById('new-contact').value = '';
+        document.getElementById('new-phone').value = '';
+        document.getElementById('new-email').value = '';
+        toggleAddLeadForm();
+        await refreshAll();
+      } else {
+        errorEl.textContent = res.message || 'Failed to add lead.';
+        errorEl.classList.remove('hidden');
+      }
+    }
+
+    // --- Helpers ---
+    function esc(str) {
+      if (!str) return '';
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    // --- Init ---
+    async function refreshAll() {
+      await Promise.all([loadKpis(), loadLeads(), loadCallHistory(), loadStatus()]);
+    }
+
+    function startAutoRefresh() {
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(() => {
+        loadStatus();
+      }, 5000);
+    }
+
+    refreshAll();
+    startAutoRefresh();
+  </script>
+</body>
+</html>

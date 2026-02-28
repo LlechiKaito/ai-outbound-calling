@@ -2,7 +2,7 @@ import type { sheets_v4 } from "googleapis";
 
 import type { Result } from "@/domain/commons/result.js";
 import { ok, fail } from "@/domain/commons/result.js";
-import type { LeadRepository, LeadUpdateData } from "@/domain/repositories/orchestrator/lead-repository.js";
+import type { LeadRepository, LeadUpdateData, NewLeadData } from "@/domain/repositories/orchestrator/lead-repository.js";
 import { Lead } from "@/domain/entities/orchestrator/lead.js";
 import { ORCHESTRATOR_ERROR_MESSAGES } from "@/domain/errors/orchestrator-error-messages.js";
 import {
@@ -39,6 +39,11 @@ export class GoogleSheetsLeadRepository implements LeadRepository {
         row[LEAD_SHEET_COLUMNS.EMAIL] ?? "",
         row[LEAD_SHEET_COLUMNS.STATUS] ?? "",
         this.parseRetryCount(row[LEAD_SHEET_COLUMNS.RETRY_COUNT]),
+        row[LEAD_SHEET_COLUMNS.LAST_CALLED_AT] ?? "",
+        row[LEAD_SHEET_COLUMNS.CALL_RESULT] ?? "",
+        row[LEAD_SHEET_COLUMNS.INTEREST_LEVEL] ?? "",
+        row[LEAD_SHEET_COLUMNS.NEXT_ACTION] ?? "",
+        row[LEAD_SHEET_COLUMNS.MEMO] ?? "",
       ),
     );
 
@@ -71,6 +76,19 @@ export class GoogleSheetsLeadRepository implements LeadRepository {
       data.summary,
       String(data.retryCount),
     ];
+  }
+
+  async addLead(data: NewLeadData): Promise<Result<void, Error>> {
+    await this.sheets.spreadsheets.values.append({
+      spreadsheetId: this.spreadsheetId,
+      range: "A:D",
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [[data.companyName, data.contactName, data.phoneNumber, data.email]],
+      },
+    });
+
+    return ok(undefined);
   }
 
   private normalizePhoneNumber(raw: string): string {

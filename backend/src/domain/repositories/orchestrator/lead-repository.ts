@@ -11,7 +11,15 @@ export interface LeadUpdateData {
   readonly lastCalledAt: Date;
 }
 
+export interface NewLeadData {
+  readonly companyName: string;
+  readonly contactName: string;
+  readonly phoneNumber: string;
+  readonly email: string;
+}
+
 export interface LeadRepository {
   fetchAllLeads(): Promise<Result<Lead[], Error>>;
   updateLeadResult(rowIndex: number, data: LeadUpdateData): Promise<Result<void, Error>>;
+  addLead(data: NewLeadData): Promise<Result<void, Error>>;
 }
