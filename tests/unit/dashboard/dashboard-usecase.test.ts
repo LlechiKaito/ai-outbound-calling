@@ -17,6 +17,7 @@ describe("DashboardUseCase", () => {
       fetchAllLeads: jest.fn(),
       updateLeadResult: jest.fn(),
       addLead: jest.fn(),
+    editLead: jest.fn(),
     };
     useCase = new DashboardUseCase(mockLeadRepo);
   });
@@ -146,6 +147,27 @@ describe("DashboardUseCase", () => {
 
       expect(result.success).toBe(true);
       expect(mockLeadRepo.addLead).toHaveBeenCalledWith(data);
+    });
+  });
+
+  describe("editLead", () => {
+    it("should delegate to repository with rowIndex and data", async () => {
+      mockLeadRepo.editLead.mockResolvedValue(ok(undefined));
+
+      const data = { companyName: "更新会社", contactName: "更新名前", phoneNumber: "09099999999", email: "updated@example.com" };
+      const result = await useCase.editLead(2, data);
+
+      expect(result.success).toBe(true);
+      expect(mockLeadRepo.editLead).toHaveBeenCalledWith(2, data);
+    });
+
+    it("should propagate repository error", async () => {
+      mockLeadRepo.editLead.mockResolvedValue(fail(new Error("update failed")));
+
+      const data = { companyName: "会社", contactName: "名前", phoneNumber: "09000000000", email: "" };
+      const result = await useCase.editLead(2, data);
+
+      expect(result.success).toBe(false);
     });
   });
 });

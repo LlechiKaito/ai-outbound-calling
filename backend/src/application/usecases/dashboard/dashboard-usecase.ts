@@ -1,6 +1,6 @@
 import type { Result } from "@/domain/commons/result.js";
 import { ok } from "@/domain/commons/result.js";
-import type { LeadRepository, NewLeadData } from "@/domain/repositories/orchestrator/lead-repository.js";
+import type { LeadRepository, NewLeadData, EditLeadData } from "@/domain/repositories/orchestrator/lead-repository.js";
 import type { Lead } from "@/domain/entities/orchestrator/lead.js";
 import type {
   DashboardKpiDto,
@@ -55,6 +55,10 @@ export class DashboardUseCase {
 
   async addLead(data: NewLeadData): Promise<Result<void, Error>> {
     return this.leadRepository.addLead(data);
+  }
+
+  async editLead(rowIndex: number, data: EditLeadData): Promise<Result<void, Error>> {
+    return this.leadRepository.editLead(rowIndex, data);
   }
 
   private computeKpis(leads: Lead[]): DashboardKpiDto {

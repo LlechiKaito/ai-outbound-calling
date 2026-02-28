@@ -24,6 +24,11 @@ export function dashboardRoutes(controller: DashboardController) {
       controller.addLead.bind(controller),
     );
 
+    app.put(
+      "/api/dashboard/leads/:rowIndex",
+      controller.editLead.bind(controller),
+    );
+
     app.get(
       "/api/dashboard/status",
       controller.getStatus.bind(controller),

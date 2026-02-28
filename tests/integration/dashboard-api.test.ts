@@ -16,6 +16,7 @@ function createMockLeadRepo(): jest.Mocked<LeadRepository> {
     fetchAllLeads: jest.fn(),
     updateLeadResult: jest.fn(),
     addLead: jest.fn(),
+    editLead: jest.fn(),
   };
 }
 
@@ -117,6 +118,30 @@ describe("Dashboard API", () => {
         contactName: "新名前",
         phoneNumber: "09012345678",
         email: "new@test.com",
+      });
+
+      await app.close();
+    });
+  });
+
+  describe("PUT /api/dashboard/leads/:rowIndex", () => {
+    it("should edit an existing lead", async () => {
+      const repo = createMockLeadRepo();
+      repo.editLead.mockResolvedValue(ok(undefined));
+      const app = buildApp(repo);
+      await app.ready();
+
+      const res = await supertest(app.server)
+        .put("/api/dashboard/leads/2")
+        .send({ companyName: "更新会社", contactName: "更新名前", phoneNumber: "09099999999", email: "updated@test.com" });
+
+      expect(res.status).toBe(HTTP_STATUS.OK);
+      expect(res.body.isSuccess).toBe(true);
+      expect(repo.editLead).toHaveBeenCalledWith(2, {
+        companyName: "更新会社",
+        contactName: "更新名前",
+        phoneNumber: "09099999999",
+        email: "updated@test.com",
       });
 
       await app.close();

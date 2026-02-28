@@ -50,6 +50,7 @@ describe("AutoCallOrchestratorUseCase", () => {
       fetchAllLeads: jest.fn(),
       updateLeadResult: jest.fn(),
       addLead: jest.fn(),
+    editLead: jest.fn(),
     };
     mockMakeCallUseCase = { execute: jest.fn() };
     mockAnalysisRepo = { analyze: jest.fn() };

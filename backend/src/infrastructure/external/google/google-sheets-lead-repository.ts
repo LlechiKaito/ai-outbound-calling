@@ -2,7 +2,7 @@ import type { sheets_v4 } from "googleapis";
 
 import type { Result } from "@/domain/commons/result.js";
 import { ok, fail } from "@/domain/commons/result.js";
-import type { LeadRepository, LeadUpdateData, NewLeadData } from "@/domain/repositories/orchestrator/lead-repository.js";
+import type { LeadRepository, LeadUpdateData, NewLeadData, EditLeadData } from "@/domain/repositories/orchestrator/lead-repository.js";
 import { Lead } from "@/domain/entities/orchestrator/lead.js";
 import { ORCHESTRATOR_ERROR_MESSAGES } from "@/domain/errors/orchestrator-error-messages.js";
 import {
@@ -76,6 +76,22 @@ export class GoogleSheetsLeadRepository implements LeadRepository {
       data.summary,
       String(data.retryCount),
     ];
+  }
+
+  async editLead(
+    rowIndex: number,
+    data: EditLeadData,
+  ): Promise<Result<void, Error>> {
+    await this.sheets.spreadsheets.values.update({
+      spreadsheetId: this.spreadsheetId,
+      range: `A${rowIndex}:D${rowIndex}`,
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [[data.companyName, data.contactName, data.phoneNumber, data.email]],
+      },
+    });
+
+    return ok(undefined);
   }
 
   async addLead(data: NewLeadData): Promise<Result<void, Error>> {

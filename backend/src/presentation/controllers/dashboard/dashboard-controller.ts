@@ -16,6 +16,17 @@ interface AddLeadBody {
   email?: string;
 }
 
+interface EditLeadParams {
+  rowIndex: string;
+}
+
+interface EditLeadBody {
+  companyName: string;
+  contactName: string;
+  phoneNumber: string;
+  email?: string;
+}
+
 export class DashboardController {
   constructor(
     private readonly dashboardUseCase: DashboardUseCase,
@@ -89,6 +100,30 @@ export class DashboardController {
     }
 
     reply.status(HTTP_STATUS.CREATED).send({
+      isSuccess: true,
+      data: null,
+    });
+  }
+
+  async editLead(
+    request: FastifyRequest<{ Params: EditLeadParams; Body: EditLeadBody }>,
+    reply: FastifyReply,
+  ): Promise<void> {
+    const rowIndex = parseInt(request.params.rowIndex, 10);
+    const { companyName, contactName, phoneNumber, email } = request.body;
+
+    const result = await this.dashboardUseCase.editLead(rowIndex, {
+      companyName,
+      contactName,
+      phoneNumber,
+      email: email ?? "",
+    });
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    reply.status(HTTP_STATUS.OK).send({
       isSuccess: true,
       data: null,
     });

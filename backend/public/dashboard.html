@@ -141,10 +141,11 @@
               <th class="px-4 py-3">最終架電</th>
               <th class="px-4 py-3">次のアクション</th>
               <th class="px-4 py-3">リトライ</th>
+              <th class="px-4 py-3">操作</th>
             </tr>
           </thead>
           <tbody id="leads-tbody" class="divide-y">
-            <tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">読み込み中...</td></tr>
+            <tr><td colspan="10" class="px-4 py-8 text-center text-gray-400">読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -175,6 +176,43 @@
     </section>
   </main>
 
+  <!-- 編集モーダル -->
+  <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">リード編集</h3>
+      <input type="hidden" id="edit-row-index">
+      <div class="space-y-3">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">会社名</label>
+          <input type="text" id="edit-company"
+                 class="w-full px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">担当者名</label>
+          <input type="text" id="edit-contact"
+                 class="w-full px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">電話番号</label>
+          <input type="tel" id="edit-phone"
+                 class="w-full px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">メールアドレス</label>
+          <input type="email" id="edit-email"
+                 class="w-full px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
+        </div>
+      </div>
+      <p id="edit-lead-error" class="text-red-500 text-xs mt-2 hidden"></p>
+      <div class="flex gap-2 mt-4">
+        <button onclick="submitEditLead()" id="btn-edit-submit"
+                class="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex-1">保存</button>
+        <button onclick="closeEditModal()"
+                class="px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API = '';
     let currentFilter = '';
@@ -198,6 +236,15 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: body ? JSON.stringify(body) : undefined,
+      });
+      return res.json();
+    }
+
+    async function apiPut(path, body) {
+      const res = await fetch(API + path, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       });
       return res.json();
     }
@@ -239,13 +286,16 @@
       return '<div class="flex items-center gap-1"><div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="' + color + ' h-1.5 rounded-full" style="width:' + (n * 10) + '%"></div></div><span class="text-xs">' + n + '</span></div>';
     }
 
+    let leadsCache = [];
+
     async function loadLeads() {
       const q = currentFilter ? '?status=' + currentFilter : '';
       const res = await apiFetch('/api/dashboard/leads' + q);
       if (!res.isSuccess) return;
+      leadsCache = res.data;
       const tbody = document.getElementById('leads-tbody');
       if (res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">リードがありません</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="px-4 py-8 text-center text-gray-400">リードがありません</td></tr>';
         return;
       }
       tbody.innerHTML = res.data.map(l => `<tr class="hover:bg-gray-50">
@@ -258,6 +308,10 @@
         <td class="px-4 py-3 text-xs text-gray-500">${esc(l.lastCalledAt)}</td>
         <td class="px-4 py-3 text-xs">${esc(l.nextAction)}</td>
         <td class="px-4 py-3 text-center">${l.retryCount}</td>
+        <td class="px-4 py-3 text-center">
+          <button onclick="openEditModal(${l.rowIndex})"
+                  class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200">編集</button>
+        </td>
       </tr>`).join('');
     }
 
@@ -383,6 +437,49 @@
         await refreshAll();
       } else {
         errorEl.textContent = res.message || 'リードの追加に失敗しました。';
+        errorEl.classList.remove('hidden');
+      }
+    }
+
+    // --- リード編集 ---
+    function openEditModal(rowIndex) {
+      const lead = leadsCache.find(l => l.rowIndex === rowIndex);
+      if (!lead) return;
+      document.getElementById('edit-row-index').value = rowIndex;
+      document.getElementById('edit-company').value = lead.companyName;
+      document.getElementById('edit-contact').value = lead.contactName;
+      document.getElementById('edit-phone').value = lead.phoneNumber;
+      document.getElementById('edit-email').value = lead.email || '';
+      document.getElementById('edit-lead-error').classList.add('hidden');
+      document.getElementById('edit-modal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    async function submitEditLead() {
+      const rowIndex = document.getElementById('edit-row-index').value;
+      const companyName = document.getElementById('edit-company').value.trim();
+      const contactName = document.getElementById('edit-contact').value.trim();
+      const phoneNumber = document.getElementById('edit-phone').value.trim();
+      const email = document.getElementById('edit-email').value.trim();
+      const errorEl = document.getElementById('edit-lead-error');
+
+      if (!companyName || !contactName || !phoneNumber) {
+        errorEl.textContent = '会社名・担当者名・電話番号は必須です。';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      errorEl.classList.add('hidden');
+      const res = await apiPut('/api/dashboard/leads/' + rowIndex, { companyName, contactName, phoneNumber, email });
+
+      if (res.isSuccess) {
+        closeEditModal();
+        await refreshAll();
+      } else {
+        errorEl.textContent = res.message || 'リードの更新に失敗しました。';
         errorEl.classList.remove('hidden');
       }
     }

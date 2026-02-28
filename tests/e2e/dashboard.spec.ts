@@ -86,6 +86,14 @@ test.describe("Dashboard", () => {
     await page.route("**/api/dashboard/leads?status=pending", (route) =>
       route.fulfill({ json: MOCK_PENDING_LEADS }),
     );
+    await page.route("**/api/dashboard/leads/**", (route) => {
+      if (route.request().method() === "PUT") {
+        return route.fulfill({
+          json: { isSuccess: true, data: null },
+        });
+      }
+      return route.continue();
+    });
     await page.route("**/api/dashboard/leads", (route) => {
       if (route.request().method() === "GET") {
         return route.fulfill({ json: MOCK_LEADS });
@@ -211,6 +219,72 @@ test.describe("Dashboard", () => {
     const error = page.locator("#add-lead-error");
     await expect(error).toBeVisible();
     await expect(error).toContainText("必須");
+  });
+
+  test("should open edit modal with lead data", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+
+    const modal = page.locator("#edit-modal");
+    await expect(modal).toBeVisible();
+    await expect(page.locator("#edit-company")).toHaveValue("テスト株式会社");
+    await expect(page.locator("#edit-contact")).toHaveValue("山田太郎");
+    await expect(page.locator("#edit-phone")).toHaveValue("+819012345678");
+    await expect(page.locator("#edit-email")).toHaveValue("yamada@example.com");
+  });
+
+  test("should submit edit lead", async ({ page }) => {
+    let editLeadCalled = false;
+    let editLeadBody: Record<string, string> = {};
+    await page.route("**/api/dashboard/leads/**", (route) => {
+      if (route.request().method() === "PUT") {
+        editLeadCalled = true;
+        editLeadBody = route.request().postDataJSON();
+        return route.fulfill({
+          json: { isSuccess: true, data: null },
+        });
+      }
+      return route.continue();
+    });
+
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+    await page.fill("#edit-company", "更新株式会社");
+    await page.fill("#edit-contact", "更新太郎");
+    await page.click("#btn-edit-submit");
+
+    await page.waitForTimeout(500);
+    expect(editLeadCalled).toBe(true);
+    expect(editLeadBody.companyName).toBe("更新株式会社");
+    expect(editLeadBody.contactName).toBe("更新太郎");
+  });
+
+  test("should show edit validation error for empty fields", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+    await page.fill("#edit-company", "");
+    await page.click("#btn-edit-submit");
+
+    const error = page.locator("#edit-lead-error");
+    await expect(error).toBeVisible();
+    await expect(error).toContainText("必須");
+  });
+
+  test("should close edit modal on cancel", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+    await expect(page.locator("#edit-modal")).toBeVisible();
+
+    await page.click("#edit-modal button:has-text('キャンセル')");
+    await expect(page.locator("#edit-modal")).toBeHidden();
   });
 
   test("should update controls when orchestrator is running", async ({ page }) => {
