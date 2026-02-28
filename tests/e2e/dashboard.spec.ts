@@ -3,13 +3,10 @@ import { test, expect } from "@playwright/test";
 const MOCK_KPIS = {
   isSuccess: true,
   data: {
-    totalLeads: 10,
     totalCalled: 5,
-    successCount: 3,
     successRate: 60,
     avgInterestLevel: 7.2,
-    pendingCount: 4,
-    retryLimitCount: 1,
+    emailSentCount: 3,
   },
 };
 
@@ -114,13 +111,10 @@ test.describe("Dashboard", () => {
   test("should display KPI cards with correct values", async ({ page }) => {
     await page.goto("/dashboard");
 
-    await expect(page.locator("#kpi-total-leads")).toHaveText("10");
     await expect(page.locator("#kpi-total-called")).toHaveText("5");
-    await expect(page.locator("#kpi-success-count")).toHaveText("3");
     await expect(page.locator("#kpi-success-rate")).toHaveText("60%");
     await expect(page.locator("#kpi-avg-interest")).toHaveText("7.2");
-    await expect(page.locator("#kpi-pending")).toHaveText("4");
-    await expect(page.locator("#kpi-retry-limit")).toHaveText("1");
+    await expect(page.locator("#kpi-email-sent")).toHaveText("3");
   });
 
   test("should display lead list", async ({ page }) => {

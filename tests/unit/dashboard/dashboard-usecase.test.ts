@@ -30,13 +30,10 @@ describe("DashboardUseCase", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.totalLeads).toBe(4);
         expect(result.data.totalCalled).toBe(3);
-        expect(result.data.successCount).toBe(1);
         expect(result.data.successRate).toBe(33);
         expect(result.data.avgInterestLevel).toBe(8);
-        expect(result.data.pendingCount).toBe(2);
-        expect(result.data.retryLimitCount).toBe(1);
+        expect(result.data.emailSentCount).toBe(1);
       }
     });
 
@@ -47,9 +44,10 @@ describe("DashboardUseCase", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.totalLeads).toBe(0);
+        expect(result.data.totalCalled).toBe(0);
         expect(result.data.successRate).toBe(0);
         expect(result.data.avgInterestLevel).toBe(0);
+        expect(result.data.emailSentCount).toBe(0);
       }
     });
 

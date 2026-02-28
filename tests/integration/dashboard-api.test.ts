@@ -44,8 +44,8 @@ describe("Dashboard API", () => {
 
       expect(res.status).toBe(HTTP_STATUS.OK);
       expect(res.body.isSuccess).toBe(true);
-      expect(res.body.data.totalLeads).toBe(2);
       expect(res.body.data.totalCalled).toBe(1);
+      expect(res.body.data.emailSentCount).toBe(1);
 
       await app.close();
     });

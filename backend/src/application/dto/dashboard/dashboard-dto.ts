@@ -1,13 +1,10 @@
 import type { OrchestratorStateValue } from "@/domain/value-objects/orchestrator/orchestrator-state.js";
 
 export interface DashboardKpiDto {
-  readonly totalLeads: number;
   readonly totalCalled: number;
-  readonly successCount: number;
   readonly successRate: number;
   readonly avgInterestLevel: number;
-  readonly pendingCount: number;
-  readonly retryLimitCount: number;
+  readonly emailSentCount: number;
 }
 
 export interface DashboardLeadDto {

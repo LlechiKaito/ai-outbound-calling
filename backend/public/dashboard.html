@@ -61,21 +61,13 @@
     </section>
 
     <!-- KPI表示 -->
-    <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500">総リード数</p>
-        <p id="kpi-total-leads" class="text-2xl font-bold text-gray-900 mt-1">-</p>
-      </div>
-      <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500">架電済み</p>
+        <p class="text-xs text-gray-500">総架電数</p>
         <p id="kpi-total-called" class="text-2xl font-bold text-gray-900 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500">応答数</p>
-        <p id="kpi-success-count" class="text-2xl font-bold text-green-600 mt-1">-</p>
-      </div>
-      <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500">応答率</p>
+        <p class="text-xs text-gray-500">通話成功率</p>
         <p id="kpi-success-rate" class="text-2xl font-bold text-blue-600 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
@@ -83,12 +75,8 @@
         <p id="kpi-avg-interest" class="text-2xl font-bold text-purple-600 mt-1">-</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500">未対応</p>
-        <p id="kpi-pending" class="text-2xl font-bold text-yellow-600 mt-1">-</p>
-      </div>
-      <div class="bg-white rounded-lg shadow-sm border p-4">
-        <p class="text-xs text-gray-500">リトライ上限</p>
-        <p id="kpi-retry-limit" class="text-2xl font-bold text-red-600 mt-1">-</p>
+        <p class="text-xs text-gray-500">メール送信数</p>
+        <p id="kpi-email-sent" class="text-2xl font-bold text-green-600 mt-1">-</p>
       </div>
     </section>
 
@@ -254,13 +242,10 @@
       const res = await apiFetch('/api/dashboard/kpis');
       if (!res.isSuccess) return;
       const d = res.data;
-      document.getElementById('kpi-total-leads').textContent = d.totalLeads;
       document.getElementById('kpi-total-called').textContent = d.totalCalled;
-      document.getElementById('kpi-success-count').textContent = d.successCount;
       document.getElementById('kpi-success-rate').textContent = d.successRate + '%';
       document.getElementById('kpi-avg-interest').textContent = d.avgInterestLevel;
-      document.getElementById('kpi-pending').textContent = d.pendingCount;
-      document.getElementById('kpi-retry-limit').textContent = d.retryLimitCount;
+      document.getElementById('kpi-email-sent').textContent = d.emailSentCount;
     }
 
     // --- リード ---

@@ -62,7 +62,6 @@ export class DashboardUseCase {
   }
 
   private computeKpis(leads: Lead[]): DashboardKpiDto {
-    const totalLeads = leads.length;
     const calledLeads = leads.filter((l) => l.lastCalledAt !== "");
     const totalCalled = calledLeads.length;
     const successCount = leads.filter((l) => l.callResult === "応答").length;
@@ -75,17 +74,13 @@ export class DashboardUseCase {
       ? Math.round((interestValues.reduce((sum, v) => sum + v, 0) / interestValues.length) * 10) / 10
       : 0;
 
-    const pendingCount = leads.filter((l) => l.isPending()).length;
-    const retryLimitCount = leads.filter((l) => l.status === LEAD_STATUS.RETRY_LIMIT).length;
+    const emailSentCount = leads.filter((l) => l.callResult === "応答" && l.email !== "").length;
 
     return {
-      totalLeads,
       totalCalled,
-      successCount,
       successRate,
       avgInterestLevel,
-      pendingCount,
-      retryLimitCount,
+      emailSentCount,
     };
   }
 
