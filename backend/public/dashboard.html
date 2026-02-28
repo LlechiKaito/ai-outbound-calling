@@ -35,12 +35,12 @@
   </header>
 
   <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-    <!-- ライブステータス -->
+    <!-- ライブアクティビティ -->
     <section id="live-activity" class="bg-white rounded-lg shadow-sm border p-4">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
           <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-gray-400"></div>
-          <h2 class="text-sm font-semibold text-gray-700 tracking-wide">リアルタイム状況</h2>
+          <h2 class="text-sm font-semibold text-gray-700 tracking-wide">ライブアクティビティ</h2>
           <span id="orchestrator-state" class="status-badge bg-gray-100 text-gray-600">待機中</span>
         </div>
         <div class="flex gap-2">
@@ -60,7 +60,7 @@
       </div>
     </section>
 
-    <!-- KPI カード -->
+    <!-- KPI表示 -->
     <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
       <div class="bg-white rounded-lg shadow-sm border p-4">
         <p class="text-xs text-gray-500">総リード数</p>
@@ -96,7 +96,7 @@
     <section class="bg-white rounded-lg shadow-sm border">
       <div class="p-4 border-b flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <h2 class="font-semibold text-gray-900">架電リスト</h2>
+          <h2 class="font-semibold text-gray-900">架電リスト管理</h2>
           <nav class="flex gap-4 text-sm" id="lead-tabs">
             <button onclick="filterLeads('')" class="tab-active pb-1" data-tab="all">すべて</button>
             <button onclick="filterLeads('pending')" class="tab-inactive pb-1" data-tab="pending">未対応</button>
@@ -151,10 +151,10 @@
       </div>
     </section>
 
-    <!-- 架電履歴 -->
+    <!-- 架電履歴一覧 -->
     <section class="bg-white rounded-lg shadow-sm border">
       <div class="p-4 border-b">
-        <h2 class="font-semibold text-gray-900">架電履歴</h2>
+        <h2 class="font-semibold text-gray-900">架電履歴一覧</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -249,7 +249,7 @@
       return res.json();
     }
 
-    // --- KPI ---
+    // --- KPI表示 ---
     async function loadKpis() {
       const res = await apiFetch('/api/dashboard/kpis');
       if (!res.isSuccess) return;
@@ -325,13 +325,13 @@
       loadLeads();
     }
 
-    // --- 架電履歴 ---
+    // --- 架電履歴一覧 ---
     async function loadCallHistory() {
       const res = await apiFetch('/api/dashboard/call-history');
       if (!res.isSuccess) return;
       const tbody = document.getElementById('history-tbody');
       if (res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">架電履歴がありません</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">履歴がありません</td></tr>';
         return;
       }
       tbody.innerHTML = res.data.map(h => `<tr class="hover:bg-gray-50">
@@ -344,7 +344,7 @@
       </tr>`).join('');
     }
 
-    // --- ライブステータス ---
+    // --- ライブアクティビティ ---
     async function loadStatus() {
       const res = await apiFetch('/api/dashboard/status');
       if (!res.isSuccess) return;
