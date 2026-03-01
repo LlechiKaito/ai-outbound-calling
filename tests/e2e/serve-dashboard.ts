@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = Fastify();
 
 app.register(fastifyStatic, {
-  root: path.join(__dirname, "..", "..", "backend", "public"),
+  root: path.join(__dirname, "..", "..", "frontend", "public"),
   prefix: "/",
 });
 

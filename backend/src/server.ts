@@ -62,7 +62,7 @@ export function buildApp() {
 
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   app.register(fastifyStatic, {
-    root: path.join(__dirname, "..", "public"),
+    root: path.join(__dirname, "..", "..", "frontend", "public"),
     prefix: "/",
   });
 
