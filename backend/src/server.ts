@@ -60,7 +60,7 @@ export function buildApp() {
   }
 
   app.register(fastifyStatic, {
-    root: path.join(__dirname, "..", "..", "..", "frontend", "public"),
+    root: path.join(__dirname, "..", "..", "frontend", "public"),
     prefix: "/",
   });
 
