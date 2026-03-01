@@ -1,5 +1,4 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import Fastify from "fastify";
 import fastifyWebSocket from "@fastify/websocket";
@@ -60,9 +59,8 @@ export function buildApp() {
     app.register(dashboardRoutes(dashboardController));
   }
 
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   app.register(fastifyStatic, {
-    root: path.join(__dirname, "..", "..", "frontend", "public"),
+    root: path.join(__dirname, "..", "..", "..", "frontend", "public"),
     prefix: "/",
   });
 
