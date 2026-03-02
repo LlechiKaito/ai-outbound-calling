@@ -1,7 +1,9 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import Fastify from "fastify";
 import fastifyWebSocket from "@fastify/websocket";
+import fastifyCors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 
 import { config } from "@/config/index.js";
@@ -22,6 +24,7 @@ export function buildApp() {
   });
 
   app.register(fastifyWebSocket);
+  app.register(fastifyCors, { origin: true });
 
   app.addContentTypeParser(
     CONTENT_TYPE.FORM_URLENCODED,
@@ -29,6 +32,17 @@ export function buildApp() {
   );
 
   app.setErrorHandler(errorHandler);
+
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const frontendRoot = path.resolve(__dirname, "../../frontend/public");
+  app.register(fastifyStatic, {
+    root: frontendRoot,
+    prefix: "/",
+  });
+
+  app.get("/dashboard", (_request, reply) => {
+    return reply.sendFile("dashboard.html");
+  });
 
   app.register(healthRoutes);
 
@@ -58,15 +72,6 @@ export function buildApp() {
   if (dashboardController) {
     app.register(dashboardRoutes(dashboardController));
   }
-
-  app.register(fastifyStatic, {
-    root: path.join(__dirname, "..", "..", "frontend", "public"),
-    prefix: "/",
-  });
-
-  app.get("/dashboard", (_request, reply) => {
-    reply.sendFile("dashboard.html");
-  });
 
   return app;
 }
