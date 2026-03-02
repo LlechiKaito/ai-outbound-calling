@@ -19,10 +19,10 @@ describe("formatDateTimeJST", () => {
 });
 
 describe("formatPhoneNumberDomestic", () => {
-  it("should convert +81 number to domestic format with text prefix", () => {
+  it("should convert +81 number to domestic format", () => {
     const result = formatPhoneNumberDomestic("+819012345678");
 
-    expect(result).toBe("'09012345678");
+    expect(result).toBe("09012345678");
   });
 
   it("should return non-JP number as-is", () => {

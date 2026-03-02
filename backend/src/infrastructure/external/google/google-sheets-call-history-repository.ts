@@ -17,7 +17,7 @@ export class GoogleSheetsCallHistoryRepository implements CallHistoryRepository 
     await this.sheets.spreadsheets.values.append({
       spreadsheetId: this.spreadsheetId,
       range: SHEETS_RANGE,
-      valueInputOption: "USER_ENTERED",
+      valueInputOption: "RAW",
       requestBody: {
         values: [callHistory.toRow()],
       },

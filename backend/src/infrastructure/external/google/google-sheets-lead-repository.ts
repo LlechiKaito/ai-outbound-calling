@@ -85,9 +85,9 @@ export class GoogleSheetsLeadRepository implements LeadRepository {
     await this.sheets.spreadsheets.values.update({
       spreadsheetId: this.spreadsheetId,
       range: `A${rowIndex}:D${rowIndex}`,
-      valueInputOption: "USER_ENTERED",
+      valueInputOption: "RAW",
       requestBody: {
-        values: [[data.companyName, data.contactName, data.phoneNumber, data.email]],
+        values: [[data.companyName, data.contactName, this.formatPhoneForSheets(data.phoneNumber), data.email]],
       },
     });
 
@@ -98,13 +98,17 @@ export class GoogleSheetsLeadRepository implements LeadRepository {
     await this.sheets.spreadsheets.values.append({
       spreadsheetId: this.spreadsheetId,
       range: "A:D",
-      valueInputOption: "USER_ENTERED",
+      valueInputOption: "RAW",
       requestBody: {
-        values: [[data.companyName, data.contactName, data.phoneNumber, data.email]],
+        values: [[data.companyName, data.contactName, this.formatPhoneForSheets(data.phoneNumber), data.email]],
       },
     });
 
     return ok(undefined);
+  }
+
+  private formatPhoneForSheets(phone: string): string {
+    return formatPhoneNumberDomestic(this.normalizePhoneNumber(phone));
   }
 
   private normalizePhoneNumber(raw: string): string {

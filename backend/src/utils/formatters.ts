@@ -15,11 +15,9 @@ export function formatDateTimeJST(date: Date): string {
   return `${y}/${m}/${d} ${h}:${min}`;
 }
 
-const SHEETS_TEXT_PREFIX = "'";
-
 export function formatPhoneNumberDomestic(phone: string): string {
   if (phone.startsWith(JAPAN_COUNTRY_CODE)) {
-    return SHEETS_TEXT_PREFIX + "0" + phone.slice(JAPAN_COUNTRY_CODE.length);
+    return "0" + phone.slice(JAPAN_COUNTRY_CODE.length);
   }
   return phone;
 }
