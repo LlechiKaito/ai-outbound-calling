@@ -13,6 +13,9 @@ if (!envConfig) {
   throw new Error(`Unknown environment: ${envName}`);
 }
 
-new AppStack(app, `AiOutboundCalling-${envConfig.envName}`, {
+const stack = new AppStack(app, `AiOutboundCalling-${envConfig.envName}`, {
   envConfig,
 });
+
+cdk.Tags.of(stack).add("Project", "ai-outbound-calling");
+cdk.Tags.of(stack).add("Environment", envConfig.envName);
