@@ -12,6 +12,7 @@ AI を使った電話営業の自動化システム。Twilio で発信し、Elev
 | 通話後自動処理 | 通話終了後に分析→記録→メール送信を自動実行 |
 | フォローアップメール | AI が興味度に応じたメール文面を生成し、Gmail SMTP で送信 |
 | 自動架電オーケストレーター | スプレッドシートのリードに対して順次自動架電。営業時間判定・不在リトライ・開始/一時停止/停止コントロール付き |
+| ダッシュボード | KPI 表示・架電リスト管理（追加・編集）・架電履歴一覧・ライブアクティビティをブラウザで操作 |
 
 ## 必要なもの
 
@@ -490,6 +491,9 @@ npm run test:unit
 
 # インテグレーションテストのみ
 npm run test:integration
+
+# E2E テスト（Playwright）
+npx playwright test
 ```
 
 ## API エンドポイント一覧
@@ -508,6 +512,12 @@ npm run test:integration
 | POST | `/api/orchestrator/resume` | 自動架電を再開する |
 | POST | `/api/orchestrator/stop` | 自動架電を停止する |
 | GET | `/api/orchestrator/status` | 自動架電の状態を取得する |
+| GET | `/api/dashboard/kpis` | KPI（総架電数・成功率・平均興味度・メール送信数）を取得 |
+| GET | `/api/dashboard/leads` | リード一覧を取得（`?status=pending` でフィルタ可能） |
+| POST | `/api/dashboard/leads` | リードを追加する（Google Sheets に同期） |
+| PUT | `/api/dashboard/leads/:rowIndex` | リードを編集する（Google Sheets に同期） |
+| GET | `/api/dashboard/call-history` | 架電履歴一覧を取得する |
+| GET | `/api/dashboard/status` | ライブアクティビティ状態を取得する |
 
 ### POST /api/make-call
 
@@ -657,39 +667,34 @@ Twilio Media Stream と ElevenLabs Conversational AI を中継する WebSocket �
 ## プロジェクト構成
 
 ```
-backend/src/
-├── domain/           # ビジネスロジックの核（外部依存なし）
-│   ├── entities/     # CallHistory, CallAnalysis, FollowUpEmail 等
-│   ├── value-objects/ # InterestLevel, CallResult, PhoneNumber 等
-│   ├── repositories/ # Repository インターフェース
-│   ├── commons/      # Result 型
-│   └── errors/       # エラーメッセージ定数
-├── application/      # ユースケース、DTO
-│   ├── usecases/     # MakeCall, AnalyzeCall, PostCallProcessing, SendFollowUpEmail 等
-│   └── dto/          # リクエスト・レスポンス型定義
-├── infrastructure/   # 外部サービス実装
-│   ├── external/     # Twilio, ElevenLabs, OpenAI, Google Sheets, Nodemailer
-│   ├── repositories/ # Repository 実装
-│   └── mappers/      # データ変換
-├── presentation/     # ルーティング、コントローラー、ハンドラー
-│   ├── controllers/  # Call, Analysis, CallHistory, FollowUpEmail
-│   ├── routes/       # API ルート定義
-│   ├── handlers/     # WebSocket ハンドラー
-│   └── errors/       # エラーハンドラー
-├── container/        # DI コンテナ（依存の組み立て）
-├── config/           # 環境変数の読み込み
-├── constants/        # 定数定義
-├── utils/            # ユーティリティ（フォーマッター等）
-└── server.ts         # エントリーポイント
-
-scripts/
-├── test-call-analysis.ts    # 通話分析テストスクリプト
-└── test-follow-up-email.ts  # メール送信テストスクリプト
-
-tests/
-├── unit/             # ユニットテスト
-└── integration/      # インテグレーションテスト（supertest）
+├── backend/src/            # バックエンド（API サーバー）
+│   ├── domain/             #   ビジネスロジックの核（外部依存なし）
+│   ├── application/        #   ユースケース、DTO
+│   ├── infrastructure/     #   外部サービス実装（Twilio, Google Sheets 等）
+│   ├── presentation/       #   ルーティング、コントローラー
+│   ├── container/          #   DI コンテナ
+│   ├── config/             #   環境変数の読み込み
+│   ├── constants/          #   定数定義
+│   ├── utils/              #   ユーティリティ
+│   └── server.ts           #   エントリーポイント
+├── frontend/public/        # フロントエンド（静的ファイル）
+│   ├── dashboard.html      #   ダッシュボード HTML
+│   └── js/                 #   JavaScript（config / constants / api / ui / dashboard）
+├── infra/                  # AWS CDK（インフラ定義）
+│   ├── bin/app.ts          #   CDK エントリポイント
+│   ├── lib/compute/        #   App Runner + ECR
+│   ├── lib/frontend/       #   S3 + CloudFront
+│   └── config/             #   環境別設定（dev / prod）
+├── scripts/                # ユーティリティスクリプト
+├── tests/                  # テスト
+│   ├── unit/               #   ユニットテスト
+│   ├── integration/        #   インテグレーションテスト（supertest）
+│   └── e2e/                #   E2E テスト（Playwright）
+├── Dockerfile              # Docker（dev / test / prod ステージ）
+└── docker-compose.yml      # ローカル開発用
 ```
+
+バックエンドとフロントエンドは独立してデプロイ可能。バックエンドは API のみ（`@fastify/cors` で CORS 対応）、フロントエンドは `js/config.js` の `API_BASE_URL` でバックエンド URL を設定する。
 
 ## トラブルシューティング
 
@@ -702,3 +707,252 @@ tests/
 | メールが届かない | Gmail アプリパスワード不正 | 2 段階認証を有効化し、アプリパスワードを再生成 |
 | Sheets に記録されない | credentials.json が見つからない | プロジェクトルートに `credentials.json` を配置し `docker compose up --build` |
 | ElevenLabs quota エラー | 無料枠（10,000 credits/月）を超過 | 月次リセットを待つか、有料プランにアップグレード |
+
+## ダッシュボード
+
+ブラウザから自動架電システムを操作・監視できるダッシュボード。
+
+### 機能
+
+| セクション | 機能 |
+|-----------|------|
+| KPI 表示 | 総架電数・通話成功率・平均興味度・メール送信数 |
+| 架電リスト管理 | リードの一覧・フィルタ・追加・編集（Google Sheets に同期） |
+| 架電履歴一覧 | 過去の架電結果を時系列で確認 |
+| ライブアクティビティ | オーケストレーターの状態・進捗・開始/停止コントロール |
+
+### ローカルでの確認
+
+バックエンドとフロントエンドは分離されている。ローカルで確認するには両方を起動する。
+
+**バックエンド（API サーバー）:**
+
+```bash
+docker compose up app
+```
+
+**フロントエンド（静的ファイル配信）:**
+
+`frontend/public/` を任意の静的ファイルサーバーで配信する。例:
+
+```bash
+npx serve frontend/public -l 8080
+```
+
+ブラウザで `http://localhost:8080/dashboard.html` を開く。
+
+バックエンドが別ホストの場合は、`frontend/public/js/config.js` を編集して `API_BASE_URL` を設定する:
+
+```javascript
+window.API_BASE_URL = 'http://localhost:3000';
+```
+
+### フロントエンド構成
+
+```
+frontend/public/
+├── dashboard.html      # メイン HTML
+└── js/
+    ├── config.js       # API_BASE_URL 設定（デプロイ時に上書き）
+    ├── constants.js    # API パス・状態ラベル・エラーメッセージ
+    ├── api.js          # HTTP 通信層（axios）
+    ├── ui.js           # UI ヘルパー（エスケープ・バッジ・バー）
+    └── dashboard.js    # メインロジック（KPI・リスト・履歴・ステータス）
+```
+
+## AWS デプロイ
+
+AWS CDK を使ってデプロイする。App Runner（バックエンド）+ S3/CloudFront（フロントエンド）の構成で月額 ~$6-11。
+
+### アーキテクチャ
+
+```
+┌─────────────────┐     ┌──────────────────────────┐
+│  CloudFront     │     │  App Runner              │
+│  + S3           │────▶│  (Fastify API)           │
+│  (静的ファイル)  │     │  0.25 vCPU / 0.5 GB      │
+└─────────────────┘     └──────────────────────────┘
+  フロントエンド            バックエンド
+  ~$1/月                   ~$5-10/月
+
+  シークレット: SSM Parameter Store
+  Docker イメージ: ECR（DockerImageAsset で自動ビルド）
+```
+
+### コスト内訳
+
+| リソース | サービス | 月額目安 |
+|---------|---------|---------|
+| バックエンド | App Runner (0.25 vCPU / 0.5 GB) | ~$5-10 |
+| フロントエンド | S3 + CloudFront | <$1 |
+| シークレット | SSM Parameter Store | 無料 |
+| Docker イメージ | ECR | <$1 |
+| **合計** | | **~$6-11/月** |
+
+### CDK プロジェクト構成
+
+```
+infra/
+├── bin/app.ts                    # CDK エントリポイント
+├── lib/
+│   ├── app-stack.ts              # メインスタック
+│   ├── compute/compute.ts        # App Runner + ECR
+│   └── frontend/frontend.ts      # S3 + CloudFront
+├── config/environments.ts        # 環境別設定（dev / prod）
+├── cdk.json                      # CDK 設定（環境は context で切替）
+├── tsconfig.json
+└── package.json
+```
+
+### 手順 1: SSM パラメータを作成
+
+デプロイ前に、AWS SSM Parameter Store にシークレットを登録する。パラメータ名は `/ai-outbound-calling/{env}/` プレフィックスで統一。
+
+**必須パラメータ:**
+
+```bash
+ENV=dev  # または prod
+
+# Twilio
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/TWILIO_ACCOUNT_SID" --type SecureString --value "ACxxxxxxxx"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/TWILIO_AUTH_TOKEN" --type SecureString --value "xxxxxxxx"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/TWILIO_PHONE_NUMBER" --type SecureString --value "+1xxxxxxxxxx"
+
+# OpenAI
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/OPENAI_API_KEY" --type SecureString --value "sk-xxxxxxxx"
+
+# 通話設定
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/CALL_COMPANY_NAME" --type SecureString --value "株式会社サンプル"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/CALL_CONTACT_NAME" --type SecureString --value "営業担当"
+
+# PUBLIC_URL（初回デプロイ後に App Runner URL で更新する）
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/PUBLIC_URL" --type SecureString --value "https://placeholder"
+```
+
+**Google Sheets 連携（`enableGoogle: true` の場合）:**
+
+```bash
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/GOOGLE_SHEETS_ID" --type SecureString --value "xxxxxxxx"
+
+# credentials.json の中身を丸ごと設定（docker-entrypoint.sh がファイルに変換する）
+aws ssm put-parameter \
+  --name "/ai-outbound-calling/$ENV/GOOGLE_CREDENTIALS_JSON" \
+  --type SecureString \
+  --value "$(cat credentials.json)"
+```
+
+**ElevenLabs 連携（`enableElevenLabs: true` の場合）:**
+
+```bash
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/ELEVENLABS_API_KEY" --type SecureString --value "xxxxxxxx"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/ELEVENLABS_AGENT_ID" --type SecureString --value "xxxxxxxx"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/ELEVENLABS_LANGUAGE" --type SecureString --value "ja"
+```
+
+**メール連携（`enableMail: true` の場合）:**
+
+```bash
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_HOST" --type SecureString --value "smtp.gmail.com"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_PORT" --type SecureString --value "587"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_USER" --type SecureString --value "your-email@gmail.com"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_PASSWORD" --type SecureString --value "xxxx xxxx xxxx xxxx"
+aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_FROM" --type SecureString --value "your-email@gmail.com"
+```
+
+### 手順 2: 環境設定を確認
+
+`infra/config/environments.ts` で環境ごとのスペック・機能フラグを確認する:
+
+```typescript
+dev: {
+  envName: "dev",
+  backendPort: 3000,
+  backendCpu: "0.25 vCPU",     // 最小スペック
+  backendMemory: "0.5 GB",
+  enableGoogle: true,           // false にすると Google 系 SSM パラメータ不要
+  enableElevenLabs: true,
+  enableMail: true,
+},
+```
+
+使わない機能は `false` にすれば、対応する SSM パラメータの作成が不要になる。
+
+### 手順 3: CDK デプロイ
+
+```bash
+cd infra
+npm install
+
+# 差分確認（デプロイはしない）
+npx cdk diff
+
+# dev 環境にデプロイ
+npx cdk deploy --all
+
+# prod 環境にデプロイ
+npx cdk deploy --all -c env=prod
+```
+
+デプロイ完了後、以下の URL が出力される:
+
+```
+Outputs:
+AiOutboundCalling-dev.BackendUrl = https://xxxxxxxx.ap-northeast-1.awsapprunner.com
+AiOutboundCalling-dev.FrontendUrl = https://xxxxxxxxxx.cloudfront.net
+AiOutboundCalling-dev.BucketName = ai-outbound-calling-dev-frontend-xxxxxxxx
+```
+
+### 手順 4: PUBLIC_URL を更新
+
+初回デプロイ後、出力された `BackendUrl` で SSM パラメータを更新する:
+
+```bash
+aws ssm put-parameter \
+  --name "/ai-outbound-calling/dev/PUBLIC_URL" \
+  --type SecureString \
+  --value "https://xxxxxxxx.ap-northeast-1.awsapprunner.com" \
+  --overwrite
+```
+
+更新後、App Runner サービスを再起動する（AWS コンソールまたは CLI）:
+
+```bash
+aws apprunner start-deployment --service-arn <service-arn>
+```
+
+### Docker イメージのビルドについて
+
+CDK は `DockerImageAsset` を使い、`cdk deploy` 時に自動で Docker イメージをビルド・ECR にプッシュする。手動でのビルド・プッシュは不要。
+
+Dockerfile の `prod` ステージがマルチステージビルドで本番イメージを生成する:
+
+```
+base（npm ci + ソースコピー）
+  → build（TypeScript コンパイル）
+    → prod（コンパイル済み JS + 本番依存のみ）
+```
+
+### Google 認証情報の扱い
+
+ローカル開発では `credentials.json` ファイルを Docker ボリュームでマウントする。
+
+AWS 環境では、SSM Parameter Store の `GOOGLE_CREDENTIALS_JSON` に JSON 全体を格納し、コンテナ起動時に `docker-entrypoint.sh` がファイルに変換する:
+
+```
+SSM: GOOGLE_CREDENTIALS_JSON（JSON 文字列）
+  → docker-entrypoint.sh が /tmp/google-credentials.json に書き出し
+  → GOOGLE_CREDENTIALS_PATH=/tmp/google-credentials.json を設定
+  → アプリはファイルパスから読み込み（コード変更なし）
+```
+
+### インフラの削除
+
+```bash
+cd infra
+
+# dev 環境を削除
+npx cdk destroy --all
+
+# prod 環境を削除（S3 バケットは RETAIN ポリシーのため手動削除が必要）
+npx cdk destroy --all -c env=prod
+```
