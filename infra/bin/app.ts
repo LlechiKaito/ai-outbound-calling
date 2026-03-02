@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+import * as cdk from "aws-cdk-lib";
+
+import { AppStack } from "../lib/app-stack";
+import { ENVIRONMENTS } from "../config/environments";
+
+const app = new cdk.App();
+
+const envName = app.node.tryGetContext("env") as string || "dev";
+const envConfig = ENVIRONMENTS[envName];
+
+if (!envConfig) {
+  throw new Error(`Unknown environment: ${envName}`);
+}
+
+new AppStack(app, `AiOutboundCalling-${envConfig.envName}`, {
+  envConfig,
+});

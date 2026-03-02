@@ -1,0 +1,18 @@
+{
+  "name": "ai-outbound-calling-infra",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy --all"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.180.0",
+    "constructs": "^10.0.0"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.180.0",
+    "typescript": "^5.9.0"
+  }
+}
