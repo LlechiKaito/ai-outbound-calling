@@ -1,3 +1,5 @@
+const API_BASE_URL = window.API_BASE_URL || '';
+
 const API_PATHS = {
   KPIS: '/api/dashboard/kpis',
   LEADS: '/api/dashboard/leads',
@@ -18,6 +20,22 @@ const STATE_COLORS = {
   running: { badge: 'bg-green-100 text-green-700', dot: 'bg-green-500' },
   paused: { badge: 'bg-yellow-100 text-yellow-700', dot: 'bg-yellow-500' },
   stopped: { badge: 'bg-red-100 text-red-700', dot: 'bg-red-500' },
+};
+
+const PHASE_LABELS = {
+  calling: '架電中...',
+  waiting_response: '通話中...',
+  analyzing: '分析中...',
+  sending_email: 'メール送信中...',
+  updating: '更新中...',
+};
+
+const PHASE_COLORS = {
+  calling: 'text-blue-600',
+  waiting_response: 'text-green-600',
+  analyzing: 'text-purple-600',
+  sending_email: 'text-orange-600',
+  updating: 'text-gray-600',
 };
 
 const ERROR_MESSAGES = {

@@ -18,7 +18,7 @@ function buildLeadRow(l) {
   return '<tr class="hover:bg-gray-50">'
     + '<td class="px-4 py-3">' + esc(l.companyName) + '</td>'
     + '<td class="px-4 py-3">' + esc(l.contactName) + '</td>'
-    + '<td class="px-4 py-3 font-mono text-xs">' + esc(l.phoneNumber) + '</td>'
+    + '<td class="px-4 py-3 font-mono text-xs">' + esc(formatPhone(l.phoneNumber)) + '</td>'
     + '<td class="px-4 py-3">' + statusBadge(l.status) + '</td>'
     + '<td class="px-4 py-3">' + resultBadge(l.callResult) + '</td>'
     + '<td class="px-4 py-3">' + interestBar(l.interestLevel) + '</td>'
@@ -103,7 +103,7 @@ function openEditModal(rowIndex) {
   document.getElementById('edit-row-index').value = rowIndex;
   document.getElementById('edit-company').value = lead.companyName;
   document.getElementById('edit-contact').value = lead.contactName;
-  document.getElementById('edit-phone').value = lead.phoneNumber;
+  document.getElementById('edit-phone').value = formatPhone(lead.phoneNumber);
   document.getElementById('edit-email').value = lead.email || '';
   document.getElementById('edit-lead-error').classList.add('hidden');
   document.getElementById('edit-modal').classList.remove('hidden');
@@ -161,6 +161,46 @@ async function loadCallHistory() {
 }
 
 // --- ライブアクティビティ ---
+function buildStatusMessage(d) {
+  var isRunning = d.orchestratorState === 'running';
+  var isPaused = d.orchestratorState === 'paused';
+
+  if (!isRunning && !isPaused) return '';
+
+  var leadName = d.currentLead ? d.currentLead.companyName : '';
+  var phase = d.currentPhase || '';
+  var progress = d.processedCount + '/' + d.totalLeads + '件';
+
+  if (!leadName) return progress;
+
+  var phaseLabel = PHASE_LABELS[phase] || '';
+  if (phase === 'calling') return leadName + 'に架電中... （' + progress + '）';
+  if (phase === 'waiting_response') return leadName + 'と通話中... （' + progress + '）';
+  if (phase === 'analyzing') return leadName + 'の通話を分析中... （' + progress + '）';
+  if (phase === 'sending_email') return leadName + 'にメール送信中... （' + progress + '）';
+  if (phase === 'updating') return leadName + 'の情報を更新中... （' + progress + '）';
+
+  return leadName + ' ' + phaseLabel + ' （' + progress + '）';
+}
+
+function renderActivityLog(activityLog) {
+  var logEntries = document.getElementById('activity-log-entries');
+  if (!activityLog || activityLog.length === 0) {
+    logEntries.innerHTML = '<span class="text-gray-400">ログなし</span>';
+    return;
+  }
+  logEntries.innerHTML = activityLog.map(function (entry) {
+    var time = entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString('ja-JP') : '';
+    var resultClass = entry.callResult === '応答' ? 'text-green-600' : 'text-orange-600';
+    return '<div class="flex items-center gap-2 py-0.5">'
+      + '<span class="text-gray-400 w-16 shrink-0">' + esc(time) + '</span>'
+      + '<span class="font-medium">' + esc(entry.companyName) + '</span>'
+      + '<span class="' + resultClass + '">' + esc(entry.callResult) + '</span>'
+      + '<span class="text-gray-500">' + esc(entry.detail) + '</span>'
+      + '</div>';
+  }).join('');
+}
+
 async function loadStatus() {
   const res = await apiFetch(API_PATHS.STATUS);
   if (!res.isSuccess) return;
@@ -184,24 +224,12 @@ async function loadStatus() {
   document.getElementById('btn-resume').disabled = !isPaused;
   document.getElementById('btn-stop').disabled = !isRunning && !isPaused;
 
-  var progressEl = document.getElementById('live-progress');
-  var currentEl = document.getElementById('live-current-lead');
-
   if (d.spreadsheetUrl) {
     document.getElementById('sheets-link').href = d.spreadsheetUrl;
   }
 
-  if (isRunning || isPaused) {
-    progressEl.textContent = '進捗: ' + d.processedCount + ' / ' + d.totalLeads + ' 件';
-    if (d.currentLead) {
-      currentEl.textContent = '架電中: ' + d.currentLead.companyName + '（' + d.currentLead.contactName + '）';
-    } else {
-      currentEl.textContent = '';
-    }
-  } else {
-    progressEl.textContent = '';
-    currentEl.textContent = '';
-  }
+  document.getElementById('live-status-message').textContent = buildStatusMessage(d);
+  renderActivityLog(d.activityLog);
 }
 
 async function orchestratorAction(action) {

@@ -83,6 +83,8 @@ describe("AutoCallOrchestratorUseCase", () => {
       expect(status.processedCount).toBe(0);
       expect(status.totalLeads).toBe(0);
       expect(status.currentLead).toBeNull();
+      expect(status.currentPhase).toBe("");
+      expect(status.activityLog).toEqual([]);
     });
   });
 
@@ -128,7 +130,7 @@ describe("AutoCallOrchestratorUseCase", () => {
     });
 
     it("should filter out non-callable leads", async () => {
-      const completedLead = new Lead(4, "完了会社", "名前", "+819011111111", "", "完了", 0);
+      const completedLead = new Lead(4, "対応済み会社", "名前", "+819011111111", "", "対応済み", 0);
       const maxRetryLead = new Lead(5, "リトライ上限", "名前", "+819022222222", "", "", 3);
 
       mockLeadRepo.fetchAllLeads.mockResolvedValue(
@@ -276,7 +278,7 @@ describe("AutoCallOrchestratorUseCase", () => {
       expect(mockLeadRepo.updateLeadResult).toHaveBeenCalledWith(
         2,
         expect.objectContaining({
-          status: "未対応",
+          status: "フォロー中",
           callResult: "不在",
           retryCount: 1,
         }),
@@ -298,7 +300,7 @@ describe("AutoCallOrchestratorUseCase", () => {
       expect(mockLeadRepo.updateLeadResult).toHaveBeenCalledWith(
         2,
         expect.objectContaining({
-          status: "未対応",
+          status: "フォロー中",
           callResult: "不在",
           retryCount: 1,
         }),

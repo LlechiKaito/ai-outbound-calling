@@ -5,15 +5,21 @@ function esc(str) {
   return d.innerHTML;
 }
 
+function formatPhone(phone) {
+  if (!phone) return '';
+  if (phone.startsWith('+81')) return '0' + phone.slice(3);
+  return phone;
+}
+
 function statusBadge(status) {
   if (!status || status === '未対応') {
     return '<span class="status-badge bg-yellow-100 text-yellow-700">未対応</span>';
   }
-  if (status === '完了') {
-    return '<span class="status-badge bg-green-100 text-green-700">完了</span>';
+  if (status === 'フォロー中') {
+    return '<span class="status-badge bg-blue-100 text-blue-700">フォロー中</span>';
   }
-  if (status === 'リトライ上限') {
-    return '<span class="status-badge bg-red-100 text-red-700">リトライ上限</span>';
+  if (status === '対応済み') {
+    return '<span class="status-badge bg-green-100 text-green-700">対応済み</span>';
   }
   return '<span class="status-badge bg-gray-100 text-gray-600">' + esc(status) + '</span>';
 }

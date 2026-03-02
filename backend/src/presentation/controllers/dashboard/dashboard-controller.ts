@@ -133,18 +133,23 @@ export class DashboardController {
     _request: FastifyRequest,
     reply: FastifyReply,
   ): Promise<void> {
-    const status: DashboardStatusDto = this.orchestrator
+    const orchestratorStatus = this.orchestrator?.getStatus();
+    const status: DashboardStatusDto = orchestratorStatus
       ? {
-          orchestratorState: this.orchestrator.getStatus().state,
-          processedCount: this.orchestrator.getStatus().processedCount,
-          totalLeads: this.orchestrator.getStatus().totalLeads,
-          currentLead: this.orchestrator.getStatus().currentLead,
+          orchestratorState: orchestratorStatus.state,
+          processedCount: orchestratorStatus.processedCount,
+          totalLeads: orchestratorStatus.totalLeads,
+          currentLead: orchestratorStatus.currentLead,
+          currentPhase: orchestratorStatus.currentPhase,
+          activityLog: orchestratorStatus.activityLog,
         }
       : {
           orchestratorState: "idle",
           processedCount: 0,
           totalLeads: 0,
           currentLead: null,
+          currentPhase: "",
+          activityLog: [],
         };
 
     reply.status(HTTP_STATUS.OK).send({

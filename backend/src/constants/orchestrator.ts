@@ -39,6 +39,19 @@ export const HEADER_ROW_OFFSET = 1;
 
 export const LEAD_STATUS = {
   PENDING: "未対応",
-  COMPLETED: "完了",
-  RETRY_LIMIT: "リトライ上限",
+  FOLLOWING: "フォロー中",
+  COMPLETED: "対応済み",
 } as const;
+
+export const ORCHESTRATOR_PHASE = {
+  IDLE: "",
+  CALLING: "calling",
+  WAITING_RESPONSE: "waiting_response",
+  ANALYZING: "analyzing",
+  SENDING_EMAIL: "sending_email",
+  UPDATING: "updating",
+} as const;
+
+export type OrchestratorPhaseValue = typeof ORCHESTRATOR_PHASE[keyof typeof ORCHESTRATOR_PHASE];
+
+export const MAX_ACTIVITY_LOG_ENTRIES = 20;

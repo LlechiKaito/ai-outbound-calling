@@ -29,7 +29,7 @@ function buildApp(mockLeadRepo: jest.Mocked<LeadRepository>): FastifyInstance {
   return app;
 }
 
-const lead1 = new Lead(2, "会社A", "名前A", "+819012345678", "a@test.com", "完了", 0, "2026-02-28 10:00", "応答", "7", "フォロー", "要約テスト");
+const lead1 = new Lead(2, "会社A", "名前A", "+819012345678", "a@test.com", "フォロー中", 0, "2026-02-28 10:00", "応答", "7", "フォロー", "要約テスト");
 const lead2 = new Lead(3, "会社B", "名前B", "+819087654321", "", "", 0, "", "", "", "", "");
 
 describe("Dashboard API", () => {
@@ -158,6 +158,8 @@ describe("Dashboard API", () => {
 
       expect(res.status).toBe(HTTP_STATUS.OK);
       expect(res.body.data.orchestratorState).toBe("idle");
+      expect(res.body.data.currentPhase).toBe("");
+      expect(res.body.data.activityLog).toEqual([]);
       expect(res.body.data.spreadsheetUrl).toBe("https://docs.google.com/spreadsheets/d/test-sheet-id");
 
       await app.close();

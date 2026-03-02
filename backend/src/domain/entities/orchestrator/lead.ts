@@ -18,11 +18,19 @@ export class Lead {
     return this.status === "" || this.status === "未対応";
   }
 
+  isFollowing(): boolean {
+    return this.status === "フォロー中";
+  }
+
+  isCompleted(): boolean {
+    return this.status === "対応済み";
+  }
+
   canRetry(maxRetries: number): boolean {
     return this.retryCount < maxRetries;
   }
 
   isCallable(maxRetries: number): boolean {
-    return this.isPending() && this.canRetry(maxRetries);
+    return (this.isPending() || this.isFollowing()) && this.canRetry(maxRetries);
   }
 }

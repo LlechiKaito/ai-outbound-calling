@@ -19,7 +19,11 @@ import {
   BUSINESS_HOURS_CHECK_INTERVAL_MS,
   PAUSE_CHECK_INTERVAL_MS,
   LEAD_STATUS,
+  ORCHESTRATOR_PHASE,
+  MAX_ACTIVITY_LOG_ENTRIES,
 } from "@/constants/orchestrator.js";
+import type { OrchestratorPhaseValue } from "@/constants/orchestrator.js";
+import type { ActivityLogEntry } from "@/application/dto/orchestrator/orchestrator-dto.js";
 import { config } from "@/config/index.js";
 
 interface PendingCall {
@@ -32,6 +36,8 @@ export class AutoCallOrchestratorUseCase {
   private processedCount = 0;
   private totalLeads = 0;
   private currentLead: Lead | null = null;
+  private currentPhase: OrchestratorPhaseValue = ORCHESTRATOR_PHASE.IDLE;
+  private readonly activityLog: ActivityLogEntry[] = [];
   private readonly pendingCalls = new Map<string, PendingCall>();
   private readonly businessHours = new BusinessHours();
 
@@ -105,6 +111,7 @@ export class AutoCallOrchestratorUseCase {
     this.state = this.state.toStopped();
     this.clearPendingCalls();
     this.currentLead = null;
+    this.currentPhase = ORCHESTRATOR_PHASE.IDLE;
     this.logger.info("[Orchestrator] Stopped");
   }
 
@@ -120,6 +127,8 @@ export class AutoCallOrchestratorUseCase {
             phoneNumber: this.currentLead.phoneNumber,
           }
         : null,
+      currentPhase: this.currentPhase,
+      activityLog: [...this.activityLog],
     };
   }
 
@@ -162,6 +171,7 @@ export class AutoCallOrchestratorUseCase {
     }
 
     this.currentLead = null;
+    this.currentPhase = ORCHESTRATOR_PHASE.IDLE;
     if (this.state.isRunning()) {
       this.state = OrchestratorState.create("stopped");
       this.logger.info(
@@ -173,6 +183,7 @@ export class AutoCallOrchestratorUseCase {
 
   private async processLead(lead: Lead): Promise<void> {
     this.currentLead = lead;
+    this.currentPhase = ORCHESTRATOR_PHASE.CALLING;
     this.logger.info(
       {
         companyName: lead.companyName,
@@ -196,6 +207,7 @@ export class AutoCallOrchestratorUseCase {
       return;
     }
 
+    this.currentPhase = ORCHESTRATOR_PHASE.WAITING_RESPONSE;
     this.logger.info(
       { callSid: callResult.data.callSid, phoneNumber: lead.phoneNumber },
       "[Orchestrator] Call initiated, waiting for completion",
@@ -220,6 +232,7 @@ export class AutoCallOrchestratorUseCase {
     lead: Lead,
     transcript: string,
   ): Promise<void> {
+    this.currentPhase = ORCHESTRATOR_PHASE.ANALYZING;
     const analysisResult = await this.callAnalysisRepository.analyze(transcript);
 
     if (!analysisResult.success) {
@@ -227,11 +240,14 @@ export class AutoCallOrchestratorUseCase {
         { error: analysisResult.error, phoneNumber: lead.phoneNumber },
         "[Orchestrator] Analysis failed",
       );
+      this.addActivityLog(lead.companyName, "応答", "分析失敗");
       return;
     }
 
+    this.currentPhase = ORCHESTRATOR_PHASE.UPDATING;
+    const hasNextAction = analysisResult.data.nextAction !== "";
     const updateData: LeadUpdateData = {
-      status: LEAD_STATUS.COMPLETED,
+      status: hasNextAction ? LEAD_STATUS.FOLLOWING : LEAD_STATUS.COMPLETED,
       callResult: "応答",
       interestLevel: analysisResult.data.interestLevel.value,
       nextAction: analysisResult.data.nextAction,
@@ -261,6 +277,8 @@ export class AutoCallOrchestratorUseCase {
       "[Orchestrator] Lead updated with analysis",
     );
 
+    this.addActivityLog(lead.companyName, "応答", "分析完了");
+
     await this.sendFollowUpEmailIfNeeded(lead, analysisResult.data);
   }
 
@@ -272,6 +290,7 @@ export class AutoCallOrchestratorUseCase {
       return;
     }
 
+    this.currentPhase = ORCHESTRATOR_PHASE.SENDING_EMAIL;
     const emailResult = await this.sendFollowUpEmailUseCase.execute({
       to: lead.email,
       companyName: lead.companyName,
@@ -285,16 +304,20 @@ export class AutoCallOrchestratorUseCase {
         { error: emailResult.error, email: lead.email },
         "[Orchestrator] Failed to send follow-up email",
       );
+      return;
     }
+
+    this.addActivityLog(lead.companyName, "応答", "メール送信完了");
   }
 
   private async updateLeadAsNoAnswer(lead: Lead): Promise<void> {
+    this.currentPhase = ORCHESTRATOR_PHASE.UPDATING;
     const newRetryCount = lead.retryCount + 1;
 
     const reachedLimit = newRetryCount >= MAX_RETRY_COUNT;
 
     const updateData: LeadUpdateData = {
-      status: reachedLimit ? LEAD_STATUS.RETRY_LIMIT : LEAD_STATUS.PENDING,
+      status: reachedLimit ? LEAD_STATUS.COMPLETED : LEAD_STATUS.FOLLOWING,
       callResult: "不在",
       interestLevel: 0,
       nextAction: reachedLimit ? "リトライ上限到達" : "再架電",
@@ -324,6 +347,8 @@ export class AutoCallOrchestratorUseCase {
       },
       "[Orchestrator] Lead marked as no-answer",
     );
+
+    this.addActivityLog(lead.companyName, "不在", `${newRetryCount}/${MAX_RETRY_COUNT}回目`);
   }
 
   private waitForCallComplete(phoneNumber: string): Promise<CallCompletionEvent> {
@@ -365,6 +390,23 @@ export class AutoCallOrchestratorUseCase {
       clearTimeout(pending.timeout);
       pending.resolve({ answered: false, transcript: "" });
       this.pendingCalls.delete(phoneNumber);
+    }
+  }
+
+  private addActivityLog(
+    companyName: string,
+    callResult: string,
+    detail: string,
+  ): void {
+    this.activityLog.unshift({
+      timestamp: new Date().toISOString(),
+      companyName,
+      callResult,
+      detail,
+    });
+
+    if (this.activityLog.length > MAX_ACTIVITY_LOG_ENTRIES) {
+      this.activityLog.length = MAX_ACTIVITY_LOG_ENTRIES;
     }
   }
 

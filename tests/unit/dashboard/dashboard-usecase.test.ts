@@ -7,10 +7,10 @@ describe("DashboardUseCase", () => {
   let mockLeadRepo: jest.Mocked<LeadRepository>;
   let useCase: DashboardUseCase;
 
-  const lead1 = new Lead(2, "会社A", "名前A", "+819012345678", "a@example.com", "完了", 0, "2026-02-28 10:00", "応答", "8", "フォロー", "良い反応");
-  const lead2 = new Lead(3, "会社B", "名前B", "+819087654321", "", "未対応", 1, "2026-02-28 11:00", "不在", "", "再架電", "");
+  const lead1 = new Lead(2, "会社A", "名前A", "+819012345678", "a@example.com", "フォロー中", 0, "2026-02-28 10:00", "応答", "8", "フォロー", "良い反応");
+  const lead2 = new Lead(3, "会社B", "名前B", "+819087654321", "", "未対応", 0, "", "", "", "", "");
   const lead3 = new Lead(4, "会社C", "名前C", "+819011111111", "", "", 0, "", "", "", "", "");
-  const lead4 = new Lead(5, "会社D", "名前D", "+819022222222", "", "リトライ上限", 3, "2026-02-28 09:00", "不在", "", "リトライ上限到達", "");
+  const lead4 = new Lead(5, "会社D", "名前D", "+819022222222", "", "対応済み", 3, "2026-02-28 09:00", "不在", "", "リトライ上限到達", "");
 
   beforeEach(() => {
     mockLeadRepo = {
@@ -30,8 +30,8 @@ describe("DashboardUseCase", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.totalCalled).toBe(3);
-        expect(result.data.successRate).toBe(33);
+        expect(result.data.totalCalled).toBe(2);
+        expect(result.data.successRate).toBe(50);
         expect(result.data.avgInterestLevel).toBe(8);
         expect(result.data.emailSentCount).toBe(1);
       }
@@ -84,10 +84,10 @@ describe("DashboardUseCase", () => {
       }
     });
 
-    it("should filter completed leads", async () => {
+    it("should filter following leads", async () => {
       mockLeadRepo.fetchAllLeads.mockResolvedValue(ok([lead1, lead2, lead3, lead4]));
 
-      const result = await useCase.getLeads("completed");
+      const result = await useCase.getLeads("following");
 
       expect(result.success).toBe(true);
       if (result.success) {
@@ -96,10 +96,10 @@ describe("DashboardUseCase", () => {
       }
     });
 
-    it("should filter retry_limit leads", async () => {
+    it("should filter completed leads", async () => {
       mockLeadRepo.fetchAllLeads.mockResolvedValue(ok([lead1, lead2, lead3, lead4]));
 
-      const result = await useCase.getLeads("retry_limit");
+      const result = await useCase.getLeads("completed");
 
       expect(result.success).toBe(true);
       if (result.success) {
@@ -117,10 +117,9 @@ describe("DashboardUseCase", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data).toHaveLength(3);
-        expect(result.data[0].companyName).toBe("会社B");
-        expect(result.data[1].companyName).toBe("会社A");
-        expect(result.data[2].companyName).toBe("会社D");
+        expect(result.data).toHaveLength(2);
+        expect(result.data[0].companyName).toBe("会社A");
+        expect(result.data[1].companyName).toBe("会社D");
       }
     });
 

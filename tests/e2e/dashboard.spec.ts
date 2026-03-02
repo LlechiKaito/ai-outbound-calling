@@ -19,7 +19,7 @@ const MOCK_LEADS = {
       contactName: "山田太郎",
       phoneNumber: "+819012345678",
       email: "yamada@example.com",
-      status: "完了",
+      status: "フォロー中",
       retryCount: 0,
       lastCalledAt: "2026-02-28 10:00",
       callResult: "応答",
@@ -71,6 +71,8 @@ const MOCK_STATUS = {
     processedCount: 0,
     totalLeads: 0,
     currentLead: null,
+    currentPhase: "",
+    activityLog: [],
     spreadsheetUrl: "https://docs.google.com/spreadsheets/d/test-sheet-id",
   },
 };
@@ -225,7 +227,7 @@ test.describe("Dashboard", () => {
     await expect(modal).toBeVisible();
     await expect(page.locator("#edit-company")).toHaveValue("テスト株式会社");
     await expect(page.locator("#edit-contact")).toHaveValue("山田太郎");
-    await expect(page.locator("#edit-phone")).toHaveValue("+819012345678");
+    await expect(page.locator("#edit-phone")).toHaveValue("09012345678");
     await expect(page.locator("#edit-email")).toHaveValue("yamada@example.com");
   });
 
@@ -291,6 +293,10 @@ test.describe("Dashboard", () => {
             processedCount: 2,
             totalLeads: 5,
             currentLead: { companyName: "進行中会社", contactName: "進行中名前", phoneNumber: "+819099999999" },
+            currentPhase: "waiting_response",
+            activityLog: [
+              { timestamp: "2026-03-01T10:00:00.000Z", companyName: "完了会社", callResult: "応答", detail: "分析完了" },
+            ],
             spreadsheetUrl: "https://docs.google.com/spreadsheets/d/test-sheet-id",
           },
         },
@@ -303,7 +309,7 @@ test.describe("Dashboard", () => {
     await expect(page.locator("#btn-start")).toBeDisabled();
     await expect(page.locator("#btn-pause")).toBeEnabled();
     await expect(page.locator("#btn-stop")).toBeEnabled();
-    await expect(page.locator("#live-progress")).toContainText("2 / 5 件");
-    await expect(page.locator("#live-current-lead")).toContainText("進行中会社");
+    await expect(page.locator("#live-status-message")).toContainText("進行中会社と通話中...");
+    await expect(page.locator("#activity-log-entries")).toContainText("完了会社");
   });
 });

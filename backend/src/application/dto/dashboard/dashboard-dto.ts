@@ -41,4 +41,11 @@ export interface DashboardStatusDto {
     readonly contactName: string;
     readonly phoneNumber: string;
   } | null;
+  readonly currentPhase: string;
+  readonly activityLog: readonly {
+    readonly timestamp: string;
+    readonly companyName: string;
+    readonly callResult: string;
+    readonly detail: string;
+  }[];
 }
