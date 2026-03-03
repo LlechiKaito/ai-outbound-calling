@@ -46,7 +46,7 @@ export class FrontendConstruct extends Construct {
       ],
     });
 
-    new s3deploy.BucketDeployment(this, "DeployStaticFiles", {
+    const staticDeploy = new s3deploy.BucketDeployment(this, "DeployStaticFiles", {
       sources: [
         s3deploy.Source.asset(
           path.join(__dirname, "..", "..", "..", "frontend", "public"),
@@ -58,7 +58,7 @@ export class FrontendConstruct extends Construct {
       distributionPaths: ["/*"],
     });
 
-    new s3deploy.BucketDeployment(this, "DeployConfig", {
+    const configDeploy = new s3deploy.BucketDeployment(this, "DeployConfig", {
       sources: [
         s3deploy.Source.data(
           "js/config.js",
@@ -70,6 +70,7 @@ export class FrontendConstruct extends Construct {
       distributionPaths: ["/js/config.js"],
       prune: false,
     });
+    configDeploy.node.addDependency(staticDeploy);
 
     new cdk.CfnOutput(stack, "FrontendUrl", {
       value: `https://${distribution.distributionDomainName}`,
