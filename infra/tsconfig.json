@@ -11,6 +11,6 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true
   },
-  "include": ["bin/**/*", "lib/**/*", "config/**/*"],
+  "include": ["bin/**/*", "lib/**/*", "config/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist", "cdk.out"]
 }
