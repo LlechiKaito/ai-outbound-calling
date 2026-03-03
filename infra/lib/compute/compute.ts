@@ -30,6 +30,7 @@ export class ComputeConstruct extends Construct {
       directory: path.join(__dirname, "..", "..", ".."),
       file: "Dockerfile",
       target: "prod",
+      platform: ecr_assets.Platform.LINUX_AMD64,
     });
 
     const accessRole = new iam.Role(this, "AccessRole", {
