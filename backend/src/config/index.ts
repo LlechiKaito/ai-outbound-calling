@@ -41,7 +41,8 @@ export const config = {
   },
   get google() {
     return lazy(() => ({
-      credentialsPath: requireEnv("GOOGLE_CREDENTIALS_PATH"),
+      credentialsPath: process.env["GOOGLE_CREDENTIALS_PATH"],
+      credentialsJson: process.env["GOOGLE_CREDENTIALS_JSON"],
       sheetsId: requireEnv("GOOGLE_SHEETS_ID"),
     }))();
   },
@@ -67,7 +68,7 @@ export const config = {
     return hasEnv("ELEVENLABS_API_KEY") && hasEnv("ELEVENLABS_AGENT_ID");
   },
   isGoogleConfigured(): boolean {
-    return hasEnv("GOOGLE_CREDENTIALS_PATH") && hasEnv("GOOGLE_SHEETS_ID");
+    return (hasEnv("GOOGLE_CREDENTIALS_PATH") || hasEnv("GOOGLE_CREDENTIALS_JSON")) && hasEnv("GOOGLE_SHEETS_ID");
   },
   isMailConfigured(): boolean {
     return hasEnv("MAIL_HOST") && hasEnv("MAIL_USER") && hasEnv("MAIL_PASSWORD");
