@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+.env
+coverage
+test-results
+dev-log
+infra
+frontend/nginx.conf
+tests
+cdk.out
+*.md

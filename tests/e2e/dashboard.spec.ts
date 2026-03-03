@@ -1,0 +1,315 @@
+import { test, expect } from "@playwright/test";
+
+const MOCK_KPIS = {
+  isSuccess: true,
+  data: {
+    totalCalled: 5,
+    successRate: 60,
+    avgInterestLevel: 7.2,
+    emailSentCount: 3,
+  },
+};
+
+const MOCK_LEADS = {
+  isSuccess: true,
+  data: [
+    {
+      rowIndex: 2,
+      companyName: "テスト株式会社",
+      contactName: "山田太郎",
+      phoneNumber: "+819012345678",
+      email: "yamada@example.com",
+      status: "フォロー中",
+      retryCount: 0,
+      lastCalledAt: "2026-02-28 10:00",
+      callResult: "応答",
+      interestLevel: "8",
+      nextAction: "フォロー",
+      memo: "良い反応",
+    },
+    {
+      rowIndex: 3,
+      companyName: "サンプル株式会社",
+      contactName: "佐藤花子",
+      phoneNumber: "+819087654321",
+      email: "",
+      status: "",
+      retryCount: 0,
+      lastCalledAt: "",
+      callResult: "",
+      interestLevel: "",
+      nextAction: "",
+      memo: "",
+    },
+  ],
+};
+
+const MOCK_PENDING_LEADS = {
+  isSuccess: true,
+  data: [MOCK_LEADS.data[1]],
+};
+
+const MOCK_CALL_HISTORY = {
+  isSuccess: true,
+  data: [
+    {
+      companyName: "テスト株式会社",
+      contactName: "山田太郎",
+      phoneNumber: "+819012345678",
+      callResult: "応答",
+      interestLevel: "8",
+      lastCalledAt: "2026-02-28 10:00",
+      memo: "良い反応",
+    },
+  ],
+};
+
+const MOCK_STATUS = {
+  isSuccess: true,
+  data: {
+    orchestratorState: "idle",
+    processedCount: 0,
+    totalLeads: 0,
+    currentLead: null,
+    currentPhase: "",
+    activityLog: [],
+    spreadsheetUrl: "https://docs.google.com/spreadsheets/d/test-sheet-id",
+  },
+};
+
+test.describe("Dashboard", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/dashboard/kpis", (route) =>
+      route.fulfill({ json: MOCK_KPIS }),
+    );
+    await page.route("**/api/dashboard/leads?status=pending", (route) =>
+      route.fulfill({ json: MOCK_PENDING_LEADS }),
+    );
+    await page.route("**/api/dashboard/leads/**", (route) => {
+      if (route.request().method() === "PUT") {
+        return route.fulfill({
+          json: { isSuccess: true, data: null },
+        });
+      }
+      return route.continue();
+    });
+    await page.route("**/api/dashboard/leads", (route) => {
+      if (route.request().method() === "GET") {
+        return route.fulfill({ json: MOCK_LEADS });
+      }
+      return route.fulfill({
+        status: 201,
+        json: { isSuccess: true, data: null },
+      });
+    });
+    await page.route("**/api/dashboard/call-history", (route) =>
+      route.fulfill({ json: MOCK_CALL_HISTORY }),
+    );
+    await page.route("**/api/dashboard/status", (route) =>
+      route.fulfill({ json: MOCK_STATUS }),
+    );
+  });
+
+  test("should display KPI cards with correct values", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    await expect(page.locator("#kpi-total-called")).toHaveText("5");
+    await expect(page.locator("#kpi-success-rate")).toHaveText("60%");
+    await expect(page.locator("#kpi-avg-interest")).toHaveText("7.2");
+    await expect(page.locator("#kpi-email-sent")).toHaveText("3");
+  });
+
+  test("should display lead list", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const rows = page.locator("#leads-tbody tr");
+    await expect(rows).toHaveCount(2);
+    await expect(rows.first()).toContainText("テスト株式会社");
+    await expect(rows.first()).toContainText("山田太郎");
+    await expect(rows.nth(1)).toContainText("サンプル株式会社");
+  });
+
+  test("should filter leads by pending tab", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click('[data-tab="pending"]');
+    await page.waitForTimeout(500);
+
+    const rows = page.locator("#leads-tbody tr");
+    await expect(rows).toHaveCount(1);
+    await expect(rows.first()).toContainText("サンプル株式会社");
+  });
+
+  test("should display call history", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const rows = page.locator("#history-tbody tr");
+    await expect(rows).toHaveCount(1);
+    await expect(rows.first()).toContainText("テスト株式会社");
+    await expect(rows.first()).toContainText("良い反応");
+  });
+
+  test("should show orchestrator state as idle", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    await expect(page.locator("#orchestrator-state")).toHaveText("待機中");
+    await expect(page.locator("#btn-start")).toBeEnabled();
+    await expect(page.locator("#btn-pause")).toBeDisabled();
+    await expect(page.locator("#btn-resume")).toBeDisabled();
+    await expect(page.locator("#btn-stop")).toBeDisabled();
+  });
+
+  test("should have Google Sheets link", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const link = page.locator("#sheets-link");
+    await expect(link).toHaveAttribute("href", "https://docs.google.com/spreadsheets/d/test-sheet-id");
+  });
+
+  test("should toggle add lead form", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const form = page.locator("#add-lead-form");
+    await expect(form).toBeHidden();
+
+    await page.click("#btn-add-lead");
+    await expect(form).toBeVisible();
+
+    await page.click("#add-lead-form button:has-text('キャンセル')");
+    await expect(form).toBeHidden();
+  });
+
+  test("should submit new lead", async ({ page }) => {
+    let addLeadCalled = false;
+    await page.route("**/api/dashboard/leads", (route) => {
+      if (route.request().method() === "POST") {
+        addLeadCalled = true;
+        return route.fulfill({
+          status: 201,
+          json: { isSuccess: true, data: null },
+        });
+      }
+      return route.fulfill({ json: MOCK_LEADS });
+    });
+
+    await page.goto("/dashboard");
+
+    await page.click("#btn-add-lead");
+    await page.fill("#new-company", "新規会社");
+    await page.fill("#new-contact", "新規担当");
+    await page.fill("#new-phone", "09011112222");
+    await page.fill("#new-email", "new@test.com");
+    await page.click("#add-lead-form button:has-text('追加')");
+
+    await page.waitForTimeout(500);
+    expect(addLeadCalled).toBe(true);
+  });
+
+  test("should show validation error for empty fields", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    await page.click("#btn-add-lead");
+    await page.click("#add-lead-form button:has-text('追加')");
+
+    const error = page.locator("#add-lead-error");
+    await expect(error).toBeVisible();
+    await expect(error).toContainText("必須");
+  });
+
+  test("should open edit modal with lead data", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+
+    const modal = page.locator("#edit-modal");
+    await expect(modal).toBeVisible();
+    await expect(page.locator("#edit-company")).toHaveValue("テスト株式会社");
+    await expect(page.locator("#edit-contact")).toHaveValue("山田太郎");
+    await expect(page.locator("#edit-phone")).toHaveValue("09012345678");
+    await expect(page.locator("#edit-email")).toHaveValue("yamada@example.com");
+  });
+
+  test("should submit edit lead", async ({ page }) => {
+    let editLeadCalled = false;
+    let editLeadBody: Record<string, string> = {};
+    await page.route("**/api/dashboard/leads/**", (route) => {
+      if (route.request().method() === "PUT") {
+        editLeadCalled = true;
+        editLeadBody = route.request().postDataJSON();
+        return route.fulfill({
+          json: { isSuccess: true, data: null },
+        });
+      }
+      return route.continue();
+    });
+
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+    await page.fill("#edit-company", "更新株式会社");
+    await page.fill("#edit-contact", "更新太郎");
+    await page.click("#btn-edit-submit");
+
+    await page.waitForTimeout(500);
+    expect(editLeadCalled).toBe(true);
+    expect(editLeadBody.companyName).toBe("更新株式会社");
+    expect(editLeadBody.contactName).toBe("更新太郎");
+  });
+
+  test("should show edit validation error for empty fields", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+    await page.fill("#edit-company", "");
+    await page.click("#btn-edit-submit");
+
+    const error = page.locator("#edit-lead-error");
+    await expect(error).toBeVisible();
+    await expect(error).toContainText("必須");
+  });
+
+  test("should close edit modal on cancel", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForSelector("#leads-tbody tr");
+
+    await page.click("#leads-tbody tr:first-child button:has-text('編集')");
+    await expect(page.locator("#edit-modal")).toBeVisible();
+
+    await page.click("#edit-modal button:has-text('キャンセル')");
+    await expect(page.locator("#edit-modal")).toBeHidden();
+  });
+
+  test("should update controls when orchestrator is running", async ({ page }) => {
+    await page.route("**/api/dashboard/status", (route) =>
+      route.fulfill({
+        json: {
+          isSuccess: true,
+          data: {
+            orchestratorState: "running",
+            processedCount: 2,
+            totalLeads: 5,
+            currentLead: { companyName: "進行中会社", contactName: "進行中名前", phoneNumber: "+819099999999" },
+            currentPhase: "waiting_response",
+            activityLog: [
+              { timestamp: "2026-03-01T10:00:00.000Z", companyName: "完了会社", callResult: "応答", detail: "分析完了" },
+            ],
+            spreadsheetUrl: "https://docs.google.com/spreadsheets/d/test-sheet-id",
+          },
+        },
+      }),
+    );
+
+    await page.goto("/dashboard");
+
+    await expect(page.locator("#orchestrator-state")).toHaveText("実行中");
+    await expect(page.locator("#btn-start")).toBeDisabled();
+    await expect(page.locator("#btn-pause")).toBeEnabled();
+    await expect(page.locator("#btn-stop")).toBeEnabled();
+    await expect(page.locator("#live-status-message")).toContainText("進行中会社と通話中...");
+    await expect(page.locator("#activity-log-entries")).toContainText("完了会社");
+  });
+});

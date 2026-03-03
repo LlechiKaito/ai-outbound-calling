@@ -1,0 +1,888 @@
+──────────────────────────────────────
+[02:32:54] $ mkdir -p /home/claude/workdir/ai-outbound-calling/backend/public/js
+──────────────────────────────────────
+[02:35:01] $ npx playwright test 2>&1 | tail -20
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (329ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (265ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (795ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (268ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (248ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (240ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (308ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (833ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (308ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (313ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (855ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (345ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (312ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (260ms)
+
+  14 passed (7.5s)
+──────────────────────────────────────
+[02:35:06] $ wc -l /home/claude/workdir/ai-outbound-calling/backend/public/dashboard.html /home/claude/workdir/ai-outbound-calling/backend/public/js/*.js
+  210 /home/claude/workdir/ai-outbound-calling/backend/public/dashboard.html
+   18 /home/claude/workdir/ai-outbound-calling/backend/public/js/api.js
+   36 /home/claude/workdir/ai-outbound-calling/backend/public/js/constants.js
+  227 /home/claude/workdir/ai-outbound-calling/backend/public/js/dashboard.js
+   43 /home/claude/workdir/ai-outbound-calling/backend/public/js/ui.js
+  534 total
+──────────────────────────────────────
+[02:35:15] $ git add backend/public/dashboard.html backend/public/js/constants.js backend/public/js/api.js backend/public/js/ui.js backend/public/js/dashboard.js && git commit -m "$(cat <<'EOF'
+refactor(dashboard): separate frontend JS from HTML
+
+Extract inline JavaScript from dashboard.html into 4 separate files:
+- js/constants.js: API paths, labels, error messages
+- js/api.js: HTTP communication layer (axios)
+- js/ui.js: UI helpers (badge rendering, escaping)
+- js/dashboard.js: main logic (data loading, event handlers)
+
+Replace fetch API with axios per coding conventions. Move all
+hardcoded strings to constants. Each file stays under 300 lines.
+
+Closes #4
+EOF
+)"
+[feature/#4-auto-analyze-and-save fe64f95] refactor(dashboard): separate frontend JS from HTML
+ 5 files changed, 329 insertions(+), 291 deletions(-)
+ create mode 100644 backend/public/js/api.js
+ create mode 100644 backend/public/js/constants.js
+ create mode 100644 backend/public/js/dashboard.js
+ create mode 100644 backend/public/js/ui.js
+──────────────────────────────────────
+[02:35:19] $ git push
+To https://github.com/LlechiKaito/ai-outbound-calling.git
+   b9c93f2..fe64f95  feature/#4-auto-analyze-and-save -> feature/#4-auto-analyze-and-save
+──────────────────────────────────────
+[02:37:07] $ ls /home/claude/workdir/ai-outbound-calling/backend/public/
+dashboard.html
+js
+──────────────────────────────────────
+[02:37:15] $ mkdir -p /home/claude/workdir/ai-outbound-calling/frontend/public/js
+──────────────────────────────────────
+[02:37:22] $ git mv backend/public/dashboard.html frontend/public/dashboard.html && git mv backend/public/js/constants.js frontend/public/js/constants.js && git mv backend/public/js/api.js frontend/public/js/api.js && git mv backend/public/js/ui.js frontend/public/js/ui.js && git mv backend/public/js/dashboard.js frontend/public/js/dashboard.js
+──────────────────────────────────────
+[02:37:45] $ npx playwright test 2>&1 | tail -20
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (289ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (273ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (783ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (255ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (249ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (243ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (314ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (833ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (319ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (293ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (852ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (335ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (309ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (253ms)
+
+  14 passed (7.4s)
+──────────────────────────────────────
+[02:37:50] $ ls backend/public/ 2>&1
+js
+──────────────────────────────────────
+[02:37:54] $ ls backend/public/js/ 2>&1
+──────────────────────────────────────
+[02:37:59] $ git add backend/src/server.ts tests/e2e/serve-dashboard.ts && git status
+On branch feature/#4-auto-analyze-and-save
+Your branch is up to date with 'origin/feature/#4-auto-analyze-and-save'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   backend/src/server.ts
+	renamed:    backend/public/dashboard.html -> frontend/public/dashboard.html
+	renamed:    backend/public/js/api.js -> frontend/public/js/api.js
+	renamed:    backend/public/js/constants.js -> frontend/public/js/constants.js
+	renamed:    backend/public/js/dashboard.js -> frontend/public/js/dashboard.js
+	renamed:    backend/public/js/ui.js -> frontend/public/js/ui.js
+	modified:   tests/e2e/serve-dashboard.ts
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   dev-log/auto/2026-02-28-tools.log
+	modified:   dev-log/auto/2026-02-28.log
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	dev-log/auto/2026-03-01-tools.log
+	dev-log/auto/2026-03-01.log
+	dev-log/sessions/2026-02-28_13-24-00.md
+	dev-log/sessions/2026-02-28_13-47-29.md
+	dev-log/sessions/2026-02-28_13-59-51.md
+	dev-log/sessions/2026-02-28_14-09-19.md
+	dev-log/sessions/2026-02-28_14-18-32.md
+	dev-log/sessions/2026-02-28_14-23-04.md
+	dev-log/sessions/2026-03-01_02-35-29.md
+──────────────────────────────────────
+[02:38:05] $ git commit -m "$(cat <<'EOF'
+refactor(dashboard): move frontend files to frontend/ directory
+
+Move dashboard HTML and JS from backend/public/ to frontend/public/
+to separate frontend and backend codebases. Update static file
+serving path in server.ts and E2E test server.
+
+Closes #4
+EOF
+)"
+[feature/#4-auto-analyze-and-save 4b8b1eb] refactor(dashboard): move frontend files to frontend/ directory
+ 7 files changed, 2 insertions(+), 2 deletions(-)
+ rename {backend => frontend}/public/dashboard.html (100%)
+ rename {backend => frontend}/public/js/api.js (100%)
+ rename {backend => frontend}/public/js/constants.js (100%)
+ rename {backend => frontend}/public/js/dashboard.js (100%)
+ rename {backend => frontend}/public/js/ui.js (100%)
+──────────────────────────────────────
+[02:38:17] $ git push
+To https://github.com/LlechiKaito/ai-outbound-calling.git
+   fe64f95..4b8b1eb  feature/#4-auto-analyze-and-save -> feature/#4-auto-analyze-and-save
+──────────────────────────────────────
+[02:40:11] $ head -10 /home/claude/workdir/ai-outbound-calling/package.json
+{
+  "name": "ai-outbound-calling",
+  "version": "1.0.0",
+  "description": "AI outbound calling system",
+  "main": "dist/backend/src/server.js",
+  "scripts": {
+    "dev": "tsx --tsconfig tsconfig.json backend/src/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/backend/src/server.js",
+    "test:unit": "jest --testPathPatterns=tests/unit --passWithNoTests",
+──────────────────────────────────────
+[02:40:35] $ npx tsc --noEmit 2>&1 | grep -v "media-stream-types"
+──────────────────────────────────────
+[02:40:50] $ npx playwright test 2>&1 | tail -20
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (445ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (417ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (834ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (273ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (254ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (266ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (317ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (837ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (358ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (293ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (808ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (346ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (309ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (262ms)
+
+  14 passed (7.9s)
+──────────────────────────────────────
+[02:40:56] $ git add backend/src/server.ts && git commit -m "$(cat <<'EOF'
+fix(dashboard): replace import.meta with __dirname for CommonJS
+
+The project uses CommonJS (no "type": "module" in package.json),
+so import.meta.url is not available. Use Node.js __dirname instead.
+EOF
+)"
+[feature/#4-auto-analyze-and-save 45978a5] fix(dashboard): replace import.meta with __dirname for CommonJS
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+──────────────────────────────────────
+[02:41:01] $ git push
+To https://github.com/LlechiKaito/ai-outbound-calling.git
+   4b8b1eb..45978a5  feature/#4-auto-analyze-and-save -> feature/#4-auto-analyze-and-save
+──────────────────────────────────────
+[02:43:37] $ npx playwright test 2>&1 | tail -5
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (347ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (308ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (255ms)
+
+  14 passed (7.5s)
+──────────────────────────────────────
+[02:43:43] $ git add backend/src/server.ts && git commit -m "$(cat <<'EOF'
+fix(dashboard): correct static file path to frontend/public
+
+__dirname is backend/src/, so only 2 levels up are needed to reach
+the project root, not 3.
+EOF
+)" && git push
+[feature/#4-auto-analyze-and-save 0b307ca] fix(dashboard): correct static file path to frontend/public
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To https://github.com/LlechiKaito/ai-outbound-calling.git
+   45978a5..0b307ca  feature/#4-auto-analyze-and-save -> feature/#4-auto-analyze-and-save
+──────────────────────────────────────
+[02:46:32] $ npm install @fastify/cors
+added 1 package, and audited 516 packages in 749ms
+
+106 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[02:47:02] $ npm uninstall @fastify/static
+removed 16 packages, and audited 500 packages in 559ms
+
+98 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[02:47:08] $ npm install -D @fastify/static
+added 16 packages, and audited 516 packages in 2s
+
+106 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[02:47:27] $ npx tsc --noEmit 2>&1 | head -30
+backend/src/presentation/handlers/media-stream/media-stream-types.ts(50,30): error TS2694: Namespace 'WebSocket' has no exported member 'default'.
+──────────────────────────────────────
+[02:47:39] $ npx tsc --noEmit 2>&1 | grep -v "media-stream-types" | head -20
+──────────────────────────────────────
+[02:47:54] $ npx playwright test tests/e2e/dashboard.spec.ts 2>&1
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (335ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (258ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (793ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (253ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (245ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (252ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (308ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (833ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (338ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (269ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (860ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (318ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (311ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (269ms)
+
+  14 passed (7.5s)
+──────────────────────────────────────
+[06:30:33] $ ls /home/claude/workdir/ai-outbound-calling/scripts/
+test-call-analysis.ts
+test-follow-up-email.ts
+──────────────────────────────────────
+[06:32:44] $ find /home/claude/workdir/ai-outbound-calling/backend -type f -name "*.ts" | head -20
+/home/claude/workdir/ai-outbound-calling/backend/src/config/index.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/error-messages.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/google-sheets.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/elevenlabs.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/twiml.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/http.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/orchestrator.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/openai.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/twilio-stream.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/follow-up-email.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/config.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/utils/audio-converter.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/utils/formatters.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/container/index.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/follow-up-email/send-follow-up-email-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/analysis/analyze-call-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call-history/save-call-history-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call-history/post-call-processing-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/dashboard/dashboard-dto.ts
+/home/claude/workdir/ai-outbound-calling/backend/src/application/dto/call/make-call-dto.ts
+──────────────────────────────────────
+[06:33:25] $ mkdir -p /home/claude/workdir/ai-outbound-calling/infra/{bin,lib/compute,lib/frontend,config}
+──────────────────────────────────────
+[06:34:51] $ cd /home/claude/workdir/ai-outbound-calling/infra && npm install 2>&1
+added 7 packages, and audited 46 packages in 7s
+
+5 packages are looking for funding
+  run `npm fund` for details
+
+2 high severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+──────────────────────────────────────
+[06:35:33] $ npx tsc --noEmit 2>&1
+──────────────────────────────────────
+[06:35:46] $ cd /home/claude/workdir/ai-outbound-calling && npx playwright test tests/e2e/dashboard.spec.ts 2>&1
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (317ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (288ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (805ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (288ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (250ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (253ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (314ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (852ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (340ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (298ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (862ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (349ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (327ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (272ms)
+
+  14 passed (7.6s)
+──────────────────────────────────────
+[06:35:52] $ find /home/claude/workdir/ai-outbound-calling/infra -type f -not -path '*/node_modules/*' | sort
+/home/claude/workdir/ai-outbound-calling/infra/bin/app.ts
+/home/claude/workdir/ai-outbound-calling/infra/cdk.json
+/home/claude/workdir/ai-outbound-calling/infra/config/environments.ts
+/home/claude/workdir/ai-outbound-calling/infra/lib/app-stack.ts
+/home/claude/workdir/ai-outbound-calling/infra/lib/compute/compute.ts
+/home/claude/workdir/ai-outbound-calling/infra/lib/frontend/frontend.ts
+/home/claude/workdir/ai-outbound-calling/infra/package-lock.json
+/home/claude/workdir/ai-outbound-calling/infra/package.json
+/home/claude/workdir/ai-outbound-calling/infra/tsconfig.json
+──────────────────────────────────────
+[06:59:20] $ npx playwright test tests/e2e/dashboard.spec.ts 2>&1
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (354ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (295ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (782ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (267ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (263ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (252ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (322ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (835ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (333ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (328ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (861ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (391ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (342ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (280ms)
+
+  14 passed (7.8s)
+──────────────────────────────────────
+[07:04:40] $ ls /home/claude/workdir/ai-outbound-calling/infra/
+bin
+cdk.json
+config
+lib
+node_modules
+package-lock.json
+package.json
+tsconfig.json
+──────────────────────────────────────
+[07:05:31] $ npx playwright test tests/e2e/dashboard.spec.ts 2>&1
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (341ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (290ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (786ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (285ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (261ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (264ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (321ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (854ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (344ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (313ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (872ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (324ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (345ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (251ms)
+
+  14 passed (7.7s)
+──────────────────────────────────────
+[07:11:19] $ npm install @fastify/static
+up to date, audited 516 packages in 630ms
+
+106 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+──────────────────────────────────────
+[07:12:28] $ rm /home/claude/workdir/ai-outbound-calling/frontend/nginx.conf
+──────────────────────────────────────
+[07:18:26] $ npx playwright test tests/e2e/dashboard.spec.ts 2>&1
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:111:7 › Dashboard › should display KPI cards with correct values (377ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:120:7 › Dashboard › should display lead list (375ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:130:7 › Dashboard › should filter leads by pending tab (835ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:142:7 › Dashboard › should display call history (276ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:151:7 › Dashboard › should show orchestrator state as idle (265ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:161:7 › Dashboard › should have Google Sheets link (262ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:168:7 › Dashboard › should toggle add lead form (307ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:181:7 › Dashboard › should submit new lead (834ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:207:7 › Dashboard › should show validation error for empty fields (437ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:218:7 › Dashboard › should open edit modal with lead data (301ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:232:7 › Dashboard › should submit edit lead (847ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:260:7 › Dashboard › should show edit validation error for empty fields (430ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:273:7 › Dashboard › should close edit modal on cancel (310ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:284:7 › Dashboard › should update controls when orchestrator is running (274ms)
+
+  14 passed (7.9s)
+──────────────────────────────────────
+[14:46:57] $ find /home/claude/workdir/ai-outbound-calling -type f -name "*.ts" -o -name "*.js" | head -20
+/home/claude/workdir/ai-outbound-calling/infra/bin/app.ts
+/home/claude/workdir/ai-outbound-calling/infra/config/environments.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2019.object.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.dom.iterable.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2018.full.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.esnext.collection.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/tsserverlibrary.js
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2015.reflect.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2019.string.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2017.date.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2021.intl.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2016.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2015.core.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.dom.asynciterable.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2019.intl.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2022.string.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2020.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2020.full.d.ts
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/typescript.js
+/home/claude/workdir/ai-outbound-calling/infra/node_modules/typescript/lib/lib.es2022.object.d.ts
+──────────────────────────────────────
+[14:47:32] $ grep -r "statusBadge\|resultBadge" /home/claude/workdir/ai-outbound-calling --include="*.ts" --include="*.tsx" --include="*.js" 2>/dev/null
+/home/claude/workdir/ai-outbound-calling/frontend/public/js/ui.js:function statusBadge(status) {
+/home/claude/workdir/ai-outbound-calling/frontend/public/js/ui.js:function resultBadge(result) {
+/home/claude/workdir/ai-outbound-calling/frontend/public/js/dashboard.js:    + '<td class="px-4 py-3">' + statusBadge(l.status) + '</td>'
+/home/claude/workdir/ai-outbound-calling/frontend/public/js/dashboard.js:    + '<td class="px-4 py-3">' + resultBadge(l.callResult) + '</td>'
+/home/claude/workdir/ai-outbound-calling/frontend/public/js/dashboard.js:      + '<td class="px-4 py-3">' + resultBadge(h.callResult) + '</td>'
+──────────────────────────────────────
+[14:51:41] $ npm run test:unit 2>&1
+──────────────────────────────────────
+[14:53:36] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns=tests/unit/dashboard --passWithNoTests --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/dashboard/dashboard-usecase.test.ts (44.659 s)
+  DashboardUseCase
+    getKpis
+      ✓ should compute KPIs correctly (5 ms)
+      ✓ should return zero KPIs for empty leads (1 ms)
+      ✓ should propagate repository error (1 ms)
+    getLeads
+      ✓ should return all leads when no filter (1 ms)
+      ✓ should filter pending leads (1 ms)
+      ✓ should filter following leads (1 ms)
+      ✓ should filter completed leads
+    getCallHistory
+      ✓ should return only called leads sorted by date descending (1 ms)
+      ✓ should return empty for uncalled leads
+    addLead
+      ✓ should delegate to repository (1 ms)
+    editLead
+      ✓ should delegate to repository with rowIndex and data
+      ✓ should propagate repository error
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        44.923 s
+Ran all test suites matching tests/unit/dashboard.
+──────────────────────────────────────
+[14:54:09] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns=tests/unit/orchestrator/auto-call --passWithNoTests --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+  console.log
+    [dotenv@17.3.1] injecting env (20) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts (27.49 s)
+  AutoCallOrchestratorUseCase
+    getStatus
+      ✓ should return idle state initially (3 ms)
+    start
+      ✓ should throw when already running (12 ms)
+      ✓ should stop when no pending leads found (2 ms)
+      ✓ should stop when fetch leads fails (1 ms)
+      ✓ should filter out non-callable leads (1 ms)
+      ✓ should set totalLeads before returning from start (1 ms)
+    pause
+      ✓ should throw when not running (3 ms)
+      ✓ should pause when running
+    resume
+      ✓ should throw when not paused
+      ✓ should resume when paused
+    stop
+      ✓ should throw when idle (1 ms)
+    notifyCallComplete
+      ✓ should return false when no pending call for phone number
+      ✓ should return true and resolve pending call (11 ms)
+    call processing
+      ✓ should update lead as no-answer on call timeout (1 ms)
+      ✓ should update lead as no-answer when call initiation fails
+      ✓ should send follow-up email when email is configured and lead has email (1 ms)
+      ✓ should skip follow-up email when lead has no email (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       17 passed, 17 total
+Snapshots:   0 total
+Time:        27.768 s
+Ran all test suites matching tests/unit/orchestrator/auto-call.
+──────────────────────────────────────
+[14:54:32] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns=tests/integration/dashboard --passWithNoTests --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/dashboard-api.test.ts (17.765 s)
+  Dashboard API
+    GET /api/dashboard/kpis
+      ✓ should return KPI data (90 ms)
+    GET /api/dashboard/leads
+      ✓ should return all leads (4 ms)
+      ✓ should filter by pending status (3 ms)
+    GET /api/dashboard/call-history
+      ✓ should return call history (13 ms)
+    POST /api/dashboard/leads
+      ✓ should add a new lead (7 ms)
+    PUT /api/dashboard/leads/:rowIndex
+      ✓ should edit an existing lead (3 ms)
+    GET /api/dashboard/status
+      ✓ should return orchestrator status with spreadsheet URL (3 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        17.945 s
+Ran all test suites matching tests/integration/dashboard.
+──────────────────────────────────────
+[14:55:22] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/unit/orchestrator/lead.test|tests/unit/dashboard|tests/unit/orchestrator/auto-call|tests/integration/dashboard" --passWithNoTests --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/lead.test.ts (17.42 s)
+PASS tests/unit/dashboard/dashboard-usecase.test.ts
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/integration/dashboard-api.test.ts
+
+Test Suites: 4 passed, 4 total
+Tests:       50 passed, 50 total
+Snapshots:   0 total
+Time:        18.067 s, estimated 90 s
+Ran all test suites matching tests/unit/orchestrator/lead.test|tests/unit/dashboard|tests/unit/orchestrator/auto-call|tests/integration/dashboard.
+──────────────────────────────────────
+[15:17:07] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/unit/orchestrator/auto-call|tests/unit/dashboard|tests/integration/dashboard" --passWithNoTests --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/integration/dashboard-api.test.ts (21.147 s)
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/dashboard/dashboard-usecase.test.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        22.314 s
+Ran all test suites matching tests/unit/orchestrator/auto-call|tests/unit/dashboard|tests/integration/dashboard.
+──────────────────────────────────────
+[15:36:48] $ find /home/claude/workdir/ai-outbound-calling/backend/src -name "*config*" -o -name "*env*" | head -20
+/home/claude/workdir/ai-outbound-calling/backend/src/config
+/home/claude/workdir/ai-outbound-calling/backend/src/constants/config.ts
+──────────────────────────────────────
+[15:43:22] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/unit/orchestrator/auto-call|tests/unit/dashboard|tests/integration/dashboard" --passWithNoTests --maxWorkers=1 2>&1
+PASS tests/integration/dashboard-api.test.ts (8.993 s)
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/unit/dashboard/dashboard-usecase.test.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        9.359 s, estimated 23 s
+Ran all test suites matching tests/unit/orchestrator/auto-call|tests/unit/dashboard|tests/integration/dashboard.
+──────────────────────────────────────
+[15:59:14] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --testPathPatterns="tests/unit/orchestrator/google-sheets|tests/unit/dashboard|tests/integration/dashboard" --passWithNoTests --maxWorkers=1 2>&1
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts (16.842 s)
+PASS tests/integration/dashboard-api.test.ts
+PASS tests/unit/dashboard/dashboard-usecase.test.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        17.455 s
+Ran all test suites matching tests/unit/orchestrator/google-sheets|tests/unit/dashboard|tests/integration/dashboard.
+──────────────────────────────────────
+[16:01:35] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -30
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call/make-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call/phone-number.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/utils/formatters.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/call-history/call-result.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/analysis/interest-level.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts
+PASS tests/integration/dashboard-api.test.ts
+PASS tests/unit/orchestrator/auto-call-orchestrator-usecase.test.ts
+  ● Console
+
+    console.log
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/unit/dashboard/dashboard-usecase.test.ts
+
+Test Suites: 22 passed, 22 total
+Tests:       179 passed, 179 total
+Snapshots:   0 total
+Time:        25.268 s, estimated 35 s
+Ran all test suites.
+──────────────────────────────────────
+[16:13:01] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -15
+      [dotenv@17.3.1] injecting env (20) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS tests/unit/dashboard/dashboard-usecase.test.ts
+PASS tests/unit/orchestrator/lead.test.ts
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151002: [0mUsing hybrid module kind (Node16/18/Next) is only supported in "isolatedModules: true". Please set "isolatedModules: true" in your tsconfig.json. To disable this message, you can set "diagnostics.ignoreCodes" to include 151002 in your ts-jest config. See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/options/diagnostics
+PASS tests/unit/orchestrator/google-sheets-lead-repository.test.ts
+
+Test Suites: 22 passed, 22 total
+Tests:       179 passed, 179 total
+Snapshots:   0 total
+Time:        19.133 s, estimated 26 s
+Ran all test suites.
+──────────────────────────────────────
+[16:13:05] $ docker compose down 2>&1
+──────────────────────────────────────
+[16:13:41] $ docker compose up -d --build 2>&1 | tail -20
+#13 exporting attestation manifest sha256:9f1ff8a236c7fce8622d587587c8879dface8087d4408f2e0e894dfd10d1af19 done
+#13 exporting manifest list sha256:4ca6cb61777f8808400ea7206333e2603e58338ee62823a2666eb40492b45ad5 done
+#13 naming to docker.io/library/ai-outbound-calling-app:latest done
+#13 unpacking to docker.io/library/ai-outbound-calling-app:latest
+#13 unpacking to docker.io/library/ai-outbound-calling-app:latest 3.8s done
+#13 DONE 9.6s
+
+#14 resolving provenance for metadata file
+#14 DONE 0.0s
+ Image ai-outbound-calling-app Built 
+ Network ai-outbound-calling_default Creating 
+ Network ai-outbound-calling_default Created 
+ Container ai-outbound-calling-app-1 Creating 
+ Container ai-outbound-calling-app-1 Created 
+ Container ai-outbound-calling-frontend-1 Creating 
+ Container ai-outbound-calling-frontend-1 Created 
+ Container ai-outbound-calling-app-1 Starting 
+ Container ai-outbound-calling-app-1 Started 
+ Container ai-outbound-calling-frontend-1 Starting 
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/home/claude/workdir/ai-outbound-calling/frontend/nginx.conf" to rootfs at "/etc/nginx/conf.d/default.conf": mount src=/home/claude/workdir/ai-outbound-calling/frontend/nginx.conf, dst=/etc/nginx/conf.d/default.conf, dstFd=/proc/thread-self/fd/11, flags=MS_BIND|MS_REC: not a directory: Are you trying to mount a directory onto a file (or vice-versa)? Check if the specified host path exists and is the expected type
+──────────────────────────────────────
+[16:13:44] $ ls -la /home/claude/workdir/ai-outbound-calling/frontend/nginx.conf 2>&1
+-rw-r--r-- 1 claude claude 154 Mar  1 07:18 /home/claude/workdir/ai-outbound-calling/frontend/nginx.conf
+──────────────────────────────────────
+[16:13:56] $ docker compose ps 2>&1
+NAME                        IMAGE                     COMMAND                  SERVICE   CREATED          STATUS          PORTS
+ai-outbound-calling-app-1   ai-outbound-calling-app   "docker-entrypoint.s…"   app       16 seconds ago   Up 15 seconds   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+──────────────────────────────────────
+[16:14:01] $ curl -s http://localhost:3000/dashboard | head -5
+──────────────────────────────────────
+[16:14:09] $ docker compose logs --tail=20 app 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+app-1  | {"level":30,"time":1772381622934,"pid":30,"hostname":"6e66e0c425e6","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772381622935,"pid":30,"hostname":"6e66e0c425e6","msg":"Server listening at http://172.19.0.2:3000"}
+──────────────────────────────────────
+[16:31:19] $ curl -s http://172.19.0.2:3000/dashboard 2>&1 | head -10
+──────────────────────────────────────
+[16:31:23] $ docker exec ai-outbound-calling-app-1 curl -s http://localhost:3000/dashboard 2>&1 | head -10
+OCI runtime exec failed: exec failed: unable to start container process: exec: "curl": executable file not found in $PATH
+──────────────────────────────────────
+[16:31:27] $ docker exec ai-outbound-calling-app-1 wget -qO- http://localhost:3000/dashboard 2>&1 | head -10
+OCI runtime exec failed: exec failed: unable to start container process: exec: "wget": executable file not found in $PATH
+──────────────────────────────────────
+[16:31:31] $ docker exec ai-outbound-calling-app-1 node -e "fetch('http://localhost:3000/dashboard').then(r=>r.text()).then(t=>console.log(t.substring(0,200)))" 2>&1
+{"message":"Route GET:/dashboard not found","error":"Not Found","statusCode":404}
+──────────────────────────────────────
+[16:32:13] $ cat /home/claude/workdir/ai-outbound-calling/package.json | grep -A2 '"dev"' 2>&1
+    "dev": "tsx --tsconfig tsconfig.json backend/src/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/backend/src/server.js",
+──────────────────────────────────────
+[16:32:18] $ npm ls @fastify/static 2>&1
+ai-outbound-calling@1.0.0 /home/claude/workdir/ai-outbound-calling
+`-- @fastify/static@9.0.0
+──────────────────────────────────────
+[16:32:42] $ docker compose down 2>&1 && docker compose up -d --build app 2>&1 | tail -15
+ Container ai-outbound-calling-frontend-1 Stopping 
+ Container ai-outbound-calling-frontend-1 Stopped 
+ Container ai-outbound-calling-frontend-1 Removing 
+ Container ai-outbound-calling-frontend-1 Removed 
+ Container ai-outbound-calling-app-1 Stopping 
+ Container ai-outbound-calling-app-1 Stopped 
+ Container ai-outbound-calling-app-1 Removing 
+ Container ai-outbound-calling-app-1 Removed 
+ Network ai-outbound-calling_default Removing 
+ Network ai-outbound-calling_default Removed 
+
+   7 |     COPY tsconfig.json ./
+
+   8 |     COPY backend/ ./backend/
+
+   9 | >>> COPY frontend/ ./frontend/
+
+  10 |     COPY scripts/ ./scripts/
+
+  11 |     
+
+--------------------
+
+failed to solve: failed to compute cache key: failed to calculate checksum of ref vcgrelzdnioz8v1e3qvrs2bx7::ruhksobn33lj1yd098q447ig9: "/frontend": not found
+──────────────────────────────────────
+[16:32:54] $ docker compose up -d --build app 2>&1 | tail -15
+#14 exporting attestation manifest sha256:ef3d91fcf846c20181209471a05a9c813de9930e2c3e16e54d90a67329603acb done
+#14 exporting manifest list sha256:46e6651142eff6e15f1cbdd9c07e18e9bc373f552e395a090c351c2cf4e31321 done
+#14 naming to docker.io/library/ai-outbound-calling-app:latest done
+#14 unpacking to docker.io/library/ai-outbound-calling-app:latest 0.0s done
+#14 DONE 0.1s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image ai-outbound-calling-app Built 
+ Network ai-outbound-calling_default Creating 
+ Network ai-outbound-calling_default Created 
+ Container ai-outbound-calling-app-1 Creating 
+ Container ai-outbound-calling-app-1 Created 
+ Container ai-outbound-calling-app-1 Starting 
+ Container ai-outbound-calling-app-1 Started
+──────────────────────────────────────
+[16:33:00] $ sleep 2 && docker compose logs --tail=10 app 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+app-1  | {"level":30,"time":1772382776419,"pid":29,"hostname":"cfc0142063f5","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772382776419,"pid":29,"hostname":"cfc0142063f5","msg":"Server listening at http://172.19.0.2:3000"}
+──────────────────────────────────────
+[16:33:05] $ docker exec ai-outbound-calling-app-1 node -e "fetch('http://localhost:3000/dashboard').then(r=>r.text()).then(t=>console.log(t.substring(0,300)))" 2>&1
+{"isSuccess":false,"message":"Internal server error","code":"INTERNAL_ERROR"}
+──────────────────────────────────────
+[16:33:08] $ docker compose logs --tail=20 app 2>&1
+app-1  | 
+app-1  | > ai-outbound-calling@1.0.0 dev
+app-1  | > tsx --tsconfig tsconfig.json backend/src/server.ts
+app-1  | 
+app-1  | [dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+app-1  | {"level":30,"time":1772382776419,"pid":29,"hostname":"cfc0142063f5","msg":"Server listening at http://127.0.0.1:3000"}
+app-1  | {"level":30,"time":1772382776419,"pid":29,"hostname":"cfc0142063f5","msg":"Server listening at http://172.19.0.2:3000"}
+app-1  | {"level":30,"time":1772382785333,"pid":29,"hostname":"cfc0142063f5","reqId":"req-1","req":{"method":"GET","url":"/dashboard","host":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":46662},"msg":"incoming request"}
+app-1  | {"level":50,"time":1772382785334,"pid":29,"hostname":"cfc0142063f5","reqId":"req-1","err":{"type":"TypeError","message":"reply.sendFile is not a function","stack":"TypeError: reply.sendFile is not a function\n    at Object.<anonymous> (/app/backend/src/server.ts:45:18)\n    at preHandlerCallbackInner (/app/node_modules/fastify/lib/handle-request.js:168:24)\n    at preHandlerCallback (/app/node_modules/fastify/lib/handle-request.js:134:5)\n    at validationCompleted (/app/node_modules/fastify/lib/handle-request.js:124:5)\n    at preValidationCallback (/app/node_modules/fastify/lib/handle-request.js:101:5)\n    at handler (/app/node_modules/fastify/lib/handle-request.js:78:7)\n    at Object.handleRequest (/app/node_modules/fastify/lib/handle-request.js:30:5)\n    at runPreParsing (/app/node_modules/fastify/lib/route.js:612:19)\n    at next (/app/node_modules/fastify/lib/hooks.js:236:9)\n    at /app/node_modules/@fastify/cors/index.js:215:12"},"msg":"Unhandled error"}
+app-1  | {"level":30,"time":1772382785336,"pid":29,"hostname":"cfc0142063f5","reqId":"req-1","res":{"statusCode":500},"responseTime":2.858833998441696,"msg":"request completed"}
+──────────────────────────────────────
+[16:33:19] $ docker compose down 2>&1 && docker compose up -d --build app 2>&1 | tail -10
+ Container ai-outbound-calling-app-1 Stopping 
+ Container ai-outbound-calling-app-1 Stopped 
+ Container ai-outbound-calling-app-1 Removing 
+ Container ai-outbound-calling-app-1 Removed 
+ Network ai-outbound-calling_default Removing 
+ Network ai-outbound-calling_default Removed 
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image ai-outbound-calling-app Built 
+ Network ai-outbound-calling_default Creating 
+ Network ai-outbound-calling_default Created 
+ Container ai-outbound-calling-app-1 Creating 
+ Container ai-outbound-calling-app-1 Created 
+ Container ai-outbound-calling-app-1 Starting 
+ Container ai-outbound-calling-app-1 Started
+──────────────────────────────────────
+[16:33:25] $ sleep 2 && docker exec ai-outbound-calling-app-1 node -e "fetch('http://localhost:3000/dashboard').then(r=>r.text()).then(t=>console.log(t.substring(0,200)))" 2>&1
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 自動架電システム - ダッシュボード</title>
+  <script src="https://
+──────────────────────────────────────
+[16:33:30] $ docker exec ai-outbound-calling-app-1 node -e "fetch('http://localhost:3000/js/ui.js').then(r=>r.text()).then(t=>console.log(t.substring(0,200)))" 2>&1
+function esc(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function formatPhone(phone) {
+  if (!phone) return '';
+  if (phone
+──────────────────────────────────────
+[16:33:45] $ NODE_OPTIONS="--max-old-space-size=4096" npx jest --maxWorkers=1 2>&1 | tail -10
+PASS tests/unit/call/phone-number.test.ts
+PASS tests/unit/follow-up-email/send-follow-up-email-usecase.test.ts
+PASS tests/unit/call-history/save-call-history-usecase.test.ts
+PASS tests/unit/analysis/analyze-call-usecase.test.ts
+
+Test Suites: 22 passed, 22 total
+Tests:       179 passed, 179 total
+Snapshots:   0 total
+Time:        9.875 s, estimated 19 s
+Ran all test suites.
+──────────────────────────────────────
+[16:33:58] $ npx playwright test 2>&1 | tail -20
+Running 14 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/dashboard.spec.ts:113:7 › Dashboard › should display KPI cards with correct values (456ms)
+  ✓   2 [chromium] › tests/e2e/dashboard.spec.ts:122:7 › Dashboard › should display lead list (262ms)
+  ✓   3 [chromium] › tests/e2e/dashboard.spec.ts:132:7 › Dashboard › should filter leads by pending tab (812ms)
+  ✓   4 [chromium] › tests/e2e/dashboard.spec.ts:144:7 › Dashboard › should display call history (261ms)
+  ✓   5 [chromium] › tests/e2e/dashboard.spec.ts:153:7 › Dashboard › should show orchestrator state as idle (253ms)
+  ✓   6 [chromium] › tests/e2e/dashboard.spec.ts:163:7 › Dashboard › should have Google Sheets link (250ms)
+  ✓   7 [chromium] › tests/e2e/dashboard.spec.ts:170:7 › Dashboard › should toggle add lead form (327ms)
+  ✓   8 [chromium] › tests/e2e/dashboard.spec.ts:183:7 › Dashboard › should submit new lead (853ms)
+  ✓   9 [chromium] › tests/e2e/dashboard.spec.ts:209:7 › Dashboard › should show validation error for empty fields (362ms)
+  ✓  10 [chromium] › tests/e2e/dashboard.spec.ts:220:7 › Dashboard › should open edit modal with lead data (321ms)
+  ✓  11 [chromium] › tests/e2e/dashboard.spec.ts:234:7 › Dashboard › should submit edit lead (868ms)
+  ✓  12 [chromium] › tests/e2e/dashboard.spec.ts:262:7 › Dashboard › should show edit validation error for empty fields (350ms)
+  ✓  13 [chromium] › tests/e2e/dashboard.spec.ts:275:7 › Dashboard › should close edit modal on cancel (304ms)
+  ✓  14 [chromium] › tests/e2e/dashboard.spec.ts:286:7 › Dashboard › should update controls when orchestrator is running (282ms)
+
+  14 passed (8.0s)
