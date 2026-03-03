@@ -50,6 +50,7 @@ export class FrontendConstruct extends Construct {
       sources: [
         s3deploy.Source.asset(
           path.join(__dirname, "..", "..", "..", "frontend", "public"),
+          { exclude: ["js/config.js"] },
         ),
       ],
       destinationBucket: siteBucket,
