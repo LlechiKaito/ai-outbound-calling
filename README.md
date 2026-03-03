@@ -775,7 +775,8 @@ AWS CDK を使ってデプロイする。App Runner（バックエンド）+ S3/
   フロントエンド            バックエンド
   ~$1/月                   ~$5-10/月
 
-  シークレット: SSM Parameter Store
+  機密情報: SSM Parameter Store
+  設定値: environments.ts → 環境変数
   Docker イメージ: ECR（DockerImageAsset で自動ビルド）
 ```
 
@@ -804,78 +805,74 @@ infra/
 └── package.json
 ```
 
-### 手順 1: SSM パラメータを作成
+### 手順 1: SSM パラメータを登録
 
-デプロイ前に、AWS SSM Parameter Store にシークレットを登録する。パラメータ名は `/ai-outbound-calling/{env}/` プレフィックスで統一。
+デプロイ前に、AWS SSM Parameter Store に機密情報を登録する。一括登録スクリプトを使う。
 
-**必須パラメータ:**
+**1. パラメータファイルを作成:**
 
-```bash
-ENV=dev  # または prod
-
-# Twilio
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/TWILIO_ACCOUNT_SID" --type SecureString --value "ACxxxxxxxx"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/TWILIO_AUTH_TOKEN" --type SecureString --value "xxxxxxxx"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/TWILIO_PHONE_NUMBER" --type SecureString --value "+1xxxxxxxxxx"
-
-# OpenAI
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/OPENAI_API_KEY" --type SecureString --value "sk-xxxxxxxx"
-
-# 通話設定
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/CALL_COMPANY_NAME" --type SecureString --value "株式会社サンプル"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/CALL_CONTACT_NAME" --type SecureString --value "営業担当"
-
-# PUBLIC_URL（初回デプロイ後に App Runner URL で更新する）
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/PUBLIC_URL" --type SecureString --value "https://placeholder"
-```
-
-**Google Sheets 連携（`enableGoogle: true` の場合）:**
+`infra/scripts/ssm-params.json` を `ssm-params.example.json` を参考に作成し、実際の値を設定する。
 
 ```bash
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/GOOGLE_SHEETS_ID" --type SecureString --value "xxxxxxxx"
-
-# credentials.json の中身を丸ごと設定（docker-entrypoint.sh がファイルに変換する）
-aws ssm put-parameter \
-  --name "/ai-outbound-calling/$ENV/GOOGLE_CREDENTIALS_JSON" \
-  --type SecureString \
-  --value "$(cat credentials.json)"
+cd infra
+cp scripts/ssm-params.example.json scripts/ssm-params.json
 ```
 
-**ElevenLabs 連携（`enableElevenLabs: true` の場合）:**
+Google Sheets 連携を使う場合は、`credentials.json` も同じディレクトリに配置する（`file://credentials.json` で参照される）。
+
+**SSM に格納するパラメータ（機密情報のみ）:**
+
+| パラメータ | 説明 | 必須 |
+|-----------|------|------|
+| `TWILIO_ACCOUNT_SID` | Twilio アカウント SID | Yes |
+| `TWILIO_AUTH_TOKEN` | Twilio 認証トークン | Yes |
+| `TWILIO_PHONE_NUMBER` | Twilio 発信番号（E.164） | Yes |
+| `OPENAI_API_KEY` | OpenAI API キー | Yes |
+| `CALL_COMPANY_NAME` | 自社名（分析・記録に使用） | Yes |
+| `CALL_CONTACT_NAME` | 担当者名（分析・記録に使用） | Yes |
+| `GOOGLE_SHEETS_ID` | スプレッドシート ID | enableGoogle 時 |
+| `GOOGLE_CREDENTIALS_JSON` | サービスアカウント JSON | enableGoogle 時 |
+| `ELEVENLABS_API_KEY` | ElevenLabs API キー | enableElevenLabs 時 |
+| `ELEVENLABS_AGENT_ID` | ElevenLabs エージェント ID | enableElevenLabs 時 |
+| `MAIL_PASSWORD` | SMTP パスワード | enableMail 時 |
+| `MAIL_USER` | SMTP ユーザー | enableMail 時 |
+| `MAIL_FROM` | 送信元メールアドレス | enableMail 時 |
+
+> `PUBLIC_URL` は CDK が App Runner の URL を自動で SSM に書き込むため、手動設定不要。
+
+**2. 一括登録を実行:**
 
 ```bash
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/ELEVENLABS_API_KEY" --type SecureString --value "xxxxxxxx"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/ELEVENLABS_AGENT_ID" --type SecureString --value "xxxxxxxx"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/ELEVENLABS_LANGUAGE" --type SecureString --value "ja"
+node scripts/register-ssm-params.mjs dev scripts/ssm-params.json
 ```
 
-**メール連携（`enableMail: true` の場合）:**
-
-```bash
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_HOST" --type SecureString --value "smtp.gmail.com"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_PORT" --type SecureString --value "587"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_USER" --type SecureString --value "your-email@gmail.com"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_PASSWORD" --type SecureString --value "xxxx xxxx xxxx xxxx"
-aws ssm put-parameter --name "/ai-outbound-calling/$ENV/MAIL_FROM" --type SecureString --value "your-email@gmail.com"
-```
+JSON にないパラメータは自動削除される（同期モード）。パラメータを変更した場合も同じコマンドで更新できる。
 
 ### 手順 2: 環境設定を確認
 
-`infra/config/environments.ts` で環境ごとのスペック・機能フラグを確認する:
+`infra/config/environments.ts` で環境ごとの設定を確認する:
 
 ```typescript
 dev: {
   envName: "dev",
   backendPort: 3000,
-  backendCpu: "0.25 vCPU",     // 最小スペック
+  backendCpu: "0.25 vCPU",
   backendMemory: "0.5 GB",
-  enableGoogle: true,           // false にすると Google 系 SSM パラメータ不要
+  skipBusinessHoursCheck: true,   // true: 営業時間外でも架電可能
+  enableGoogle: true,              // false にすると Google 系 SSM パラメータ不要
   enableElevenLabs: true,
   enableMail: true,
+  elevenLabsLanguage: "ja",
+  mailHost: "smtp.gmail.com",
+  mailPort: "587",
 },
 ```
 
-使わない機能は `false` にすれば、対応する SSM パラメータの作成が不要になる。
+| 設定 | 説明 |
+|-----|------|
+| `skipBusinessHoursCheck` | `true` で営業時間チェックをスキップ（テスト用） |
+| `enableGoogle` / `enableElevenLabs` / `enableMail` | `false` にすると対応する SSM パラメータが不要になる |
+| `elevenLabsLanguage` / `mailHost` / `mailPort` | 非機密の設定値（環境変数として直接注入） |
 
 ### 手順 3: CDK デプロイ
 
@@ -902,23 +899,23 @@ AiOutboundCalling-dev.FrontendUrl = https://xxxxxxxxxx.cloudfront.net
 AiOutboundCalling-dev.BucketName = ai-outbound-calling-dev-frontend-xxxxxxxx
 ```
 
-### 手順 4: PUBLIC_URL を更新
+### 手順 4: 動作確認
 
-初回デプロイ後、出力された `BackendUrl` で SSM パラメータを更新する:
+`PUBLIC_URL` は CDK が自動で SSM に書き込むため、手動設定は不要。
 
-```bash
-aws ssm put-parameter \
-  --name "/ai-outbound-calling/dev/PUBLIC_URL" \
-  --type SecureString \
-  --value "https://xxxxxxxx.ap-northeast-1.awsapprunner.com" \
-  --overwrite
-```
-
-更新後、App Runner サービスを再起動する（AWS コンソールまたは CLI）:
+デプロイ後、出力された `BackendUrl` でヘルスチェックを確認:
 
 ```bash
-aws apprunner start-deployment --service-arn <service-arn>
+curl https://xxxxxxxx.ap-northeast-1.awsapprunner.com/health
 ```
+
+> 初回デプロイ時は `PUBLIC_URL` がまだ SSM にないため、App Runner の再デプロイが必要:
+>
+> ```bash
+> npx cdk deploy --all
+> ```
+>
+> 2回目以降は URL が変わらないため、再デプロイ1回で完了する。
 
 ### Docker イメージのビルドについて
 

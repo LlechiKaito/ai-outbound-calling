@@ -1,5 +1,4 @@
 {
-  "PUBLIC_URL": "https://後でデプロイ後に更新",
   "TWILIO_ACCOUNT_SID": "ACxxxx",
   "TWILIO_AUTH_TOKEN": "xxxx",
   "TWILIO_PHONE_NUMBER": "+1xxxx",
@@ -10,10 +9,7 @@
   "GOOGLE_CREDENTIALS_JSON": "file://google-credentials.json",
   "ELEVENLABS_API_KEY": "xxxx",
   "ELEVENLABS_AGENT_ID": "xxxx",
-  "ELEVENLABS_LANGUAGE": "ja",
-  "MAIL_HOST": "smtp.gmail.com",
-  "MAIL_PORT": "587",
-  "MAIL_USER": "xxxx@gmail.com",
   "MAIL_PASSWORD": "xxxx",
+  "MAIL_USER": "xxxx@gmail.com",
   "MAIL_FROM": "xxxx@gmail.com"
 }
