@@ -1,0 +1,68 @@
+──────────────────────────────────────
+[01:38:08] $ ls /home/claude/workdir/ai-outbound-calling/infra/scripts/ 2>/dev/null || echo "not found"
+not found
+──────────────────────────────────────
+[01:38:12] $ mkdir -p /home/claude/workdir/ai-outbound-calling/infra/scripts
+──────────────────────────────────────
+[01:38:31] $ chmod +x /home/claude/workdir/ai-outbound-calling/infra/scripts/register-ssm-params.sh
+──────────────────────────────────────
+[01:38:43] $ cd /home/claude/workdir/ai-outbound-calling/infra && cat package.json | grep -c "aws-sdk" || echo "0"
+0
+0
+──────────────────────────────────────
+[01:38:52] $ npm install @aws-sdk/client-ssm 2>&1 | tail -3
+  npm audit fix
+
+Run `npm audit` for details.
+──────────────────────────────────────
+[01:39:19] $ npm run build 2>&1
+> ai-outbound-calling-infra@1.0.0 build
+> tsc
+──────────────────────────────────────
+[01:39:23] $ rm /home/claude/workdir/ai-outbound-calling/infra/scripts/register-ssm-params.sh
+──────────────────────────────────────
+[01:40:23] $ rm -r /home/claude/workdir/ai-outbound-calling/infra/lib/secrets/
+──────────────────────────────────────
+[02:03:58] $ cd /home/claude/workdir/ai-outbound-calling && git status
+On branch feature/#4-auto-analyze-and-save
+Your branch is up to date with 'origin/feature/#4-auto-analyze-and-save'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   dev-log/auto/2026-03-02-tools.log
+	modified:   dev-log/auto/2026-03-02.log
+	modified:   infra/.gitignore
+	modified:   infra/package-lock.json
+	modified:   infra/package.json
+	modified:   infra/tsconfig.json
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	dev-log/auto/2026-03-03-tools.log
+	dev-log/auto/2026-03-03.log
+	dev-log/sessions/2026-03-02_15-28-04.md
+	dev-log/sessions/2026-03-02_15-28-54.md
+	dev-log/sessions/2026-03-02_15-50-17.md
+	dev-log/sessions/2026-03-02_15-56-01.md
+	dev-log/sessions/2026-03-03_01-37-18.md
+	dev-log/sessions/2026-03-03_01-38-37.md
+	dev-log/sessions/2026-03-03_01-39-35.md
+	dev-log/sessions/2026-03-03_01-40-29.md
+	dev-log/sessions/2026-03-03_01-42-36.md
+	infra/scripts/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+──────────────────────────────────────
+[02:04:05] $ git add infra/.gitignore infra/package.json infra/package-lock.json infra/tsconfig.json infra/scripts/register-ssm-params.ts infra/scripts/ssm-params.example.json && git commit -m "$(cat <<'EOF'
+chore(infra): add SSM parameter bulk registration script
+
+- Add TypeScript script to register all SSM parameters from JSON file
+- Add ssm-params.example.json template
+- Install @aws-sdk/client-ssm dependency
+EOF
+)"
+[feature/#4-auto-analyze-and-save bc38abb] chore(infra): add SSM parameter bulk registration script
+ 6 files changed, 1337 insertions(+), 1 deletion(-)
+ create mode 100644 infra/scripts/register-ssm-params.ts
+ create mode 100644 infra/scripts/ssm-params.example.json

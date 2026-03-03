@@ -1,0 +1,12 @@
+[01:38:18] WRITE /home/claude/workdir/ai-outbound-calling/infra/scripts/ssm-params.example.json (20 lines)
+[01:38:28] WRITE /home/claude/workdir/ai-outbound-calling/infra/scripts/register-ssm-params.sh (55 lines)
+[01:38:56] READ /home/claude/workdir/ai-outbound-calling/infra/tsconfig.json
+[01:39:06] WRITE /home/claude/workdir/ai-outbound-calling/infra/scripts/register-ssm-params.ts (75 lines)
+[01:39:11] EDIT /home/claude/workdir/ai-outbound-calling/infra/tsconfig.json
+  - old: "include": ["bin/**/*", "lib/**/*", "config/**/*"],
+  + new: "include": ["bin/**/*", "lib/**/*", "config/**/*", "scripts/**/*"],
+[01:39:27] READ /home/claude/workdir/ai-outbound-calling/infra/.gitignore
+[01:39:31] EDIT /home/claude/workdir/ai-outbound-calling/infra/.gitignore
+  - old: node_modules/
+  + new: node_modules/
+[01:40:07] WRITE /home/claude/workdir/ai-outbound-calling/infra/lib/secrets/secrets.ts (47 lines)
