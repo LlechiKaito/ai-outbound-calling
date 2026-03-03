@@ -47,6 +47,6 @@ export interface SessionState {
   streamSid: string | null;
   callSid: string | null;
   phoneNumber: string | null;
-  elevenLabsWs: import("ws").default | null;
+  elevenLabsWs: import("ws") | null;
   transcriptLines: string[];
 }
