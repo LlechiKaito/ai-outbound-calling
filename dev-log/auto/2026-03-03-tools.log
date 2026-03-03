@@ -10,3 +10,10 @@
   - old: node_modules/
   + new: node_modules/
 [01:40:07] WRITE /home/claude/workdir/ai-outbound-calling/infra/lib/secrets/secrets.ts (47 lines)
+[02:15:14] READ /home/claude/workdir/ai-outbound-calling/infra/README.md
+[02:15:28] EDIT /home/claude/workdir/ai-outbound-calling/infra/README.md
+  - old: ### 2. Register SSM Parameters
+  + new: ### 2. Register SSM Parameters
+[02:15:35] EDIT /home/claude/workdir/ai-outbound-calling/infra/README.md
+  - old: ## Post-Deploy
+  + new: ## Post-Deploy

@@ -102,11 +102,24 @@ export function createMediaStreamHandler(): MediaStreamHandler | null {
   );
 }
 
-function createGoogleSheetsRepository(): GoogleSheetsCallHistoryRepository {
-  const auth = new google.auth.GoogleAuth({
+function createGoogleAuth(): InstanceType<typeof google.auth.GoogleAuth> {
+  const scopes = ["https://www.googleapis.com/auth/spreadsheets"];
+
+  if (config.google.credentialsJson) {
+    return new google.auth.GoogleAuth({
+      credentials: JSON.parse(config.google.credentialsJson),
+      scopes,
+    });
+  }
+
+  return new google.auth.GoogleAuth({
     keyFile: config.google.credentialsPath,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    scopes,
   });
+}
+
+function createGoogleSheetsRepository(): GoogleSheetsCallHistoryRepository {
+  const auth = createGoogleAuth();
 
   const sheets = google.sheets({ version: "v4", auth });
 
@@ -222,10 +235,7 @@ export function createDashboardController(): DashboardController | null {
 }
 
 function createGoogleSheetsLeadRepository(): GoogleSheetsLeadRepository {
-  const auth = new google.auth.GoogleAuth({
-    keyFile: config.google.credentialsPath,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
+  const auth = createGoogleAuth();
 
   const sheets = google.sheets({ version: "v4", auth });
 

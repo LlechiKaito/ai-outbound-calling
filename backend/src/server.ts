@@ -1,5 +1,4 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import Fastify from "fastify";
 import fastifyWebSocket from "@fastify/websocket";
@@ -33,7 +32,6 @@ export function buildApp() {
 
   app.setErrorHandler(errorHandler);
 
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const frontendRoot = path.resolve(__dirname, "../../frontend/public");
   app.register(fastifyStatic, {
     root: frontendRoot,

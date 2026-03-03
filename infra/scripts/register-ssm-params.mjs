@@ -21,7 +21,7 @@ const SSM_PREFIX = "/ai-outbound-calling";
 const FILE_PREFIX = "file://";
 const DELETE_BATCH_SIZE = 10;
 
-function resolveValue(value: string, baseDir: string): string {
+function resolveValue(value, baseDir) {
   if (!value.startsWith(FILE_PREFIX)) {
     return value;
   }
@@ -29,12 +29,9 @@ function resolveValue(value: string, baseDir: string): string {
   return fs.readFileSync(filePath, "utf-8").trim();
 }
 
-async function getExistingParams(
-  client: SSMClient,
-  prefix: string,
-): Promise<string[]> {
-  const names: string[] = [];
-  let nextToken: string | undefined;
+async function getExistingParams(client, prefix) {
+  const names = [];
+  let nextToken;
 
   do {
     const res = await client.send(
@@ -52,26 +49,23 @@ async function getExistingParams(
   return names;
 }
 
-async function deleteParams(
-  client: SSMClient,
-  names: string[],
-): Promise<void> {
+async function deleteParams(client, names) {
   for (let i = 0; i < names.length; i += DELETE_BATCH_SIZE) {
     const batch = names.slice(i, i + DELETE_BATCH_SIZE);
     await client.send(new DeleteParametersCommand({ Names: batch }));
   }
 }
 
-async function main(): Promise<void> {
+async function main() {
   const env = process.argv[2];
   const filePath = process.argv[3];
 
   if (!env || !filePath) {
     console.error(
-      "Usage: npx tsx scripts/register-ssm-params.ts <env> <params-json>",
+      "Usage: node scripts/register-ssm-params.mjs <env> <params-json>",
     );
     console.error(
-      "Example: npx tsx scripts/register-ssm-params.ts dev scripts/ssm-params.json",
+      "Example: node scripts/register-ssm-params.mjs dev scripts/ssm-params.json",
     );
     process.exit(1);
   }
@@ -83,9 +77,7 @@ async function main(): Promise<void> {
   }
 
   const baseDir = path.dirname(absolutePath);
-  const params: Record<string, string> = JSON.parse(
-    fs.readFileSync(absolutePath, "utf-8"),
-  );
+  const params = JSON.parse(fs.readFileSync(absolutePath, "utf-8"));
 
   const client = new SSMClient({});
   const prefix = `${SSM_PREFIX}/${env}`;
@@ -135,7 +127,7 @@ async function main(): Promise<void> {
     console.error("---");
     console.error(`${failed.length} parameter(s) failed:`);
     for (const f of failed) {
-      console.error(`  ${(f as PromiseRejectedResult).reason}`);
+      console.error(`  ${f.reason}`);
     }
     process.exit(1);
   }
@@ -144,9 +136,7 @@ async function main(): Promise<void> {
   if (toDelete.length > 0) {
     console.log(`Deleted: ${toDelete.length} obsolete parameter(s)`);
   }
-  console.log(
-    `Registered: ${results.length} parameter(s) under ${prefix}/`,
-  );
+  console.log(`Registered: ${results.length} parameter(s) under ${prefix}/`);
 }
 
 main();

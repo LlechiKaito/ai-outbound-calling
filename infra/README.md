@@ -38,31 +38,16 @@ All secrets must be registered in AWS SSM Parameter Store before deployment.
 **Prefix:** `/ai-outbound-calling/{env}/` (e.g., `/ai-outbound-calling/dev/`)
 
 ```bash
-# Required
-aws ssm put-parameter --name "/ai-outbound-calling/dev/PUBLIC_URL" --type String --value "https://<your-apprunner-url>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/TWILIO_ACCOUNT_SID" --type SecureString --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/TWILIO_AUTH_TOKEN" --type SecureString --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/TWILIO_PHONE_NUMBER" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/OPENAI_API_KEY" --type SecureString --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/CALL_COMPANY_NAME" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/CALL_CONTACT_NAME" --type String --value "<value>"
+# テンプレートをコピーして実際の値を入力
+cp scripts/ssm-params.example.json scripts/ssm-params.json
+vi scripts/ssm-params.json
 
-# Google Sheets integration
-aws ssm put-parameter --name "/ai-outbound-calling/dev/GOOGLE_SHEETS_ID" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/GOOGLE_CREDENTIALS_JSON" --type SecureString --value '<service-account-json>'
-
-# ElevenLabs voice AI
-aws ssm put-parameter --name "/ai-outbound-calling/dev/ELEVENLABS_API_KEY" --type SecureString --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/ELEVENLABS_AGENT_ID" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/ELEVENLABS_LANGUAGE" --type String --value "ja"
-
-# Mail (SMTP)
-aws ssm put-parameter --name "/ai-outbound-calling/dev/MAIL_HOST" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/MAIL_PORT" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/MAIL_USER" --type String --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/MAIL_PASSWORD" --type SecureString --value "<value>"
-aws ssm put-parameter --name "/ai-outbound-calling/dev/MAIL_FROM" --type String --value "<value>"
+# ビルド & 一括登録
+npm run build
+node dist/scripts/register-ssm-params.js dev scripts/ssm-params.json
 ```
+
+機密情報（API キー等）は自動で `SecureString` として登録されます。
 
 ### 3. SSM Parameters Reference
 
@@ -143,5 +128,7 @@ npx cdk deploy -c env=prod
 After the first deployment:
 
 1. Note the `BackendUrl` output (App Runner URL)
-2. Update `PUBLIC_URL` in SSM to the App Runner URL
-3. The `FrontendUrl` output is the CloudFront URL for dashboard access
+2. `scripts/ssm-params.json` の `PUBLIC_URL` を App Runner URL に書き換える
+3. 再登録: `node dist/scripts/register-ssm-params.js dev scripts/ssm-params.json`
+4. App Runner を再起動: `aws apprunner start-deployment --service-arn <ARN>`
+5. `FrontendUrl` の CloudFront URL で Dashboard にアクセス

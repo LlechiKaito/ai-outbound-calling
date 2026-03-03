@@ -4,6 +4,7 @@ import * as cdk from "aws-cdk-lib";
 import * as apprunner from "aws-cdk-lib/aws-apprunner";
 import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 import { EnvironmentConfig } from "../../config/environments";
@@ -30,6 +31,7 @@ export class ComputeConstruct extends Construct {
       directory: path.join(__dirname, "..", "..", ".."),
       file: "Dockerfile",
       target: "prod",
+      platform: ecr_assets.Platform.LINUX_AMD64,
     });
 
     const accessRole = new iam.Role(this, "AccessRole", {
@@ -49,12 +51,7 @@ export class ComputeConstruct extends Construct {
       }),
     );
 
-    const envVars: KeyValuePair[] = [
-      { name: "PORT", value: String(envConfig.backendPort) },
-      { name: "HOST", value: "0.0.0.0" },
-      { name: "SKIP_BUSINESS_HOURS_CHECK", value: "false" },
-    ];
-
+    const envVars = this.buildEnvVars(envConfig);
     const ssmSecrets = this.buildSsmSecrets(stack, ssmPrefix, envConfig);
 
     // L1 (CfnService) を使用: App Runner L2 は alpha のため
@@ -88,12 +85,46 @@ export class ComputeConstruct extends Construct {
 
     this.serviceUrl = cdk.Fn.join("", ["https://", service.attrServiceUrl]);
 
+    // App Runner の URL を SSM に自動書き込み（手動設定不要にする）
+    new ssm.StringParameter(this, "PublicUrlParam", {
+      parameterName: `${ssmPrefix}/PUBLIC_URL`,
+      stringValue: this.serviceUrl,
+    });
+
     new cdk.CfnOutput(stack, "BackendUrl", {
       value: this.serviceUrl,
       description: "App Runner service URL",
     });
   }
 
+  private buildEnvVars(envConfig: EnvironmentConfig): KeyValuePair[] {
+    const vars: KeyValuePair[] = [
+      { name: "PORT", value: String(envConfig.backendPort) },
+      { name: "HOST", value: "0.0.0.0" },
+      { name: "SKIP_BUSINESS_HOURS_CHECK", value: String(envConfig.skipBusinessHoursCheck) },
+    ];
+
+    if (envConfig.enableElevenLabs && envConfig.elevenLabsLanguage) {
+      vars.push({ name: "ELEVENLABS_LANGUAGE", value: envConfig.elevenLabsLanguage });
+    }
+
+    if (envConfig.enableMail) {
+      if (envConfig.mailHost) {
+        vars.push({ name: "MAIL_HOST", value: envConfig.mailHost });
+      }
+      if (envConfig.mailPort) {
+        vars.push({ name: "MAIL_PORT", value: envConfig.mailPort });
+      }
+    }
+
+    return vars;
+  }
+
+  /**
+   * SSM には機密情報のみ格納する。
+   * PUBLIC_URL は App Runner 自身の URL を参照するため循環依存になり、
+   * CDK で自動解決できないので SSM に残す。
+   */
   private buildSsmSecrets(
     stack: cdk.Stack,
     ssmPrefix: string,
@@ -123,17 +154,19 @@ export class ComputeConstruct extends Construct {
 
     if (envConfig.enableElevenLabs) {
       secrets.push(
-        ...["ELEVENLABS_API_KEY", "ELEVENLABS_AGENT_ID", "ELEVENLABS_LANGUAGE"].map(
-          (name) => ({ name, value: toArn(name) }),
-        ),
+        ...["ELEVENLABS_API_KEY", "ELEVENLABS_AGENT_ID"].map((name) => ({
+          name,
+          value: toArn(name),
+        })),
       );
     }
 
     if (envConfig.enableMail) {
       secrets.push(
-        ...["MAIL_HOST", "MAIL_PORT", "MAIL_USER", "MAIL_PASSWORD", "MAIL_FROM"].map(
-          (name) => ({ name, value: toArn(name) }),
-        ),
+        ...["MAIL_PASSWORD", "MAIL_USER", "MAIL_FROM"].map((name) => ({
+          name,
+          value: toArn(name),
+        })),
       );
     }
 

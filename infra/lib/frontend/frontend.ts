@@ -46,19 +46,12 @@ export class FrontendConstruct extends Construct {
       ],
     });
 
-    new s3deploy.BucketDeployment(this, "DeployStaticFiles", {
+    new s3deploy.BucketDeployment(this, "DeploySite", {
       sources: [
         s3deploy.Source.asset(
           path.join(__dirname, "..", "..", "..", "frontend", "public"),
+          { exclude: ["js/config.js"] },
         ),
-      ],
-      destinationBucket: siteBucket,
-      distribution,
-      distributionPaths: ["/*"],
-    });
-
-    new s3deploy.BucketDeployment(this, "DeployConfig", {
-      sources: [
         s3deploy.Source.data(
           "js/config.js",
           `window.API_BASE_URL = '${backendUrl}';`,
@@ -66,8 +59,7 @@ export class FrontendConstruct extends Construct {
       ],
       destinationBucket: siteBucket,
       distribution,
-      distributionPaths: ["/js/config.js"],
-      prune: false,
+      distributionPaths: ["/*"],
     });
 
     new cdk.CfnOutput(stack, "FrontendUrl", {
