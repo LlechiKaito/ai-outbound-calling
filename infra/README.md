@@ -42,8 +42,9 @@ All secrets must be registered in AWS SSM Parameter Store before deployment.
 cp scripts/ssm-params.example.json scripts/ssm-params.json
 vi scripts/ssm-params.json
 
-# 一括登録
-npx tsx scripts/register-ssm-params.ts dev scripts/ssm-params.json
+# ビルド & 一括登録
+npm run build
+node dist/scripts/register-ssm-params.js dev scripts/ssm-params.json
 ```
 
 機密情報（API キー等）は自動で `SecureString` として登録されます。
@@ -128,6 +129,6 @@ After the first deployment:
 
 1. Note the `BackendUrl` output (App Runner URL)
 2. `scripts/ssm-params.json` の `PUBLIC_URL` を App Runner URL に書き換える
-3. 再登録: `npx tsx scripts/register-ssm-params.ts dev scripts/ssm-params.json`
+3. 再登録: `node dist/scripts/register-ssm-params.js dev scripts/ssm-params.json`
 4. App Runner を再起動: `aws apprunner start-deployment --service-arn <ARN>`
 5. `FrontendUrl` の CloudFront URL で Dashboard にアクセス

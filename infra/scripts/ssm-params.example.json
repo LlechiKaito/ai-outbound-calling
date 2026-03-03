@@ -7,7 +7,7 @@
   "CALL_COMPANY_NAME": "株式会社スマートテーブル",
   "CALL_CONTACT_NAME": "担当者",
   "GOOGLE_SHEETS_ID": "xxxx",
-  "GOOGLE_CREDENTIALS_JSON": "{\"type\":\"service_account\",...}",
+  "GOOGLE_CREDENTIALS_JSON": "file://google-credentials.json",
   "ELEVENLABS_API_KEY": "xxxx",
   "ELEVENLABS_AGENT_ID": "xxxx",
   "ELEVENLABS_LANGUAGE": "ja",

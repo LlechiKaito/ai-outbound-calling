@@ -4,3 +4,4 @@ cdk.out/
 *.d.ts
 !jest.config.js
 scripts/ssm-params.json
+scripts/google-credentials.json
