@@ -9,6 +9,7 @@ function createMockSheets(rows: string[][]) {
           data: { values: rows },
         }),
         update: jest.fn().mockResolvedValue({}),
+        append: jest.fn().mockResolvedValue({}),
       },
     },
   } as unknown as import("googleapis").sheets_v4.Sheets;
@@ -106,6 +107,151 @@ describe("GoogleSheetsLeadRepository", () => {
       if (result.success) {
         expect(result.data[0].phoneNumber).toBe("+819012345678");
       }
+    });
+
+    it("should handle left single quotation mark (U+2018)", async () => {
+      const sheets = createMockSheets([
+        HEADER,
+        ["会社A", "名前A", "\u201809012345678", "", "", "", "", "", "", "", ""],
+      ]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      const result = await repo.fetchAllLeads();
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data[0].phoneNumber).toBe("+819012345678");
+      }
+    });
+
+    it("should handle right single quotation mark (U+2019)", async () => {
+      const sheets = createMockSheets([
+        HEADER,
+        ["会社A", "名前A", "\u201909012345678", "", "", "", "", "", "", "", ""],
+      ]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      const result = await repo.fetchAllLeads();
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data[0].phoneNumber).toBe("+819012345678");
+      }
+    });
+
+    it("should handle number with spaces", async () => {
+      const sheets = createMockSheets([
+        HEADER,
+        ["会社A", "名前A", "090 1234 5678", "", "", "", "", "", "", "", ""],
+      ]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      const result = await repo.fetchAllLeads();
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data[0].phoneNumber).toBe("+819012345678");
+      }
+    });
+
+    it("should handle number with parentheses", async () => {
+      const sheets = createMockSheets([
+        HEADER,
+        ["会社A", "名前A", "(090)1234-5678", "", "", "", "", "", "", "", ""],
+      ]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      const result = await repo.fetchAllLeads();
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data[0].phoneNumber).toBe("+819012345678");
+      }
+    });
+  });
+
+  describe("addLead - phone number normalization", () => {
+    it("should store phone number in domestic format after stripping quotes", async () => {
+      const sheets = createMockSheets([HEADER]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      await repo.addLead({
+        companyName: "会社A",
+        contactName: "名前A",
+        phoneNumber: "'09012345678",
+        email: "test@example.com",
+      });
+
+      expect(sheets.spreadsheets.values.append).toHaveBeenCalledWith(
+        expect.objectContaining({
+          requestBody: {
+            values: [["会社A", "名前A", "09012345678", "test@example.com"]],
+          },
+        }),
+      );
+    });
+
+    it("should store phone number after stripping Unicode left quote", async () => {
+      const sheets = createMockSheets([HEADER]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      await repo.addLead({
+        companyName: "会社A",
+        contactName: "名前A",
+        phoneNumber: "\u201809012345678",
+        email: "",
+      });
+
+      expect(sheets.spreadsheets.values.append).toHaveBeenCalledWith(
+        expect.objectContaining({
+          requestBody: {
+            values: [["会社A", "名前A", "09012345678", ""]],
+          },
+        }),
+      );
+    });
+
+    it("should normalize E.164 to domestic format for storage", async () => {
+      const sheets = createMockSheets([HEADER]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      await repo.addLead({
+        companyName: "会社A",
+        contactName: "名前A",
+        phoneNumber: "+819012345678",
+        email: "",
+      });
+
+      expect(sheets.spreadsheets.values.append).toHaveBeenCalledWith(
+        expect.objectContaining({
+          requestBody: {
+            values: [["会社A", "名前A", "09012345678", ""]],
+          },
+        }),
+      );
+    });
+  });
+
+  describe("editLead - phone number normalization", () => {
+    it("should store phone number in domestic format after stripping quotes", async () => {
+      const sheets = createMockSheets([HEADER]);
+      const repo = new GoogleSheetsLeadRepository(sheets, "sheet-id");
+
+      await repo.editLead(2, {
+        companyName: "会社A",
+        contactName: "名前A",
+        phoneNumber: "\u201909012345678",
+        email: "test@example.com",
+      });
+
+      expect(sheets.spreadsheets.values.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          range: "A2:D2",
+          requestBody: {
+            values: [["会社A", "名前A", "09012345678", "test@example.com"]],
+          },
+        }),
+      );
     });
   });
 
