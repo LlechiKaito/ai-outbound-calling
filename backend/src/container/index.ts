@@ -86,6 +86,10 @@ export function createMediaStreamHandler(): MediaStreamHandler | null {
 
   const { companyName, contactName } = config.call;
 
+  const leadRepository = config.isGoogleConfigured()
+    ? createGoogleSheetsLeadRepository()
+    : null;
+
   return new MediaStreamHandler(
     conversationRepository,
     { language: config.elevenlabs.language },
@@ -95,7 +99,33 @@ export function createMediaStreamHandler(): MediaStreamHandler | null {
         return;
       }
 
-      postCallProcessing.execute({ transcript, phoneNumber, companyName, contactName, email: "" })
+      const findEmailAndProcess = async (): Promise<void> => {
+        let email = "";
+        let leadCompanyName = companyName;
+        let leadContactName = contactName;
+
+        if (leadRepository) {
+          const leadsResult = await leadRepository.fetchAllLeads();
+          if (leadsResult.success) {
+            const lead = leadsResult.data.find((l) => l.phoneNumber === phoneNumber);
+            if (lead) {
+              email = lead.email;
+              leadCompanyName = lead.companyName;
+              leadContactName = lead.contactName;
+            }
+          }
+        }
+
+        await postCallProcessing.execute({
+          transcript,
+          phoneNumber,
+          companyName: leadCompanyName,
+          contactName: leadContactName,
+          email,
+        });
+      };
+
+      findEmailAndProcess()
         .then(() => logger.info("[PostCall] Analysis and save completed"))
         .catch((error) => logger.error({ error }, "[PostCall] Failed"));
     },
