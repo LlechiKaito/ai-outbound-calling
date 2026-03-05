@@ -1,6 +1,8 @@
 import * as path from "node:path";
 
 import * as cdk from "aws-cdk-lib";
+import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
@@ -33,7 +35,8 @@ interface ComputeConstructProps {
 
 export class ComputeConstruct extends Construct {
   public readonly serviceUrl: string;
-  public readonly alb: elbv2.ApplicationLoadBalancer;
+  public readonly backendDistributionUrl: string;
+  public readonly taskDefinition: ecs.FargateTaskDefinition;
 
   constructor(scope: Construct, id: string, props: ComputeConstructProps) {
     super(scope, id);
@@ -45,7 +48,7 @@ export class ComputeConstruct extends Construct {
     const vpc = this.createVpc();
     const cluster = this.createCluster(envConfig, vpc);
     const image = this.createDockerImage();
-    const taskDefinition = this.createTaskDefinition(
+    this.taskDefinition = this.createTaskDefinition(
       stack,
       envConfig,
       ssmPrefix,
@@ -54,21 +57,22 @@ export class ComputeConstruct extends Construct {
     const { service, alb } = this.createService(
       envConfig,
       cluster,
-      taskDefinition,
+      this.taskDefinition,
       vpc,
     );
 
-    const albUrl = `http://${alb.loadBalancerDnsName}`;
-    this.serviceUrl = albUrl;
-    this.alb = alb;
+    this.serviceUrl = `http://${alb.loadBalancerDnsName}`;
 
-    taskDefinition
+    const backendDistribution = this.createBackendDistribution(alb);
+    this.backendDistributionUrl = `https://${backendDistribution.distributionDomainName}`;
+
+    this.taskDefinition
       .findContainer(CONTAINER_NAME)
-      ?.addEnvironment("PUBLIC_URL", albUrl);
+      ?.addEnvironment("PUBLIC_URL", this.backendDistributionUrl);
 
     new cdk.CfnOutput(stack, "BackendUrl", {
-      value: albUrl,
-      description: "ALB URL for backend service",
+      value: this.backendDistributionUrl,
+      description: "Backend CloudFront URL",
     });
   }
 
@@ -256,6 +260,26 @@ export class ComputeConstruct extends Construct {
     });
 
     return { alb, targetGroup };
+  }
+
+  private createBackendDistribution(
+    alb: elbv2.ApplicationLoadBalancer,
+  ): cloudfront.Distribution {
+    const albOrigin = new origins.HttpOrigin(alb.loadBalancerDnsName, {
+      protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+    });
+
+    return new cloudfront.Distribution(this, "BackendDistribution", {
+      defaultBehavior: {
+        origin: albOrigin,
+        viewerProtocolPolicy:
+          cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+        originRequestPolicy:
+          cloudfront.OriginRequestPolicy.ALL_VIEWER,
+      },
+    });
   }
 
   private createService(

@@ -23,7 +23,7 @@ export function buildApp() {
   });
 
   app.register(fastifyWebSocket);
-  app.register(fastifyCors, { origin: true });
+  app.register(fastifyCors, { origin: config.server.corsOrigin });
 
   app.addContentTypeParser(
     CONTENT_TYPE.FORM_URLENCODED,

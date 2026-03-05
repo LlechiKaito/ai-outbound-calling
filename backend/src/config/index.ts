@@ -31,6 +31,7 @@ export const config = {
     port: Number(requireEnv("PORT")),
     host: requireEnv("HOST"),
     publicUrl: requireEnv("PUBLIC_URL"),
+    corsOrigin: requireEnv("CORS_ORIGIN"),
   },
   get twilio() {
     return lazy(() => ({
