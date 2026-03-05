@@ -20,6 +20,7 @@ export class AppStack extends cdk.Stack {
     new FrontendConstruct(this, "Frontend", {
       envConfig: props.envConfig,
       backendUrl: compute.serviceUrl,
+      alb: compute.alb,
     });
   }
 }

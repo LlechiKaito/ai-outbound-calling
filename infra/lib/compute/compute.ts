@@ -33,6 +33,7 @@ interface ComputeConstructProps {
 
 export class ComputeConstruct extends Construct {
   public readonly serviceUrl: string;
+  public readonly alb: elbv2.ApplicationLoadBalancer;
 
   constructor(scope: Construct, id: string, props: ComputeConstructProps) {
     super(scope, id);
@@ -59,6 +60,7 @@ export class ComputeConstruct extends Construct {
 
     const albUrl = `http://${alb.loadBalancerDnsName}`;
     this.serviceUrl = albUrl;
+    this.alb = alb;
 
     taskDefinition
       .findContainer(CONTAINER_NAME)
