@@ -11,5 +11,3 @@ export const MIN_HEALTHY_PERCENT = 100;
 export const MAX_HEALTHY_PERCENT = 200;
 export const SUBNET_CIDR_MASK = 24;
 export const MAX_AZS = 2;
-export const NAT_GATEWAYS_PROD = 2;
-export const NAT_GATEWAYS_DEV = 1;

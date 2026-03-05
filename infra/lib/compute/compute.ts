@@ -24,8 +24,6 @@ import {
   MAX_AZS,
   MAX_HEALTHY_PERCENT,
   MIN_HEALTHY_PERCENT,
-  NAT_GATEWAYS_DEV,
-  NAT_GATEWAYS_PROD,
   SUBNET_CIDR_MASK,
   UNHEALTHY_THRESHOLD_COUNT,
 } from "./constants";
@@ -44,7 +42,7 @@ export class ComputeConstruct extends Construct {
     const { envConfig } = props;
     const ssmPrefix = `/ai-outbound-calling/${envConfig.envName}`;
 
-    const vpc = this.createVpc(envConfig);
+    const vpc = this.createVpc();
     const cluster = this.createCluster(envConfig, vpc);
     const image = this.createDockerImage();
     const taskDefinition = this.createTaskDefinition(
@@ -74,20 +72,14 @@ export class ComputeConstruct extends Construct {
     });
   }
 
-  private createVpc(envConfig: EnvironmentConfig): ec2.Vpc {
+  private createVpc(): ec2.Vpc {
     return new ec2.Vpc(this, "Vpc", {
       maxAzs: MAX_AZS,
-      natGateways:
-        envConfig.envName === "prod" ? NAT_GATEWAYS_PROD : NAT_GATEWAYS_DEV,
+      natGateways: 0,
       subnetConfiguration: [
         {
           name: "Public",
           subnetType: ec2.SubnetType.PUBLIC,
-          cidrMask: SUBNET_CIDR_MASK,
-        },
-        {
-          name: "Private",
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
           cidrMask: SUBNET_CIDR_MASK,
         },
       ],
@@ -291,8 +283,8 @@ export class ComputeConstruct extends Construct {
       minHealthyPercent: MIN_HEALTHY_PERCENT,
       maxHealthyPercent: MAX_HEALTHY_PERCENT,
       securityGroups: [serviceSg],
-      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-      assignPublicIp: false,
+      vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
+      assignPublicIp: true,
     });
 
     service.attachToApplicationTargetGroup(targetGroup);
