@@ -1,8 +1,9 @@
 export interface EnvironmentConfig {
   readonly envName: string;
   readonly backendPort: number;
-  readonly backendCpu: string;
-  readonly backendMemory: string;
+  readonly backendCpu: number;
+  readonly backendMemory: number;
+  readonly desiredCount: number;
   readonly skipBusinessHoursCheck: boolean;
 
   // Feature flags
@@ -22,8 +23,9 @@ export const ENVIRONMENTS: Record<string, EnvironmentConfig> = {
   dev: {
     envName: "dev",
     backendPort: 3000,
-    backendCpu: "0.25 vCPU",
-    backendMemory: "0.5 GB",
+    backendCpu: 256,
+    backendMemory: 512,
+    desiredCount: 1,
     skipBusinessHoursCheck: true,
     enableGoogle: true,
     enableElevenLabs: true,
@@ -35,8 +37,9 @@ export const ENVIRONMENTS: Record<string, EnvironmentConfig> = {
   prod: {
     envName: "prod",
     backendPort: 3000,
-    backendCpu: "0.5 vCPU",
-    backendMemory: "1 GB",
+    backendCpu: 512,
+    backendMemory: 1024,
+    desiredCount: 1,
     skipBusinessHoursCheck: false,
     enableGoogle: true,
     enableElevenLabs: true,
