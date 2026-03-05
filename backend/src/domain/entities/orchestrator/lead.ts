@@ -18,6 +18,10 @@ export class Lead {
     return this.status === "" || this.status === "未対応";
   }
 
+  isRetryPending(): boolean {
+    return this.status === "再架電待ち";
+  }
+
   isFollowing(): boolean {
     return this.status === "フォロー中";
   }
@@ -31,6 +35,6 @@ export class Lead {
   }
 
   isCallable(maxRetries: number): boolean {
-    return (this.isPending() || this.isFollowing()) && this.canRetry(maxRetries);
+    return (this.isPending() || this.isRetryPending()) && this.canRetry(maxRetries);
   }
 }

@@ -46,7 +46,6 @@ export function buildSsmSecrets(
     );
 
   const secrets: Record<string, ecs.Secret> = {
-    PUBLIC_URL: fromSsm("PUBLIC_URL"),
     TWILIO_ACCOUNT_SID: fromSsm("TWILIO_ACCOUNT_SID"),
     TWILIO_AUTH_TOKEN: fromSsm("TWILIO_AUTH_TOKEN"),
     TWILIO_PHONE_NUMBER: fromSsm("TWILIO_PHONE_NUMBER"),

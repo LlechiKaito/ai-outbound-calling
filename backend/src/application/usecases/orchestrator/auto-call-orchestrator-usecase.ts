@@ -162,7 +162,7 @@ export class AutoCallOrchestratorUseCase {
         }
       }
 
-      await this.processLead(lead);
+      await this.processLeadSafely(lead);
       this.processedCount++;
 
       if (this.state.isRunning()) {
@@ -178,6 +178,18 @@ export class AutoCallOrchestratorUseCase {
         { processedCount: this.processedCount },
         "[Orchestrator] All leads processed",
       );
+    }
+  }
+
+  private async processLeadSafely(lead: Lead): Promise<void> {
+    try {
+      await this.processLead(lead);
+    } catch (error) {
+      this.logger.error(
+        { error, phoneNumber: lead.phoneNumber, companyName: lead.companyName },
+        ORCHESTRATOR_ERROR_MESSAGES.LEAD_PROCESSING_FAILED,
+      );
+      this.addActivityLog(lead.companyName, "エラー", "処理失敗");
     }
   }
 
@@ -317,7 +329,7 @@ export class AutoCallOrchestratorUseCase {
     const reachedLimit = newRetryCount >= MAX_RETRY_COUNT;
 
     const updateData: LeadUpdateData = {
-      status: reachedLimit ? LEAD_STATUS.COMPLETED : LEAD_STATUS.FOLLOWING,
+      status: reachedLimit ? LEAD_STATUS.COMPLETED : LEAD_STATUS.RETRY_PENDING,
       callResult: "不在",
       interestLevel: 0,
       nextAction: reachedLimit ? "リトライ上限到達" : "再架電",

@@ -11,15 +11,17 @@ import { EnvironmentConfig } from "../../config/environments";
 
 interface FrontendConstructProps {
   readonly envConfig: EnvironmentConfig;
-  readonly backendUrl: string;
+  readonly backendDistributionUrl: string;
 }
 
 export class FrontendConstruct extends Construct {
+  public readonly distributionUrl: string;
+
   constructor(scope: Construct, id: string, props: FrontendConstructProps) {
     super(scope, id);
 
     const stack = cdk.Stack.of(this);
-    const { envConfig, backendUrl } = props;
+    const { envConfig, backendDistributionUrl } = props;
 
     const siteBucket = new s3.Bucket(this, "SiteBucket", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
@@ -54,7 +56,7 @@ export class FrontendConstruct extends Construct {
         ),
         s3deploy.Source.data(
           "js/config.js",
-          `window.API_BASE_URL = '${backendUrl}';`,
+          `window.API_BASE_URL = '${backendDistributionUrl}';`,
         ),
       ],
       destinationBucket: siteBucket,
@@ -62,8 +64,10 @@ export class FrontendConstruct extends Construct {
       distributionPaths: ["/*"],
     });
 
+    this.distributionUrl = `https://${distribution.distributionDomainName}`;
+
     new cdk.CfnOutput(stack, "FrontendUrl", {
-      value: `https://${distribution.distributionDomainName}`,
+      value: this.distributionUrl,
       description: "CloudFront distribution URL",
     });
 
