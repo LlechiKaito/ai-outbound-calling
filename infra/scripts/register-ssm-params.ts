@@ -8,14 +8,9 @@ import {
   DeleteParametersCommand,
 } from "@aws-sdk/client-ssm";
 
-const SECURE_KEYS = new Set([
-  "TWILIO_AUTH_TOKEN",
-  "TWILIO_ACCOUNT_SID",
-  "OPENAI_API_KEY",
-  "GOOGLE_CREDENTIALS_JSON",
-  "ELEVENLABS_API_KEY",
-  "MAIL_PASSWORD",
-]);
+// NOTE: All parameters use String type because ECS Fargate task definition
+// references them via ecs.Secret.fromSsmParameter (StringParameter).
+// SecureString is not supported by CloudFormation for ECS task secrets.
 
 const SSM_PREFIX = "/ai-outbound-calling";
 const FILE_PREFIX = "file://";
@@ -114,7 +109,7 @@ async function main(): Promise<void> {
   const results = await Promise.allSettled(
     Object.entries(params).map(async ([key, rawValue]) => {
       const value = resolveValue(rawValue, baseDir);
-      const type = SECURE_KEYS.has(key) ? "SecureString" : "String";
+      const type = "String";
 
       await client.send(
         new PutParameterCommand({

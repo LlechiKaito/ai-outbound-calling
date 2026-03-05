@@ -7,7 +7,6 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as logs from "aws-cdk-lib/aws-logs";
-import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 import { EnvironmentConfig } from "../../config/environments";
@@ -61,10 +60,9 @@ export class ComputeConstruct extends Construct {
     const albUrl = `http://${alb.loadBalancerDnsName}`;
     this.serviceUrl = albUrl;
 
-    new ssm.StringParameter(this, "PublicUrlParam", {
-      parameterName: `${ssmPrefix}/PUBLIC_URL`,
-      stringValue: albUrl,
-    });
+    taskDefinition
+      .findContainer(CONTAINER_NAME)
+      ?.addEnvironment("PUBLIC_URL", albUrl);
 
     new cdk.CfnOutput(stack, "BackendUrl", {
       value: albUrl,
