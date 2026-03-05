@@ -112,7 +112,7 @@ export class GoogleSheetsLeadRepository implements LeadRepository {
   }
 
   private normalizePhoneNumber(raw: string): string {
-    const cleaned = raw.replace(/^'/, "").replace(/[-\s]/g, "");
+    const cleaned = raw.replace(/[^\d+]/g, "");
 
     if (cleaned.startsWith("+")) {
       return cleaned;
