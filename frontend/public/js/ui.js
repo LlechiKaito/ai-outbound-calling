@@ -15,6 +15,9 @@ function statusBadge(status) {
   if (!status || status === '未対応') {
     return '<span class="status-badge bg-yellow-100 text-yellow-700">未対応</span>';
   }
+  if (status === '再架電待ち') {
+    return '<span class="status-badge bg-orange-100 text-orange-700">再架電待ち</span>';
+  }
   if (status === 'フォロー中') {
     return '<span class="status-badge bg-blue-100 text-blue-700">フォロー中</span>';
   }

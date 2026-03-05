@@ -10,4 +10,5 @@ export const ORCHESTRATOR_ERROR_MESSAGES = {
   OUTSIDE_BUSINESS_HOURS: "Current time is outside business hours",
   INVALID_ORCHESTRATOR_STATE: "Invalid orchestrator state",
   ORCHESTRATOR_NOT_CONFIGURED: "Orchestrator requires Google Sheets and ElevenLabs configuration",
+  LEAD_PROCESSING_FAILED: "Failed to process lead",
 } as const;

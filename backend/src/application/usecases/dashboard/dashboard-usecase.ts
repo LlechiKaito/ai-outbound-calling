@@ -88,6 +88,8 @@ export class DashboardUseCase {
     switch (status) {
       case "pending":
         return leads.filter((l) => l.isPending());
+      case "retry_pending":
+        return leads.filter((l) => l.isRetryPending());
       case "following":
         return leads.filter((l) => l.isFollowing());
       case "completed":

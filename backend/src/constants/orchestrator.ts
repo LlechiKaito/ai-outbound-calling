@@ -11,7 +11,7 @@ export const WEEKEND_DAYS: readonly number[] = [0, 6];
 
 export const MAX_RETRY_COUNT = 3;
 
-export const CALL_TIMEOUT_MS = 120_000;
+export const CALL_TIMEOUT_MS = 300_000;
 
 export const INTER_CALL_DELAY_MS = 5_000;
 
@@ -39,6 +39,7 @@ export const HEADER_ROW_OFFSET = 1;
 
 export const LEAD_STATUS = {
   PENDING: "未対応",
+  RETRY_PENDING: "再架電待ち",
   FOLLOWING: "フォロー中",
   COMPLETED: "対応済み",
 } as const;
