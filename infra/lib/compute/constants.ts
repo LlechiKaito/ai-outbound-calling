@@ -1,0 +1,15 @@
+export const HEALTH_CHECK_PATH = "/health";
+export const CONTAINER_NAME = "backend";
+export const ALB_PORT = 80;
+export const HEALTH_CHECK_INTERVAL_SECONDS = 30;
+export const HEALTH_CHECK_TIMEOUT_SECONDS = 5;
+export const HEALTH_CHECK_RETRIES = 3;
+export const HEALTH_CHECK_START_PERIOD_SECONDS = 60;
+export const HEALTHY_THRESHOLD_COUNT = 2;
+export const UNHEALTHY_THRESHOLD_COUNT = 3;
+export const MIN_HEALTHY_PERCENT = 100;
+export const MAX_HEALTHY_PERCENT = 200;
+export const SUBNET_CIDR_MASK = 24;
+export const MAX_AZS = 2;
+export const NAT_GATEWAYS_PROD = 2;
+export const NAT_GATEWAYS_DEV = 1;
